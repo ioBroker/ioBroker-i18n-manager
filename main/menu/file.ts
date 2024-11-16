@@ -27,6 +27,8 @@ const closeDirectory = async () => {
     return;
   }
 
+  currentWindow.setTitle(`i18n Manager`);
+
   if (!currentWindow.isDocumentEdited()) {
     sendClose(currentWindow);
     return;

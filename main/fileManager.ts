@@ -40,6 +40,12 @@ export const openFolderInWindow = async (folderPath: string, window: Electron.Br
     await sendOpen(window, folderPath, parsedFiles);
     watchFolder(window, folderPath);
 
+    const parts = folderPath.replace(/\\/g, '/').split('/');
+    if (parts[parts.length - 1] === 'i18n') {
+      parts.pop();
+    }
+
+    window.setTitle(`i18n Manager - ${folderPath}`);
     app.addRecentDocument(folderPath);
     recentFolders = settings.addRecentFolder(folderPath);
   }

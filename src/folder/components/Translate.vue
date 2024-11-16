@@ -1,7 +1,23 @@
 <template>
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-header>Translate</v-expansion-panel-header>
+      <v-expansion-panel-header style="padding-top: 8px; padding-bottom: 8px">
+        <v-btn
+            color="primary"
+            v-if="isTranslationEnabled"
+            style="width: 122px; max-width: 122px; margin-right: 16px"
+            @click="translate"
+        >
+          Translate
+        </v-btn>
+        <div
+            v-if="!isTranslationEnabled"
+            style="width: 122px; max-width: 122px; margin-right: 16px"
+        >
+          Translate
+        </div>
+        {{ hint() }}
+      </v-expansion-panel-header>
       <v-expansion-panel-content>
         <v-row>
           <v-col>
@@ -65,12 +81,6 @@
         </v-row>
       </v-expansion-panel-content>
     </v-expansion-panel>
-    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 8px;">
-      {{ hint() }}
-      <v-btn v-if="isTranslationEnabled" color="primary" @click="translate">
-        Translate
-      </v-btn>
-    </div>
   </v-expansion-panels>
 </template>
 
@@ -92,7 +102,7 @@ import { CustomSettings } from '@common/types';
     },
     setup(props, { emit }) {
       // const source = ref('');
-      
+
       const settingsModule = useNamespace('settings');
       const settings = settingsModule.useState<CustomSettings>('settings', { immediate: true });
       const saveSettings = settingsModule.useAction('saveSettings');
@@ -123,7 +133,8 @@ import { CustomSettings } from '@common/types';
         }
       });
 
-      function translate() {
+      function translate(e: MouseEvent) {
+        e?.stopPropagation();
         emit('translate', {
           mode: settings.value.translationMode,
           overwrite: settings.value.translationOverwrite,
@@ -133,10 +144,7 @@ import { CustomSettings } from '@common/types';
       }
 
       const hint = () => {
-        return settings.value.translationFrom + ' -> ' + settings.value.translationTo.join(', ') + 
-        ' (' + settings.value.translationEngine + ')' +
-        ' | ' + (settings.value.translationMode === 'all' ? 'All Keys' : 'This Key') + 
-        (settings.value.translationOverwrite ? ' | Overwrite not empty fields' : '')
+        return `${settings.value.translationFrom} -> ${settings.value.translationTo.join(', ')} (${settings.value.translationEngine})${settings.value.translationMode === 'all' ? ' | All' : ''}${settings.value.translationOverwrite ? ' | Overwrite empty' : ''}`
       }
 
       return {
