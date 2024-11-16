@@ -10,7 +10,7 @@ export const parse = (content: string): Promise<any> => {
   }
 };
 
-export const serialize = async (data: object): Promise<string | undefined> => {
+export const serialize = async (data: object, format?: { indent: 2 | 4 | '\t' | undefined, crlf: '\r' | '\n' | '\r\n' }): Promise<string | undefined> => {
   try {
     return yaml.safeDump(data);
   } catch (e) {

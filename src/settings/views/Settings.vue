@@ -24,10 +24,18 @@
         <v-card-text>
           <v-row>
             <v-col class="px-5 pb-3">
-              <v-text-field
+              <v-select
+                  v-model="settings.sortOnSave"
+                  label="Sort words on save"
+                  :items="['sort', 'no sort']"
+                  outlined
+              />
+            </v-col>
+            <v-col class="px-5 pb-3">
+              <v-select
                 v-model="settings.spacesIndentation"
                 label="Spaces indentation"
-                :rules="spaceSizeRules"
+                :items="['4', '2', 'tab', 'detect']"
                 outlined
               />
             </v-col>
@@ -37,13 +45,13 @@
               <v-select
                 v-model="settings.translationEngine"
                 label="Translation Engine"
-                :items="['google', 'deepl', 'aws', 'iobroker']"
+                :items="[{ text: 'Google Translate', value: 'google'}, { text: 'DeepL', value: 'deepl'}, { text: 'Amazon Web Services', value: 'aws'}, { text: 'DeepL (only for ioBroker projects)', value: 'deeplIoBroker'}, { text: 'Amazon Web Services (only for ioBroker projects)', value: 'awsIoBroker'}, { text: 'Google Translate (only for ioBroker projects)', value: 'googleIoBroker'}, { text: 'Libre Translation (only for ioBroker projects)', value: 'libreIoBroker' }]"
                 hide-details
                 outlined
               />
             </v-col>
           </v-row>
-          <v-row>
+          <v-row v-if="settings.translationEngine === 'google'">
             <v-col class="px-5 pb-3">
               <v-text-field
                 v-model="settings.googleTranslateApiKey"
@@ -53,10 +61,10 @@
               />
             </v-col>
           </v-row>
-          <div class="px-2">
+          <div class="px-2" v-if="settings.translationEngine === 'google'">
             <RemoteLink href="https://console.cloud.google.com/apis/credentials/wizard?api=translate.googleapis.com" />
           </div>
-          <!-- v-row>
+          <v-row v-if="settings.translationEngine === 'deepl'">
             <v-col class="px-5 pb-3">
               <v-text-field
                 v-model="settings.deepLTranslateApiKey"
@@ -66,7 +74,10 @@
               />
             </v-col>
           </v-row>
-          <v-row>
+          <div class="px-2" v-if="settings.translationEngine === 'deepl'">
+            <RemoteLink href="https://www.deepl.com/en/pro" />
+          </div>
+          <v-row v-if="settings.translationEngine === 'aws'">
             <v-col class="px-5 pb-3">
               <v-text-field
                 v-model="settings.awsTranslateApiKey"
@@ -76,7 +87,10 @@
               />
             </v-col>
           </v-row>
-          <v-row>
+          <div class="px-2" v-if="settings.translationEngine === 'aws'">
+            <RemoteLink href="https://aws.amazon.com/en/translate/" />
+          </div>
+          <!--v-row>
             <v-col class="px-5 pb-3">
               <v-text-field
                 v-model="settings.iobrokerTranslateApiKey"
@@ -85,7 +99,7 @@
                 outlined
               />
             </v-col>
-          </v-row -->
+          </v-row-->
         </v-card-text>
 
         <v-spacer />
@@ -132,13 +146,6 @@ export default defineComponent({
     const folderModule = useNamespace('folder');
     const refreshTranslationKey = folderModule.useAction('refreshTranslationKey');
 
-    const spaceSizeRules = [
-      (v: any) => !!v || 'This field is mandatory',
-      (v: any) => (v && !isNaN(parseInt(v, 10))) || 'Enter a number',
-      (v: any) => (v && parseInt(v, 10) <= 10) || 'Tab size should be max 10',
-      (v: any) => (v && parseInt(v, 10) > 0) || 'Tab size should be above 1',
-    ];
-
     const isFormValid = false;
 
     async function handleSubmit() {
@@ -148,7 +155,9 @@ export default defineComponent({
 
     // Synchronize when the dialog is closed using ESC key
     watch(visible, () => {
-      if (!visible.value) hideSettings();
+      if (!visible.value) {
+        hideSettings();
+      }
     });
 
     return {
@@ -156,7 +165,6 @@ export default defineComponent({
       settings,
       hideSettings,
       handleSubmit,
-      spaceSizeRules,
       isFormValid,
     };
   },

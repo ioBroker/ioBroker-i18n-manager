@@ -1,15 +1,9 @@
-// import { init } from '@sentry/electron';
 import { app, BrowserWindow } from 'electron';
 import electronIsDev from 'electron-is-dev';
 
-// import { sentryConfig } from '../common/sentry';
 import registerAppEvents from './events';
 import loadMenu from './menu';
 import { createWindow, hasWindows } from './windowManager';
-
-// if (!isDev) {
-//   init(sentryConfig);
-// }
 
 registerAppEvents();
 

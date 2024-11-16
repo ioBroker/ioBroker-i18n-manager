@@ -2,7 +2,7 @@ import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { FormattedFolderPath } from '@common/types';
 import packageJson from '../../package.json';
 
-const RELEASES_URL = 'https://api.github.com/repos/gilmarsquinelato/i18n-manager/releases';
+// const RELEASES_URL = 'https://api.github.com/repos/gilmarsquinelato/i18n-manager/releases';
 
 @Module({
   namespaced: true,
@@ -22,6 +22,7 @@ export default class HomeModule extends VuexModule {
     this.recentFolders = folders;
   }
 
+  /*
   @Action({ commit: 'setLatestVersion' })
   async checkVersion() {
     try {
@@ -35,9 +36,11 @@ export default class HomeModule extends VuexModule {
 
     return '';
   }
+   */
 
-  @Mutation
+  /*@Mutation
   setLatestVersion(version: string) {
     this.latestVersion = version;
   }
+  */
 }

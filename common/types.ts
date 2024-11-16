@@ -8,12 +8,13 @@ export interface Settings {
 }
 
 export interface CustomSettings {
-  translationEngine: 'google' | 'deepl' | 'aws' | 'iobroker';
+  translationEngine: 'google' | 'deepl' | 'aws' | 'googleIoBroker' | 'libreIoBroker' | 'deeplIoBroker' | 'awsIoBroker';
   googleTranslateApiKey: string;
   awsTranslateApiKey: string;
   deepLTranslateApiKey: string;
   iobrokerTranslateApiKey: string;
-  spacesIndentation: string;
+  spacesIndentation: '4' | '2'| 'tab' | 'detect' | undefined;
+  sortOnSave: 'sort' | 'no sort' | undefined;
   translationFrom: string;
   translationTo: string[];
   translationMode: 'all' | 'this';

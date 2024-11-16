@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    <v-row>
-      <v-col cols="7">
-        <v-card>
+    <v-row style="height: 100%">
+      <v-col cols="7" style="height: 100%">
+        <v-card style="height: 100%">
           <v-card-title>Recent folders</v-card-title>
 
-          <v-list>
+          <v-list style="height: calc(100% - 64px); overflow: auto">
             <v-list-item
               v-for="folder in recentFolders"
               :key="folder.fullPath"
@@ -23,30 +23,7 @@
 
       <v-col>
         <v-card>
-          <v-card-title>Version</v-card-title>
-          <v-card-text>
-            <span
-              >Current version: {{ currentVersion }} - modded by
-              <a href="mailto:djmiky69@gmail.com">Michele Granato</a></span
-            >
-          </v-card-text>
-          <v-card-actions>
-            <span>Did you like this project? Please give a star</span>
-            <RemoteLink class="gh-star" href="https://github.com/gilmarsquinelato/i18n-manager">
-              <svg
-                viewBox="0 0 14 16"
-                class="octicon octicon-star"
-                style="width: 12.25px; height: 14px;"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"
-                />
-              </svg>
-              Star
-            </RemoteLink>
-          </v-card-actions>
+          <v-card-title>ioBroker edition Version</v-card-title>
         </v-card>
       </v-col>
     </v-row>
@@ -69,7 +46,7 @@
     setup() {
       const homeModule = useNamespace('home');
       const recentFolders = homeModule.useState<FormattedFolderPath[]>('recentFolders');
-      const checkVersion = homeModule.useAction('checkVersion');
+      // const checkVersion = homeModule.useAction('checkVersion');
       const currentVersion = homeModule.useState<string>('currentVersion');
       const latestVersion = homeModule.useState<string>('latestVersion');
 
@@ -78,7 +55,7 @@
       }
 
       sendIpc(ipcMessages.recentFolders);
-      //checkVersion();
+      // checkVersion();
 
       return {
         recentFolders,
@@ -93,6 +70,7 @@
 <style lang="scss">
   .home {
     padding: 0 8px;
+    height: 100%;
   }
 
   .gh-star {

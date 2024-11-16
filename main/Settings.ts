@@ -15,7 +15,8 @@ export const defaultSettings: Settings = {
     awsTranslateApiKey: '',
     deepLTranslateApiKey: '',
     iobrokerTranslateApiKey: '',
-    spacesIndentation: '2',
+    sortOnSave: 'sort',
+    spacesIndentation: 'detect',
     translationFrom: 'en',
     translationTo: ['en'],
     translationMode: 'this',
@@ -63,7 +64,7 @@ export const addRecentFolder = (folderPath: string) => {
   const settings = getSavedSettings();
 
   settings.recentFolders.unshift(folderPath);
-  settings.recentFolders = _.uniq(settings.recentFolders).slice(0, 10);
+  settings.recentFolders = _.uniq(settings.recentFolders).slice(0, 20);
 
   saveSettings(settings);
   return settings.recentFolders;

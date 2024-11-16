@@ -6,6 +6,7 @@ import * as util from 'util';
 import { getLocale } from '../common/language';
 import { LoadedFolder, LoadedGroup, LoadedPath, ParsedFile } from '../common/types';
 import getPlugins, { IPlugin } from './plugins';
+import {getSavedSettings} from "./Settings";
 
 const readdirAsync = util.promisify(fs.readdir);
 const readFileAsync = util.promisify(fs.readFile);
@@ -43,6 +44,33 @@ export const parseFile = async (filePath: string): Promise<any> => {
   }
 };
 
+function detectIndent(data: Buffer): { indent: 2 | 4 | '\t' | undefined, crlf: '\r' | '\n' | '\r\n' } {
+  let crlf: '\r' | '\n' | '\r\n';
+  const text = data.toString();
+  if (text.includes('\r\n')) {
+    crlf = '\r\n'
+  } else if (text.includes('\r')) {
+    crlf = '\r';
+  } else {
+    crlf = '\n';
+  }
+  let indent: 2 | 4 | '\t' | undefined;
+  const lines = data.toString().split('\n');
+  // find first line, that started from space
+  const line = lines.find(l => l.match(/^\s/));
+  if (line) {
+    if (line.startsWith('    ')) {
+      indent = 4;
+    } else if (line.startsWith('  ')) {
+      indent = 2;
+    } else if (line.startsWith('\t')) {
+      indent = '\t';
+    }
+  }
+
+  return { indent, crlf };
+}
+
 export const saveFile = async (parsedFile: ParsedFile): Promise<boolean> => {
   try {
     const plugin = getPluginForFile(parsedFile.filePath);
@@ -50,11 +78,18 @@ export const saveFile = async (parsedFile: ParsedFile): Promise<boolean> => {
     //   1 - handwritten items won't be lost
     //   2 - we keep the file structure the same, then not reordering the file structure (fixes #211)
     const fileContent = await readFileAsync(parsedFile.filePath);
+    const indent: { indent: 2 | 4 | '\t' | undefined, crlf: '\r' | '\n' | '\r\n' } = detectIndent(fileContent);
     const data = await plugin.parse(fileContent.toString());
     const updatedData = mergeDrop(data, parsedFile.data);
-    const sortedData = sortObjectDeeply(updatedData);
+    const settings = getSavedSettings();
+    let serializedContent: string | undefined;
+    if (settings.customSettings.sortOnSave !== 'no sort') {
+      const sortedData = sortObjectDeeply(updatedData);
+      serializedContent = await plugin.serialize(sortedData, indent);
+    } else {
+      serializedContent = await plugin.serialize(updatedData, indent);
+    }
 
-    const serializedContent = await plugin.serialize(sortedData);
     if (serializedContent === null) {
       return false;
     }

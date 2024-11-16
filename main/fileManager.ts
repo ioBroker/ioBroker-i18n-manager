@@ -45,7 +45,7 @@ export const openFolderInWindow = async (folderPath: string, window: Electron.Br
       parts.pop();
     }
 
-    window.setTitle(`i18n Manager - ${folderPath}`);
+    window.setTitle(`i18n Manager - ${parts.join('/')}`);
     app.addRecentDocument(folderPath);
     recentFolders = settings.addRecentFolder(folderPath);
   }

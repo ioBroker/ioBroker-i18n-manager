@@ -11,6 +11,7 @@ export default function useTree(
 ) {
   // empty string means the root tree, required to show the root nodes
   let expandedItems: string[] = [''];
+  let updated = false;
 
   const treeFilter = ref('');
   const treeVisibilityFilter = ref<'all' | 'missing' | 'duplicated'>('all');
@@ -24,6 +25,10 @@ export default function useTree(
   const expandedTreeItems = ref<TreeItem[]>([]);
 
   watch(treeItems, () => {
+    if (!updated && treeItems?.value?.length) {
+      expandTreeNode(treeItems.value[0])
+      updated = true;
+    }
     filterTreeItems(false);
     updateExpandedTreeItems();
   });
@@ -33,7 +38,9 @@ export default function useTree(
   });
 
   function expandTreeNode(item: TreeItem) {
-    if (expandedItems.includes(item.id)) return;
+    if (expandedItems.includes(item.id)) {
+      return;
+    }
     expandedItems.push(item.id);
     updateExpandedTreeItems();
   }
@@ -80,7 +87,9 @@ export default function useTree(
   }
 
   function filterTreeItems(resetExpandedItems: boolean = true) {
-    if (!treeItems.value) return;
+    if (!treeItems.value) {
+      return;
+    }
 
     if (treeFilter.value.length === 0) {
       filteredTreeItems.value = treeItems.value;
@@ -124,7 +133,7 @@ export default function useTree(
   }
 
   function filterByPath(item: TreeItem, filter: string) {
-      return filter.includes('.') && 
+      return filter.includes('.') &&
       (item.path.filter(p => typeof p === 'string')
       .join('.')
       .replace('items.data.', '')

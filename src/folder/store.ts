@@ -24,7 +24,7 @@ import {
 } from './types';
 import { addItem, deleteItem, pasteItem, renameItem } from './utils/files';
 import { createLanguageList, getLanguageLabel, getLanguagePath } from './utils/language';
-import { getTranslationItems, translate } from './utils/translate';
+import { getTranslationItems, translate, isIoBroker } from './utils/translate';
 import { createTree, createTreeStatus, pathToString, updateTreeStatus } from './utils/tree';
 
 const GOOGLE_TRANSLATE_LANGUAGES_URL =
@@ -228,7 +228,6 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
   @Action
   async translate(payload: TranslatePayload) {
     const { commit, dispatch } = this.context;
-    const { googleTranslateApiKey } = this.context.rootState.settings.settings;
 
     const tree = Object.assign({}, this.tree);
     const folder = this.folder;
@@ -240,6 +239,8 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
 
     commit('setTranslationErrors', []);
     const translationItems = getTranslationItems(commit, folder, items, payload);
+
+    const isFolderFromIoBroker = isIoBroker(this.folder);
 
     const progress: TranslationProgress = {
       total: translationItems.length,
@@ -276,6 +277,7 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
           item.formattedPath,
           this.context.rootState.settings.settings,
           this.cancelToken!,
+          isFolderFromIoBroker,
         );
         const end = new Date().getTime();
         totalTime += end - start;

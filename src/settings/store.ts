@@ -14,6 +14,7 @@ export default class SettingsModule extends VuexModule {
     awsTranslateApiKey: '',
     deepLTranslateApiKey: '',
     iobrokerTranslateApiKey: '',
+    sortOnSave: 'no sort',
     spacesIndentation: '2',
     translationFrom: 'en',
     translationTo: [],

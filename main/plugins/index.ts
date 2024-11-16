@@ -4,7 +4,7 @@ import * as yamlPlugin from './yaml';
 export interface IPlugin {
   fileExtensions: string[];
   parse: (content: string) => Promise<any | undefined>;
-  serialize: (data: any) => Promise<string | undefined>;
+  serialize: (data: any, format?: { indent: 2 | 4 | '\t' | undefined, crlf: '\r' | '\n' | '\r\n' }) => Promise<string | undefined>;
 }
 
 let plugins: IPlugin[] = [jsonPlugin, yamlPlugin];

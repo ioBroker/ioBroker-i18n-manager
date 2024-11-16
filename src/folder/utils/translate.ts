@@ -2,12 +2,13 @@ import axios, { AxiosRequestConfig, CancelTokenSource, Method } from 'axios';
 import _ from 'lodash/fp';
 import { Commit } from 'vuex';
 
-import { CustomSettings, LoadedPath } from '@common/types';
+import {CustomSettings, LoadedGroup, LoadedPath} from '@common/types';
 import { TranslatePayload, TranslationError, TreeItem } from '../types';
 import { getFormattedPath, getParsedFiles } from './files';
 import { getLanguageLabel, getLanguagePath } from './language';
 
 const GOOGLE_TRANSLATE_URL = 'https://translation.googleapis.com/language/translate/v2';
+const IOBROKER_TRANSLATE_URL = 'https://translator.iobroker.in';
 
 export const translate = async (
   text: string,
@@ -16,8 +17,9 @@ export const translate = async (
   path: string[],
   settings: CustomSettings,
   cancelToken: CancelTokenSource,
+  isFolderFromIoBroker: boolean,
 ): Promise<string | TranslationError | undefined> => {
-  // Google translate doesn't support localized languages
+  // "Google Translate" doesn't support localized languages
   const targetLanguage = target.split('-')[0];
   const sourceLanguage = source.split('-')[0];
 
@@ -26,18 +28,46 @@ export const translate = async (
   }
 
   try {
-    if (settings.translationEngine === 'iobroker') {
+    if (settings.translationEngine === 'libreIoBroker') {
+      if (!isFolderFromIoBroker) {
+        return {
+          path,
+          error: 'Not ioBroker project!',
+        };
+      }
       const response = await fetchAPI(
-        'https://translator.iobroker.in',
+        IOBROKER_TRANSLATE_URL,
         'POST',
         {
           text
         }
       );
       return response.data[targetLanguage];
-    } else if (settings.translationEngine === 'deepl') {
+    } else if (settings.translationEngine === 'googleIoBroker') {
+      if (!isFolderFromIoBroker) {
+        return {
+          path,
+          error: 'Not ioBroker project!',
+        };
+      }
       const response = await fetchAPI(
-        'https://translator.iobroker.in',
+        IOBROKER_TRANSLATE_URL,
+        'POST',
+        {
+          text,
+          service: 'google',
+        }
+      );
+      return response.data[targetLanguage];
+    } else if (settings.translationEngine === 'deeplIoBroker') {
+      if (!isFolderFromIoBroker) {
+        return {
+          path,
+          error: 'Not ioBroker project!',
+        };
+      }
+      const response = await fetchAPI(
+        IOBROKER_TRANSLATE_URL,
         'POST',
         {
           text,
@@ -45,9 +75,15 @@ export const translate = async (
         }
       );
       return response.data[targetLanguage];
-    } else if (settings.translationEngine === 'aws') {
+    } else if (settings.translationEngine === 'awsIoBroker') {
+      if (!isFolderFromIoBroker) {
+        return {
+          path,
+          error: 'Not ioBroker project!',
+        };
+      }
       const response = await fetchAPI(
-        'https://translator.iobroker.in',
+        IOBROKER_TRANSLATE_URL,
         'POST',
         {
           text,
@@ -55,7 +91,18 @@ export const translate = async (
         }
       );
       return response.data[targetLanguage];
+    } else if (settings.translationEngine === 'aws') {
+      return {
+        path,
+        error: 'Not implemented',
+      };
+    } else if (settings.translationEngine === 'deepl') {
+      return {
+        path,
+        error: 'Not implemented',
+      };
     } else {
+      // google
       const response = await fetchAPI(
         `${GOOGLE_TRANSLATE_URL}?key=${settings.googleTranslateApiKey}`,
         'POST',
@@ -105,6 +152,25 @@ function fetchAPI(url: string, method?: Method, data?: any, config?: AxiosReques
   };
 
   return axios(requestConfig);
+}
+
+export function isIoBroker(folder: LoadedPath[]): boolean {
+  if (
+      folder.length === 1 &&
+      folder[0].type === 'file' &&
+      (folder[0] as LoadedGroup).items.length === 11 &&
+      (folder[0] as LoadedGroup).items[0].filePath.endsWith('.json')
+  ) {
+    const parts = (folder[0] as LoadedGroup).items[0].filePath.replace(/\\/g, '/').split('/');
+    // remove lang.json
+    parts.pop();
+    if (parts.length > 6) {
+      parts.splice(0, parts.length - 6);
+    }
+    // try to find in path ioBroker.xx or iobroker.xx
+    return !!parts.find(name => name.match(/^io[bB]roker\.[-_0-9a-z]+$/));
+  }
+  return false;
 }
 
 export function getTranslationItems(

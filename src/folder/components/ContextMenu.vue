@@ -131,7 +131,9 @@
         focusLabelInput();
       };
       const addItemFinish = (isItem: boolean) => () => {
-        if (!isValidLabel.value) return;
+        if (!isValidLabel.value) {
+          return;
+        }
 
         emit('add-item', {
           parent: clickedItem.value,

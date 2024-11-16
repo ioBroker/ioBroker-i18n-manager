@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="height: 100%">
     <v-content class="app">
       <router-view />
     </v-content>

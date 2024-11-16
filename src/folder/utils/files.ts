@@ -1,6 +1,6 @@
 import { ContentItem } from '../types';
 import { getLanguagePath, LANGUAGE_INDEX_SYMBOL } from './language';
-import { LoadedPath, ParsedFile } from '@common/types';
+import {LoadedGroup, LoadedPath, ParsedFile} from '@common/types';
 import * as _ from 'lodash/fp';
 
 export const getContentFromPath = (folder: LoadedPath[], path: any[]): ContentItem[] => {
@@ -102,7 +102,17 @@ export const addItem = (
 
     pathCopy[languageIndex] = i;
 
-    newItems = _.set(pathCopy, item, newItems);
+    // Fill english automatically
+    if (isItem && newItems?.[0].type === 'file' && (newItems[0] as LoadedGroup).items[i].language === 'en') {
+      if (label.includes('_')) {
+        newItems = _.set(pathCopy, label.substring(label.indexOf('_') + 1), newItems);
+      } else {
+        newItems = _.set(pathCopy, label, newItems);
+      }
+    } else {
+      newItems = _.set(pathCopy, item, newItems);
+    }
+
   }
 
   return newItems;
