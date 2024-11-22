@@ -1,0 +1,3167 @@
+{
+  "program": {
+    "fileInfos": {
+      "./node_modules/typescript/lib/lib.es5.d.ts": {
+        "version": "70ae6416528e68c2ee7b62892200d2ca631759943d4429f8b779b947ff1e124d",
+        "signature": "70ae6416528e68c2ee7b62892200d2ca631759943d4429f8b779b947ff1e124d",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.d.ts": {
+        "version": "dc47c4fa66b9b9890cf076304de2a9c5201e94b740cffdf09f87296d877d71f6",
+        "signature": "dc47c4fa66b9b9890cf076304de2a9c5201e94b740cffdf09f87296d877d71f6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.es2016.d.ts": {
+        "version": "7a387c58583dfca701b6c85e0adaf43fb17d590fb16d5b2dc0a2fbd89f35c467",
+        "signature": "7a387c58583dfca701b6c85e0adaf43fb17d590fb16d5b2dc0a2fbd89f35c467",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.es2017.d.ts": {
+        "version": "8a12173c586e95f4433e0c6dc446bc88346be73ffe9ca6eec7aa63c8f3dca7f9",
+        "signature": "8a12173c586e95f4433e0c6dc446bc88346be73ffe9ca6eec7aa63c8f3dca7f9",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.es2018.d.ts": {
+        "version": "5f4e733ced4e129482ae2186aae29fde948ab7182844c3a5a51dd346182c7b06",
+        "signature": "5f4e733ced4e129482ae2186aae29fde948ab7182844c3a5a51dd346182c7b06",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.es2019.d.ts": {
+        "version": "e6b724280c694a9f588847f754198fb96c43d805f065c3a5b28bbc9594541c84",
+        "signature": "e6b724280c694a9f588847f754198fb96c43d805f065c3a5b28bbc9594541c84",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.es2020.d.ts": {
+        "version": "94b4108552f078722078d7c4a010ca4851063882f6c0c51a1468aa7a39aed4b3",
+        "signature": "94b4108552f078722078d7c4a010ca4851063882f6c0c51a1468aa7a39aed4b3",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.esnext.d.ts": {
+        "version": "2f8f379dedbdbd96a38a1e445cb3919853a1157a950fd977f85808db8d0f8a58",
+        "signature": "2f8f379dedbdbd96a38a1e445cb3919853a1157a950fd977f85808db8d0f8a58",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/typescript/lib/lib.dom.d.ts": {
+        "version": "9affb0a2ddc57df5b8174c0af96c288d697a262e5bc9ca1f544c999dc64a91e6",
+        "signature": "9affb0a2ddc57df5b8174c0af96c288d697a262e5bc9ca1f544c999dc64a91e6",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.dom.iterable.d.ts": {
+        "version": "fb0c09b697dc42afa84d1587e3c994a2f554d2a45635e4f0618768d16a86b69a",
+        "signature": "fb0c09b697dc42afa84d1587e3c994a2f554d2a45635e4f0618768d16a86b69a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.scripthost.d.ts": {
+        "version": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
+        "signature": "097a57355ded99c68e6df1b738990448e0bf170e606707df5a7c0481ff2427cd",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.core.d.ts": {
+        "version": "63e0cc12d0f77394094bd19e84464f9840af0071e5b9358ced30511efef1d8d2",
+        "signature": "63e0cc12d0f77394094bd19e84464f9840af0071e5b9358ced30511efef1d8d2",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.collection.d.ts": {
+        "version": "43fb1d932e4966a39a41b464a12a81899d9ae5f2c829063f5571b6b87e6d2f9c",
+        "signature": "43fb1d932e4966a39a41b464a12a81899d9ae5f2c829063f5571b6b87e6d2f9c",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.generator.d.ts": {
+        "version": "cdccba9a388c2ee3fd6ad4018c640a471a6c060e96f1232062223063b0a5ac6a",
+        "signature": "cdccba9a388c2ee3fd6ad4018c640a471a6c060e96f1232062223063b0a5ac6a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.iterable.d.ts": {
+        "version": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
+        "signature": "42f5e41e5893da663dbf0394268f54f1da4b43dc0ddd2ea4bf471fe5361d6faf",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.promise.d.ts": {
+        "version": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
+        "signature": "0b7a905675e6cb4211c128f0a3aa47d414b275180a299a9aad5d3ec298abbfc4",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.proxy.d.ts": {
+        "version": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
+        "signature": "dfff68b3c34338f6b307a25d4566de15eed7973b0dc5d69f9fde2bcac1c25315",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.reflect.d.ts": {
+        "version": "cb609802a8698aa28b9c56331d4b53f590ca3c1c3a255350304ae3d06017779d",
+        "signature": "cb609802a8698aa28b9c56331d4b53f590ca3c1c3a255350304ae3d06017779d",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.symbol.d.ts": {
+        "version": "3013574108c36fd3aaca79764002b3717da09725a36a6fc02eac386593110f93",
+        "signature": "3013574108c36fd3aaca79764002b3717da09725a36a6fc02eac386593110f93",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts": {
+        "version": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
+        "signature": "4670208dd7da9d6c774ab1b75c1527a810388c7989c4905de6aaea8561cb9dce",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2016.array.include.d.ts": {
+        "version": "3be5a1453daa63e031d266bf342f3943603873d890ab8b9ada95e22389389006",
+        "signature": "3be5a1453daa63e031d266bf342f3943603873d890ab8b9ada95e22389389006",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.object.d.ts": {
+        "version": "17bb1fc99591b00515502d264fa55dc8370c45c5298f4a5c2083557dccba5a2a",
+        "signature": "17bb1fc99591b00515502d264fa55dc8370c45c5298f4a5c2083557dccba5a2a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts": {
+        "version": "d0db416bccdb33975548baf09a42ee8c47eace1aac7907351a000f1e568e7232",
+        "signature": "d0db416bccdb33975548baf09a42ee8c47eace1aac7907351a000f1e568e7232",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.string.d.ts": {
+        "version": "6a6b173e739a6a99629a8594bfb294cc7329bfb7b227f12e1f7c11bc163b8577",
+        "signature": "6a6b173e739a6a99629a8594bfb294cc7329bfb7b227f12e1f7c11bc163b8577",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.intl.d.ts": {
+        "version": "12a310447c5d23c7d0d5ca2af606e3bd08afda69100166730ab92c62999ebb9d",
+        "signature": "12a310447c5d23c7d0d5ca2af606e3bd08afda69100166730ab92c62999ebb9d",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2017.typedarrays.d.ts": {
+        "version": "b0124885ef82641903d232172577f2ceb5d3e60aed4da1153bab4221e1f6dd4e",
+        "signature": "b0124885ef82641903d232172577f2ceb5d3e60aed4da1153bab4221e1f6dd4e",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts": {
+        "version": "0eb85d6c590b0d577919a79e0084fa1744c1beba6fd0d4e951432fa1ede5510a",
+        "signature": "0eb85d6c590b0d577919a79e0084fa1744c1beba6fd0d4e951432fa1ede5510a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2018.asynciterable.d.ts": {
+        "version": "a40c4d82bf13fcded295ac29f354eb7d40249613c15e07b53f2fc75e45e16359",
+        "signature": "a40c4d82bf13fcded295ac29f354eb7d40249613c15e07b53f2fc75e45e16359",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2018.intl.d.ts": {
+        "version": "df9c8a72ca8b0ed62f5470b41208a0587f0f73f0a7db28e5a1272cf92537518e",
+        "signature": "df9c8a72ca8b0ed62f5470b41208a0587f0f73f0a7db28e5a1272cf92537518e",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2018.promise.d.ts": {
+        "version": "bb2d3fb05a1d2ffbca947cc7cbc95d23e1d053d6595391bd325deb265a18d36c",
+        "signature": "bb2d3fb05a1d2ffbca947cc7cbc95d23e1d053d6595391bd325deb265a18d36c",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2018.regexp.d.ts": {
+        "version": "c80df75850fea5caa2afe43b9949338ce4e2de086f91713e9af1a06f973872b8",
+        "signature": "c80df75850fea5caa2afe43b9949338ce4e2de086f91713e9af1a06f973872b8",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2019.array.d.ts": {
+        "version": "9d57b2b5d15838ed094aa9ff1299eecef40b190722eb619bac4616657a05f951",
+        "signature": "9d57b2b5d15838ed094aa9ff1299eecef40b190722eb619bac4616657a05f951",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2019.object.d.ts": {
+        "version": "6c51b5dd26a2c31dbf37f00cfc32b2aa6a92e19c995aefb5b97a3a64f1ac99de",
+        "signature": "6c51b5dd26a2c31dbf37f00cfc32b2aa6a92e19c995aefb5b97a3a64f1ac99de",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2019.string.d.ts": {
+        "version": "93544ca2f26a48716c1b6c5091842cad63129daac422dfa4bc52460465f22bb1",
+        "signature": "93544ca2f26a48716c1b6c5091842cad63129daac422dfa4bc52460465f22bb1",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2019.symbol.d.ts": {
+        "version": "2ad234885a4240522efccd77de6c7d99eecf9b4de0914adb9a35c0c22433f993",
+        "signature": "2ad234885a4240522efccd77de6c7d99eecf9b4de0914adb9a35c0c22433f993",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2020.bigint.d.ts": {
+        "version": "4f435f794b7853c55e2ae7cff6206025802aa79232d2867544178f2ca8ff5eaa",
+        "signature": "4f435f794b7853c55e2ae7cff6206025802aa79232d2867544178f2ca8ff5eaa",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2020.promise.d.ts": {
+        "version": "7435b75fdf3509622e79622dbe5091cf4b09688410ee2034e4fc17d0c99d0862",
+        "signature": "7435b75fdf3509622e79622dbe5091cf4b09688410ee2034e4fc17d0c99d0862",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2020.string.d.ts": {
+        "version": "faf0221ae0465363c842ce6aa8a0cbda5d9296940a8e26c86e04cc4081eea21e",
+        "signature": "faf0221ae0465363c842ce6aa8a0cbda5d9296940a8e26c86e04cc4081eea21e",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.es2020.symbol.wellknown.d.ts": {
+        "version": "936d7d2e8851af9ccfa5333b15e877a824417d352b1d7fd06388639dc69ef80a",
+        "signature": "936d7d2e8851af9ccfa5333b15e877a824417d352b1d7fd06388639dc69ef80a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.esnext.intl.d.ts": {
+        "version": "89bf2b7a601b73ea4311eda9c41f86a58994fec1bee3b87c4a14d68d9adcdcbd",
+        "signature": "89bf2b7a601b73ea4311eda9c41f86a58994fec1bee3b87c4a14d68d9adcdcbd",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.esnext.string.d.ts": {
+        "version": "fb4416144c1bf0323ccbc9afb0ab289c07312214e8820ad17d709498c865a3fe",
+        "signature": "fb4416144c1bf0323ccbc9afb0ab289c07312214e8820ad17d709498c865a3fe",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/typescript/lib/lib.esnext.promise.d.ts": {
+        "version": "cd6efb9467a8b6338ece2e2855e37765700f2cd061ca54b01b33878cf5c7677e",
+        "signature": "cd6efb9467a8b6338ece2e2855e37765700f2cd061ca54b01b33878cf5c7677e",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/tslib/tslib.d.ts": {
+        "version": "4576b4e61049f5ffd7c9e935cf88832e089265bdb15ffc35077310042cbbbeea",
+        "signature": "4576b4e61049f5ffd7c9e935cf88832e089265bdb15ffc35077310042cbbbeea",
+        "affectsGlobalScope": false
+      },
+      "./common/ipcmessages.ts": {
+        "version": "30061988399590e53ea2468b459a1bdbdd9a996c575011833ef75b587107c9be",
+        "signature": "9fa288904e24658362066fbb533078e1b89fc2c098ec743cf6b4b4484a6a25bd",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/common.d.ts": {
+        "version": "ceeb65c57fe2a1300994f095b5e5c7c5eae440e9ce116d32a3b46184ab1630ec",
+        "signature": "ceeb65c57fe2a1300994f095b5e5c7c5eae440e9ce116d32a3b46184ab1630ec",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/array.d.ts": {
+        "version": "f90d4c1ae3af9afb35920b984ba3e41bdd43f0dc7bae890b89fbd52b978f0cac",
+        "signature": "f90d4c1ae3af9afb35920b984ba3e41bdd43f0dc7bae890b89fbd52b978f0cac",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/collection.d.ts": {
+        "version": "fcf79300e5257a23ed3bacaa6861d7c645139c6f7ece134d15e6669447e5e6db",
+        "signature": "fcf79300e5257a23ed3bacaa6861d7c645139c6f7ece134d15e6669447e5e6db",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/date.d.ts": {
+        "version": "187119ff4f9553676a884e296089e131e8cc01691c546273b1d0089c3533ce42",
+        "signature": "187119ff4f9553676a884e296089e131e8cc01691c546273b1d0089c3533ce42",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/function.d.ts": {
+        "version": "aa2c18a1b5a086bbcaae10a4efba409cc95ba7287d8cf8f2591b53704fea3dea",
+        "signature": "aa2c18a1b5a086bbcaae10a4efba409cc95ba7287d8cf8f2591b53704fea3dea",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/lang.d.ts": {
+        "version": "b88749bdb18fc1398370e33aa72bc4f88274118f4960e61ce26605f9b33c5ba2",
+        "signature": "b88749bdb18fc1398370e33aa72bc4f88274118f4960e61ce26605f9b33c5ba2",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/math.d.ts": {
+        "version": "0aaef8cded245bf5036a7a40b65622dd6c4da71f7a35343112edbe112b348a1e",
+        "signature": "0aaef8cded245bf5036a7a40b65622dd6c4da71f7a35343112edbe112b348a1e",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/number.d.ts": {
+        "version": "00baffbe8a2f2e4875367479489b5d43b5fc1429ecb4a4cc98cfc3009095f52a",
+        "signature": "00baffbe8a2f2e4875367479489b5d43b5fc1429ecb4a4cc98cfc3009095f52a",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/object.d.ts": {
+        "version": "bdf0ed7d9ebae6175a5d1b4ec4065d07f8099379370a804b1faff05004dc387d",
+        "signature": "bdf0ed7d9ebae6175a5d1b4ec4065d07f8099379370a804b1faff05004dc387d",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/seq.d.ts": {
+        "version": "7c14ccd2eaa82619fffc1bfa877eb68a012e9fb723d07ee98db451fadb618906",
+        "signature": "7c14ccd2eaa82619fffc1bfa877eb68a012e9fb723d07ee98db451fadb618906",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/string.d.ts": {
+        "version": "288d992cd0d35fd4bb5a0f23df62114b8bfbc53e55b96a4ad00dde7e6fb72e31",
+        "signature": "288d992cd0d35fd4bb5a0f23df62114b8bfbc53e55b96a4ad00dde7e6fb72e31",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/common/util.d.ts": {
+        "version": "df996e25faa505f85aeb294d15ebe61b399cf1d1e49959cdfaf2cc0815c203f9",
+        "signature": "df996e25faa505f85aeb294d15ebe61b399cf1d1e49959cdfaf2cc0815c203f9",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/index.d.ts": {
+        "version": "4f6a12044ee6f458db11964153830abbc499e73d065c51c329ec97407f4b13dd",
+        "signature": "4f6a12044ee6f458db11964153830abbc499e73d065c51c329ec97407f4b13dd",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/lodash/fp.d.ts": {
+        "version": "13885dd9e75979410606bfbfec0e46aaa8370fd200e18e1797292740748aeccb",
+        "signature": "13885dd9e75979410606bfbfec0e46aaa8370fd200e18e1797292740748aeccb",
+        "affectsGlobalScope": false
+      },
+      "./common/locales.ts": {
+        "version": "44cecbee7d4158771f5e24993a2100a5621aa92b915b3547cd4c995c37a2b5d2",
+        "signature": "f940ec558c3bebd0edb42185e7041bb43742ffd1366c90a5db78106d2f398554",
+        "affectsGlobalScope": false
+      },
+      "./common/language.ts": {
+        "version": "80c02819069d0d8e549517774baa44e2e1e51296acbe43bf3b126896997002ed",
+        "signature": "3b88828aacfef971116bc5d5b632fdccc36fb5a9943d84d7602400a1dee26172",
+        "affectsGlobalScope": false
+      },
+      "./common/types.ts": {
+        "version": "a157bd2f92f885883e9ce3df7156c6b551c962163f0c62ca0909aa0ce72bcd72",
+        "signature": "b33bda9a18653442d5967c696ce606e7ffbfdef8bad49a824c9b780128c94766",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/assert.d.ts": {
+        "version": "0ce65cf5b36034006f2b315f379179f07bd5a6027f6538c7aed4ac5be6742fc7",
+        "signature": "0ce65cf5b36034006f2b315f379179f07bd5a6027f6538c7aed4ac5be6742fc7",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/globals.d.ts": {
+        "version": "d986829b45b39bec6d65e343bf924e9d75cb4c0c1f69a7288c7d269b8c1f6290",
+        "signature": "d986829b45b39bec6d65e343bf924e9d75cb4c0c1f69a7288c7d269b8c1f6290",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/@types/node/async_hooks.d.ts": {
+        "version": "870050f5632fa286a3fffcf24ac496d72cea13787baf2ad5d9c28c8165fcddeb",
+        "signature": "870050f5632fa286a3fffcf24ac496d72cea13787baf2ad5d9c28c8165fcddeb",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/buffer.d.ts": {
+        "version": "97b39f33e966bcf9762bccdaca76c94825199f3fef153ebea9bdfd3fcd2413b6",
+        "signature": "97b39f33e966bcf9762bccdaca76c94825199f3fef153ebea9bdfd3fcd2413b6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/child_process.d.ts": {
+        "version": "78650a1b5800e82b6914260e9ca0fe9ea744e4333c3bec51b08f91525718d7fa",
+        "signature": "78650a1b5800e82b6914260e9ca0fe9ea744e4333c3bec51b08f91525718d7fa",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/cluster.d.ts": {
+        "version": "c41eff6b8e1f91104ae974ccd2bc37c723a462b30ca1df942b2c5b0158ef1df3",
+        "signature": "c41eff6b8e1f91104ae974ccd2bc37c723a462b30ca1df942b2c5b0158ef1df3",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/console.d.ts": {
+        "version": "2e341737e0711c12040e83047487240b1693a6774253b8142d1a0500a805b7a1",
+        "signature": "2e341737e0711c12040e83047487240b1693a6774253b8142d1a0500a805b7a1",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/constants.d.ts": {
+        "version": "e08e97c2865750e880fea09b150a702ccfa84163382daa0221f5597185a554bf",
+        "signature": "e08e97c2865750e880fea09b150a702ccfa84163382daa0221f5597185a554bf",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/crypto.d.ts": {
+        "version": "2f2cfea08a6fb75b878340af66cfaff37c5dec35d1c844e3c9eab5ff36dba323",
+        "signature": "2f2cfea08a6fb75b878340af66cfaff37c5dec35d1c844e3c9eab5ff36dba323",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/dgram.d.ts": {
+        "version": "4a1a19573176829708dc03efea508e7c364f6fa30098a5100bd9d93fc9cd38ee",
+        "signature": "4a1a19573176829708dc03efea508e7c364f6fa30098a5100bd9d93fc9cd38ee",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/dns.d.ts": {
+        "version": "8296198bc72e7ef2221b0e140738ce56004e8d1323cd08b0ac1a15295fe911b5",
+        "signature": "8296198bc72e7ef2221b0e140738ce56004e8d1323cd08b0ac1a15295fe911b5",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/domain.d.ts": {
+        "version": "baeda1fadac9fd31920480b85340ab9c4266a25ad08403dee8e15fd0751101fb",
+        "signature": "baeda1fadac9fd31920480b85340ab9c4266a25ad08403dee8e15fd0751101fb",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/events.d.ts": {
+        "version": "12c4e8e811f4310b0dcaa3d1f843a35dc985f78941886cad4950453ad6753959",
+        "signature": "12c4e8e811f4310b0dcaa3d1f843a35dc985f78941886cad4950453ad6753959",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/fs.d.ts": {
+        "version": "17f69594bc7be2023bb09b27d48e6d18606628e6ec20ff38e35cc75d6eb96998",
+        "signature": "17f69594bc7be2023bb09b27d48e6d18606628e6ec20ff38e35cc75d6eb96998",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/http.d.ts": {
+        "version": "8698062058cbdc84171bd576315a5eecab2bf46d7d034144653ae78864889683",
+        "signature": "8698062058cbdc84171bd576315a5eecab2bf46d7d034144653ae78864889683",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/http2.d.ts": {
+        "version": "b3e4f2772da66bac2144ca8cd63f70d211d2f970c93fcb789d03e8a046d47c93",
+        "signature": "b3e4f2772da66bac2144ca8cd63f70d211d2f970c93fcb789d03e8a046d47c93",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/https.d.ts": {
+        "version": "a3586135924c800f21f739a1da43acace1acfdba124deb0871cbd6d04d7dfd1b",
+        "signature": "a3586135924c800f21f739a1da43acace1acfdba124deb0871cbd6d04d7dfd1b",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/inspector.d.ts": {
+        "version": "4062f2f8aa6942f60086c41261effce3f6f542031237a0fb649ca54c0e3f2ceb",
+        "signature": "4062f2f8aa6942f60086c41261effce3f6f542031237a0fb649ca54c0e3f2ceb",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/module.d.ts": {
+        "version": "4ec74fe565d13fd219884cfacf903c89477cc54148887e51c5bead4dae7dc4fd",
+        "signature": "4ec74fe565d13fd219884cfacf903c89477cc54148887e51c5bead4dae7dc4fd",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/net.d.ts": {
+        "version": "499dfdb281e9db3c12298d66d7d77661240c986d3da27a92ea07473bb0d248bd",
+        "signature": "499dfdb281e9db3c12298d66d7d77661240c986d3da27a92ea07473bb0d248bd",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/os.d.ts": {
+        "version": "a46d8aa9e561fb135d253e1657a0cd0f6c18377676305eb0ca28e418358b229c",
+        "signature": "a46d8aa9e561fb135d253e1657a0cd0f6c18377676305eb0ca28e418358b229c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/path.d.ts": {
+        "version": "5a168a15e7a423011b10da472ee3b6d92b27227c192cdaf1e09b30f58806856d",
+        "signature": "5a168a15e7a423011b10da472ee3b6d92b27227c192cdaf1e09b30f58806856d",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/perf_hooks.d.ts": {
+        "version": "ad107fa472d28e615af522b31653e75caad12b834b257c1a83f6c4acff2de9bf",
+        "signature": "ad107fa472d28e615af522b31653e75caad12b834b257c1a83f6c4acff2de9bf",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/process.d.ts": {
+        "version": "07cfc938dfbb5a7b5ba3c363366db93d5728b0fcad1aa08a12052a1b3b72817a",
+        "signature": "07cfc938dfbb5a7b5ba3c363366db93d5728b0fcad1aa08a12052a1b3b72817a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/@types/node/punycode.d.ts": {
+        "version": "7f77304372efe3c9967e5f9ea2061f1b4bf41dc3cda3c83cdd676f2e5af6b7e6",
+        "signature": "7f77304372efe3c9967e5f9ea2061f1b4bf41dc3cda3c83cdd676f2e5af6b7e6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/querystring.d.ts": {
+        "version": "67cf04da598e6407427a17d828e9e02d8f5ae5a8466dc73d1585073b8dc29160",
+        "signature": "67cf04da598e6407427a17d828e9e02d8f5ae5a8466dc73d1585073b8dc29160",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/readline.d.ts": {
+        "version": "fa960168e0650a987d5738376a22a1969b5dff2112b9653f9f1efddf8ba7d5bb",
+        "signature": "fa960168e0650a987d5738376a22a1969b5dff2112b9653f9f1efddf8ba7d5bb",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/repl.d.ts": {
+        "version": "140b05c89cbd5fc75c4e9c1780d85dfb4ea73a2b11dd345f8f944afd002ad74f",
+        "signature": "140b05c89cbd5fc75c4e9c1780d85dfb4ea73a2b11dd345f8f944afd002ad74f",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/stream.d.ts": {
+        "version": "ece46d0e5702e9c269aa71b42d02c934c10d4d24545b1d8594a8115f23a9011f",
+        "signature": "ece46d0e5702e9c269aa71b42d02c934c10d4d24545b1d8594a8115f23a9011f",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/string_decoder.d.ts": {
+        "version": "5b0df2143d96172bf207ed187627e8c58b15a1a8f97bdbc2ede942b36b39fc98",
+        "signature": "5b0df2143d96172bf207ed187627e8c58b15a1a8f97bdbc2ede942b36b39fc98",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/timers.d.ts": {
+        "version": "dfa10c970bc18c29bb48de6704c9c32438c974f581f80cf04d63bc9ab38d0d2c",
+        "signature": "dfa10c970bc18c29bb48de6704c9c32438c974f581f80cf04d63bc9ab38d0d2c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/tls.d.ts": {
+        "version": "4ffc6b5b9366b25b55b54a7dfe89cfbcfcc264a1225113250fa6bcddd68a38ff",
+        "signature": "4ffc6b5b9366b25b55b54a7dfe89cfbcfcc264a1225113250fa6bcddd68a38ff",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/trace_events.d.ts": {
+        "version": "7df562288f949945cf69c21cd912100c2afedeeb7cdb219085f7f4b46cb7dde4",
+        "signature": "7df562288f949945cf69c21cd912100c2afedeeb7cdb219085f7f4b46cb7dde4",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/tty.d.ts": {
+        "version": "9d16690485ff1eb4f6fc57aebe237728fd8e03130c460919da3a35f4d9bd97f5",
+        "signature": "9d16690485ff1eb4f6fc57aebe237728fd8e03130c460919da3a35f4d9bd97f5",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/url.d.ts": {
+        "version": "fd240b48ab1e78082c96c1faca62df02c0b8befa1fd98d031fab4f75c90feee6",
+        "signature": "fd240b48ab1e78082c96c1faca62df02c0b8befa1fd98d031fab4f75c90feee6",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/@types/node/util.d.ts": {
+        "version": "3d87bdaed72f86b91f99401e6e04729afbb5916064778cf324b3d9b51c3a6d91",
+        "signature": "3d87bdaed72f86b91f99401e6e04729afbb5916064778cf324b3d9b51c3a6d91",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/v8.d.ts": {
+        "version": "8ca837d16a31d6d01b13328ca9e6a39e424b4bf294d3b73349dccacea51be730",
+        "signature": "8ca837d16a31d6d01b13328ca9e6a39e424b4bf294d3b73349dccacea51be730",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/vm.d.ts": {
+        "version": "a9d40247ec6c68a47effbb1d8acd8df288bcee7b6bf29c17cf4161e5ef609a0c",
+        "signature": "a9d40247ec6c68a47effbb1d8acd8df288bcee7b6bf29c17cf4161e5ef609a0c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/wasi.d.ts": {
+        "version": "caf38c850b924a0af08a893d06f68fcae3d5a41780b50cc6df9481beeca8e9a3",
+        "signature": "caf38c850b924a0af08a893d06f68fcae3d5a41780b50cc6df9481beeca8e9a3",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/worker_threads.d.ts": {
+        "version": "7152c46a63e7f9ac7db6cd8d4dbf85d90f051a0db60e650573fae576580cbf9a",
+        "signature": "7152c46a63e7f9ac7db6cd8d4dbf85d90f051a0db60e650573fae576580cbf9a",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/zlib.d.ts": {
+        "version": "496370c58ed054e51a68517846c28a695bf84df2873556cca7fe51e297b32420",
+        "signature": "496370c58ed054e51a68517846c28a695bf84df2873556cca7fe51e297b32420",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/node/globals.global.d.ts": {
+        "version": "2708349d5a11a5c2e5f3a0765259ebe7ee00cdcc8161cb9990cb4910328442a1",
+        "signature": "2708349d5a11a5c2e5f3a0765259ebe7ee00cdcc8161cb9990cb4910328442a1",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/@types/node/index.d.ts": {
+        "version": "25ca51ea953e6312cfe3d1a28dfa6be44409c8fe73e07431c73b4f92919156ed",
+        "signature": "25ca51ea953e6312cfe3d1a28dfa6be44409c8fe73e07431c73b4f92919156ed",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/electron/electron.d.ts": {
+        "version": "ca07f523dfe8431b77812ca9133dcf734c03c2a50068cb222cbb4ca49571f5dd",
+        "signature": "ca07f523dfe8431b77812ca9133dcf734c03c2a50068cb222cbb4ca49571f5dd",
+        "affectsGlobalScope": true
+      },
+      "./main/settings.ts": {
+        "version": "2c2669bd407167425a798e258b6e81db4ae8497d5468f6de3ae99cfdb471ee31",
+        "signature": "7e90725a4529ce95ff0d4cda1c50777067989cfd534e84d4558db48561caa18e",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/node-watch/lib/watch.d.ts": {
+        "version": "b0bee7165bfc62c8377ef8c07a8e1d8dfc8c5d8f38e11408a4a999200b2eb536",
+        "signature": "b0bee7165bfc62c8377ef8c07a8e1d8dfc8c5d8f38e11408a4a999200b2eb536",
+        "affectsGlobalScope": false
+      },
+      "./main/plugins/json/index.ts": {
+        "version": "f50f968f88517af9d796edcdf7240236d371bfe0ac1d46e61691b3ad09abf20e",
+        "signature": "cdd42f7e233acee00d48e6cebdf827de02a77cc712495d71585180e4ceac5cd1",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/js-yaml/index.d.ts": {
+        "version": "97106d5b3a6c345498adc0868c24612ecd615b5ee9c4a3da20d199e80a1a6201",
+        "signature": "97106d5b3a6c345498adc0868c24612ecd615b5ee9c4a3da20d199e80a1a6201",
+        "affectsGlobalScope": false
+      },
+      "./main/plugins/yaml/index.ts": {
+        "version": "87c37082603f7a604d12dee39ad8c96df15b312368093afd39cffe179bc739d4",
+        "signature": "f73f6ce5491b0616f1c6acd5e0239cb9e1c7d9044ef6484713a154f126adf1dd",
+        "affectsGlobalScope": false
+      },
+      "./main/plugins/index.ts": {
+        "version": "feae1c51df3f966e3f393bfe414df8cb9d3ec93082acc82b0ec1212e69579c30",
+        "signature": "1088a66c6487ff1bf0a23a3e49360456219ae0f3d2c278032543cf6fb301459a",
+        "affectsGlobalScope": false
+      },
+      "./main/pluginmanager.ts": {
+        "version": "ef9c20250d77100dee7cd7b1b5df882cc890d2dae77390b74fe7ffa25f6ba2df",
+        "signature": "7c4293d892f05c6c25ace98705de88e6590500ab5d4ecdb0f141203b0fed6fc8",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/electron-is-dev/index.d.ts": {
+        "version": "acff088034ac5174ba7d7ffd549cd3b39e4083a8c03f1ec159381ad6d433a4e3",
+        "signature": "acff088034ac5174ba7d7ffd549cd3b39e4083a8c03f1ec159381ad6d433a4e3",
+        "affectsGlobalScope": false
+      },
+      "./main/pathutils.ts": {
+        "version": "adcffe51d5706a1c07529589e8622f6ecd25512c49a7061ac01777ccb6c7c32e",
+        "signature": "c8630bfe24e39cde876c1debef83fe988efab8b86330fe576cf1b84c11b75e79",
+        "affectsGlobalScope": false
+      },
+      "./main/windowmanager.ts": {
+        "version": "c6d79c9c5c8b862b15b08ba1405d1387d86657d258a6aedc05487676c65c6ccc",
+        "signature": "d1155565bdfeb29ab1210e8fec968c3798ee1af9ad20ee782dc6182d0bc2d4bb",
+        "affectsGlobalScope": false
+      },
+      "./main/filemanager.ts": {
+        "version": "f9aa5e6b0aaea8eb08b12f5e965c067d67a3ef3279c67cce7e9e567fecff3508",
+        "signature": "50df9f9be9312011040a7db11fbc58b1440f11569c49a0d3baa53c1b08f740dd",
+        "affectsGlobalScope": false
+      },
+      "./main/events.ts": {
+        "version": "02f0ba49eef6546dea6574acd98847a6bf204bdb58518d76e044370e83e5d20e",
+        "signature": "e99db7772b0eef324ff456730cc5bbd2226190a549ca2eafb8c93a8b7e67e1a1",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/shared.ts": {
+        "version": "e3e57345f139f7911513ba4ba55a84d6cb34b1af4f6d385fe331ae929a03977c",
+        "signature": "1f62c2319ae31ed213802292d27cc5547c09ed8d2dbe77d8c7a54996cf550452",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/app.ts": {
+        "version": "6c26465bd5b6ade35430fb72a4f4acbcf738fc3f71c19d68c5452d4978afabb9",
+        "signature": "625da17eff219dc457296d239dc8175703104481c72cc6acf487f03d0a9a12bd",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/edit.ts": {
+        "version": "a0e7f9a2e67c1acbb678be94be28a4cd7f21f63ffa0f04127234ed6351f0b497",
+        "signature": "bb7d0838ce0f09ac69e40d1ff702dafc6333e77171fc973d0866dd806c6bf3c3",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/file.ts": {
+        "version": "d4675c55aa8159abaa3864c1e642be59b851179b14018642f1d0872cef994519",
+        "signature": "f5983f7b4f1698ab86edb42e8d0c316be471e18f2630ccd13a4ea04cfbf67d9e",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/help.ts": {
+        "version": "23f84f3754ae78992289f135a885aab8cc0299f1129c0055196d4323f39e7fb2",
+        "signature": "c28fdbd5228a64dacd05a3f35307d8eea77b21e1639062b3b37836b3f276a584",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/view.ts": {
+        "version": "9700d2e6d5077f0be2cee3025f6503d35e30dbaa798247f0ed9bbf64bb2032e0",
+        "signature": "dbd2940be8797c856549d0a6028be2f55054ca43c8e74530753ff12d137fa042",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/window.ts": {
+        "version": "1b04c641c5daa8b81fbcabf73cd59b8e7ccbe4c4928780aa21a45c54c23be19f",
+        "signature": "fd931e8d19c1fda6804847c4b41308585dbdfa4e2214372b951a0f839ddd46f5",
+        "affectsGlobalScope": false
+      },
+      "./main/menu/index.ts": {
+        "version": "76011f8aff3fe7b448b8ac6a80f011d2b68f8f6ae8a544c15e8d61bbd7b851a3",
+        "signature": "adf02dfcd775876a0125bc5abf3e03d26769da05e0cb92ed1691b1c923ec7dbc",
+        "affectsGlobalScope": false
+      },
+      "./main/index.ts": {
+        "version": "cbae3c532bcda681f7e4b51f3cf66d9337c92976586896d0dec39627c4610781",
+        "signature": "f761c91419d0a89422a0004ef1a92929dd4d2d5e5c16758654d8b0467d1998c6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/csstype/index.d.ts": {
+        "version": "8a8eb4ebffd85e589a1cc7c178e291626c359543403d58c9cd22b81fab5b1fb9",
+        "signature": "8a8eb4ebffd85e589a1cc7c178e291626c359543403d58c9cd22b81fab5b1fb9",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/jsx.d.ts": {
+        "version": "14d04f6ab1fe2a1241e758eb703a2020407ace64bb9b23e34e9aa0069200c717",
+        "signature": "14d04f6ab1fe2a1241e758eb703a2020407ace64bb9b23e34e9aa0069200c717",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/vue/types/v3-generated.d.ts": {
+        "version": "a946d43895482291ec5cb34a07c1c65ee601263ff5e26053263c0b171057c7fc",
+        "signature": "a946d43895482291ec5cb34a07c1c65ee601263ff5e26053263c0b171057c7fc",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/common.d.ts": {
+        "version": "c1efe4cefe90bdbaa0c13ae3057eba1a93b448bfb756dcae281f51173f846441",
+        "signature": "c1efe4cefe90bdbaa0c13ae3057eba1a93b448bfb756dcae281f51173f846441",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-setup-context.d.ts": {
+        "version": "03fe1289f9b1ffcf0950aa06a370badc11b3e6a793308d2bee811955fe79df12",
+        "signature": "03fe1289f9b1ffcf0950aa06a370badc11b3e6a793308d2bee811955fe79df12",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-component-props.d.ts": {
+        "version": "b18bfef15925c4bc28ac3cce02be4299f52fd6bb055c075058f9fc046bf8f1c6",
+        "signature": "b18bfef15925c4bc28ac3cce02be4299f52fd6bb055c075058f9fc046bf8f1c6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-component-options.d.ts": {
+        "version": "2f8da698a709bcc06341c377d17337abd3c26d86b67ae3c2ab145a34fa84b03d",
+        "signature": "2f8da698a709bcc06341c377d17337abd3c26d86b67ae3c2ab145a34fa84b03d",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-component-public-instance.d.ts": {
+        "version": "e6fa5b1b2b33cb3daaaafe685fef14e651a5b7f77cbbacc110dc92782a76ba0a",
+        "signature": "e6fa5b1b2b33cb3daaaafe685fef14e651a5b7f77cbbacc110dc92782a76ba0a",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/vnode.d.ts": {
+        "version": "41a04f7afd58b9696cafd248a775524fa633aa47424c13c08922e029bd8fb03c",
+        "signature": "41a04f7afd58b9696cafd248a775524fa633aa47424c13c08922e029bd8fb03c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/umd.d.ts": {
+        "version": "d15ea5ae6484cb2607ccfc95e8e139f8cc3cb78c55d31bcd03860836fe93ecfd",
+        "signature": "d15ea5ae6484cb2607ccfc95e8e139f8cc3cb78c55d31bcd03860836fe93ecfd",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-define-component.d.ts": {
+        "version": "52721fd135133263fa5b0ae1e0b5e79ea65cf66ab51d5cd59299fb6f6860e9ec",
+        "signature": "52721fd135133263fa5b0ae1e0b5e79ea65cf66ab51d5cd59299fb6f6860e9ec",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-directive.d.ts": {
+        "version": "680a3007565a1d785ba3a7711dda7eda3f3a6c82bc79c04ea6005b57fd5d68e5",
+        "signature": "680a3007565a1d785ba3a7711dda7eda3f3a6c82bc79c04ea6005b57fd5d68e5",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/options.d.ts": {
+        "version": "a8637991d21aa14213322a322fcab2e424ed46add8aefc98dc7226f71b6b7f75",
+        "signature": "a8637991d21aa14213322a322fcab2e424ed46add8aefc98dc7226f71b6b7f75",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/plugin.d.ts": {
+        "version": "445f10b292e86af14a775a962ddc617907126510e2e19ea42c57020320f1873c",
+        "signature": "445f10b292e86af14a775a962ddc617907126510e2e19ea42c57020320f1873c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/vue.d.ts": {
+        "version": "f0e647e9f289a4acff1b3b4212ecc2ed2182df93bc2fdbc09f9ecc0c55b28804",
+        "signature": "f0e647e9f289a4acff1b3b4212ecc2ed2182df93bc2fdbc09f9ecc0c55b28804",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-manual-apis.d.ts": {
+        "version": "47e03a25122f95a5d9af9461b521b079ad48acfab4ddd979071eb013f6ceb32c",
+        "signature": "47e03a25122f95a5d9af9461b521b079ad48acfab4ddd979071eb013f6ceb32c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/v3-setup-helpers.d.ts": {
+        "version": "a3970021befe3a68b5f0b076e6887db8b84ae0fa5332781cd8e35d8d3ef917a0",
+        "signature": "a3970021befe3a68b5f0b076e6887db8b84ae0fa5332781cd8e35d8d3ef917a0",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/vue/types/v3-define-async-component.d.ts": {
+        "version": "91718454bd0acb488efc4eb5f29d61a023b23839b70834550c80798988e801f2",
+        "signature": "91718454bd0acb488efc4eb5f29d61a023b23839b70834550c80798988e801f2",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/built-in-components.d.ts": {
+        "version": "bf8ed7fb09b8ad5cc244877d0cb0355a3e2a712034af061d89a6d20df4dd817c",
+        "signature": "bf8ed7fb09b8ad5cc244877d0cb0355a3e2a712034af061d89a6d20df4dd817c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue/types/index.d.ts": {
+        "version": "bf8a5c34df856da374c0ba21c56827a2a05bab0cd557bd208ef6404493498573",
+        "signature": "bf8a5c34df856da374c0ba21c56827a2a05bab0cd557bd208ef6404493498573",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts": {
+        "version": "93d01bbe1184219e4609b27aad1be2cdc6003db887241cbcca99ba03c3513509",
+        "signature": "93d01bbe1184219e4609b27aad1be2cdc6003db887241cbcca99ba03c3513509",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/types/basic.d.ts": {
+        "version": "2e0f3c1e502feed4615025ab6e172a8f9f98592008f29c629fb2800010160503",
+        "signature": "2e0f3c1e502feed4615025ab6e172a8f9f98592008f29c629fb2800010160503",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts": {
+        "version": "c4b570d68c04c8fe26d660a3bb3c70bfafc1fce67a1dd91a84f455c8743cd421",
+        "signature": "c4b570d68c04c8fe26d660a3bb3c70bfafc1fce67a1dd91a84f455c8743cd421",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/reactivity/reactive.d.ts": {
+        "version": "e04f3eb617d18a9dc03a8ea5e0ebbc4880a56a48dbd8aeb514cab3b14d804f08",
+        "signature": "e04f3eb617d18a9dc03a8ea5e0ebbc4880a56a48dbd8aeb514cab3b14d804f08",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/reactivity/set.d.ts": {
+        "version": "b2599c9d0a4498f1bf5a09c2e23c700b08390eec553524df1c92238a746dbfbb",
+        "signature": "b2599c9d0a4498f1bf5a09c2e23c700b08390eec553524df1c92238a746dbfbb",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts": {
+        "version": "d917f4cdc1233d2ee3b48597df0d8f5e26cdad695295bc550a0881c3a65024a9",
+        "signature": "d917f4cdc1233d2ee3b48597df0d8f5e26cdad695295bc550a0881c3a65024a9",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/component/component.d.ts": {
+        "version": "ef134610bbc812291f5e515e50d223f5fe9e4ea0e66584d25eec40b5b847c640",
+        "signature": "ef134610bbc812291f5e515e50d223f5fe9e4ea0e66584d25eec40b5b847c640",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/component/index.d.ts": {
+        "version": "cf9b57ebdcb73a3ae22971c4df63ec5d929fa90876b584d34f703adfa2ab3028",
+        "signature": "cf9b57ebdcb73a3ae22971c4df63ec5d929fa90876b584d34f703adfa2ab3028",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/createelement.d.ts": {
+        "version": "e9da3185e06608769e1565f6b4ab7e521c261ded9bb4fd4bd51beb9ca60b12f6",
+        "signature": "e9da3185e06608769e1565f6b4ab7e521c261ded9bb4fd4bd51beb9ca60b12f6",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/runtimecontext.d.ts": {
+        "version": "7872fbdd6fcb47dbd60e5d1e94a4481440ec3c3e9f0c16a55913dfa778c4aa01",
+        "signature": "7872fbdd6fcb47dbd60e5d1e94a4481440ec3c3e9f0c16a55913dfa778c4aa01",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/apis/state.d.ts": {
+        "version": "80acf1e90887632cae5483031535be61fc618bdaeea0c9e11b5469ff5ffdf013",
+        "signature": "80acf1e90887632cae5483031535be61fc618bdaeea0c9e11b5469ff5ffdf013",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/apis/lifecycle.d.ts": {
+        "version": "b81e808aba17844d23372021e584ac4dac68bc4a297323201205933b5051ec8b",
+        "signature": "b81e808aba17844d23372021e584ac4dac68bc4a297323201205933b5051ec8b",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/apis/watch.d.ts": {
+        "version": "bf43ab5487eb568e6f972884481c4ed56205a2a5ac374f148d97304882dce527",
+        "signature": "bf43ab5487eb568e6f972884481c4ed56205a2a5ac374f148d97304882dce527",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/apis/computed.d.ts": {
+        "version": "69208c59b1b8ad64b7e4cc0c8c0a1c24d1a91fe237096a578ae80e9f4ac4569c",
+        "signature": "69208c59b1b8ad64b7e4cc0c8c0a1c24d1a91fe237096a578ae80e9f4ac4569c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/apis/inject.d.ts": {
+        "version": "e50074ed9fa5b24cbc41eefd8a77a1e6bf6dffffc1925b8e7bfe15fa458a674e",
+        "signature": "e50074ed9fa5b24cbc41eefd8a77a1e6bf6dffffc1925b8e7bfe15fa458a674e",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@vue/composition-api/dist/index.d.ts": {
+        "version": "f0b8ba21297ea598656fc3c8a018a6575cd7bc8d4807839d018e4323047a0f72",
+        "signature": "f0b8ba21297ea598656fc3c8a018a6575cd7bc8d4807839d018e4323047a0f72",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex/types/vue.d.ts": {
+        "version": "1174624b7a1ea3277049e38c4045b0fa8b9c5f6c2ad975704d2461031349d130",
+        "signature": "1174624b7a1ea3277049e38c4045b0fa8b9c5f6c2ad975704d2461031349d130",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex/types/helpers.d.ts": {
+        "version": "4114f57f7833eeb133278d730efb45ef9a02e9491d743f25b2947447b7586a8a",
+        "signature": "4114f57f7833eeb133278d730efb45ef9a02e9491d743f25b2947447b7586a8a",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex/types/logger.d.ts": {
+        "version": "23b274161b0095b82a2580d1292e8434cffc1a6eee102a9ffdbd7cf4e993f531",
+        "signature": "23b274161b0095b82a2580d1292e8434cffc1a6eee102a9ffdbd7cf4e993f531",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex/types/index.d.ts": {
+        "version": "d0940ee17b2f90dc5b5b21abba532703c499e961a3ebbbe873573741fd2f5026",
+        "signature": "d0940ee17b2f90dc5b5b21abba532703c499e961a3ebbbe873573741fd2f5026",
+        "affectsGlobalScope": false
+      },
+      "./src/store/utils.ts": {
+        "version": "f606c42727fe677d0cc31bc5e8d6a67ca3483a218ff09280619645a767378497",
+        "signature": "5d5d188f806b12624a18fd73877fa6c1c8a38968a4f339c5344d6ebb3471d17b",
+        "affectsGlobalScope": false
+      },
+      "./src/components/remotelink.vue.ts": {
+        "version": "3f5dfba82048a73f3be1f3f7045d504b0f471c447a00b8214b41bd39c2d76368",
+        "signature": "8087090728f8b6e7750e9e54c6197a7acd35e007726bcddab894e19f1c3ec247",
+        "affectsGlobalScope": false
+      },
+      "./src/settings/views/settings.vue.ts": {
+        "version": "7f4c1d70faba6da92fca0bb4648dff15f8ce22dc9bf7f7d24b8bd2dceffa99c6",
+        "signature": "6eb7a6241317b50655e4bfeddc9b01fdb2c7f101f96b3798131a0f5bb8acd139",
+        "affectsGlobalScope": false
+      },
+      "./src/app.vue.ts": {
+        "version": "10bc1a65f1fda66a1f7813012835b41dc600cdc79866e38705846a6cebf982ed",
+        "signature": "b761c7d40bab7643559be18be92c339f4860ec74ab1870743dc974ce7f31dc33",
+        "affectsGlobalScope": false
+      },
+      "./src/index.d.ts": {
+        "version": "b7873b43dc0695046f359f0b237c0f58c6c33ea8708805c6277358e8ac4cf9fa",
+        "signature": "b7873b43dc0695046f359f0b237c0f58c6c33ea8708805c6277358e8ac4cf9fa",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue-router/types/vue.d.ts": {
+        "version": "7994d6f2f48fae27162e98ad971afe7a90448f29d107b7c6e2a38ea09bbf0564",
+        "signature": "7994d6f2f48fae27162e98ad971afe7a90448f29d107b7c6e2a38ea09bbf0564",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue-router/types/router.d.ts": {
+        "version": "3bd1f2d3f14f08c8f6020d637613f4f6279a4dc05cd3beaf2799e52bd25b299b",
+        "signature": "3bd1f2d3f14f08c8f6020d637613f4f6279a4dc05cd3beaf2799e52bd25b299b",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue-router/types/composables.d.ts": {
+        "version": "81ddb16ba2d4b846845041463ee622cfaf04569d5955edf9b856950db22ac13e",
+        "signature": "81ddb16ba2d4b846845041463ee622cfaf04569d5955edf9b856950db22ac13e",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vue-router/types/index.d.ts": {
+        "version": "c16a9ff31d72a15b1f8c5fa6ea8c922018d619f5194d96b722c83f69e0c5dfa7",
+        "signature": "c16a9ff31d72a15b1f8c5fa6ea8c922018d619f5194d96b722c83f69e0c5dfa7",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex-module-decorators/dist/types/vuexmodule.d.ts": {
+        "version": "80490f5d32cded1ccf8d6ead40026c2e0eaeaf9a0139922cde292659f693d2dc",
+        "signature": "80490f5d32cded1ccf8d6ead40026c2e0eaeaf9a0139922cde292659f693d2dc",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex-module-decorators/dist/types/moduleoptions.d.ts": {
+        "version": "16c4318b7faff223116c4638728d0a55cfae49e788c1af10655c9c397c67cde1",
+        "signature": "16c4318b7faff223116c4638728d0a55cfae49e788c1af10655c9c397c67cde1",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex-module-decorators/dist/types/module/index.d.ts": {
+        "version": "65b7b6c05d3415dc25a338f89dd670350b78cf13311fdcca34a566c806085a18",
+        "signature": "65b7b6c05d3415dc25a338f89dd670350b78cf13311fdcca34a566c806085a18",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex-module-decorators/dist/types/action.d.ts": {
+        "version": "a9b5d0476a074fb11a674e1dd02b7dc28f9a65001c2d67c62cdb56ac23514035",
+        "signature": "a9b5d0476a074fb11a674e1dd02b7dc28f9a65001c2d67c62cdb56ac23514035",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex-module-decorators/dist/types/mutation.d.ts": {
+        "version": "1288c24f9ca26a9153d78cf074eec3050fbdc4d5d89d6a2e7f4cb568e7a8ad3e",
+        "signature": "1288c24f9ca26a9153d78cf074eec3050fbdc4d5d89d6a2e7f4cb568e7a8ad3e",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex-module-decorators/dist/types/mutationaction.d.ts": {
+        "version": "365764ea6048a29b8815d06808de23db19f714d7901bedebfab19dc2a390117d",
+        "signature": "365764ea6048a29b8815d06808de23db19f714d7901bedebfab19dc2a390117d",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuex-module-decorators/dist/types/index.d.ts": {
+        "version": "94df713f586ad28ad1e8572e1a06c948820b50f9f4b3efbcd6a15f70c5c4be4b",
+        "signature": "94df713f586ad28ad1e8572e1a06c948820b50f9f4b3efbcd6a15f70c5c4be4b",
+        "affectsGlobalScope": false
+      },
+      "./src/store/types.ts": {
+        "version": "c27591a82596855240ac7cf054bd9293d9370fd058e1c4da69037f8b6ee55481",
+        "signature": "5e5ccd67fa6b964c25ba36c4e4c29c453080bfa2ab776de5c7963517d5e3d8f6",
+        "affectsGlobalScope": false
+      },
+      "./src/store/plugins/ipc.ts": {
+        "version": "8cb5e2b6d4ea392c00a0f8aa4cd065a1e6b334f82122ceef417c07c3dca8710f",
+        "signature": "d564426488b008a34fc1138a90c73371a3505e9703402d0870c2b6f343ef61d3",
+        "affectsGlobalScope": true
+      },
+      "./src/home/views/home.vue.ts": {
+        "version": "34945f4ba6a9f90ae005429c3be5a55e89c40866cb187362717ada7584960454",
+        "signature": "fee00e31e92d663ffee64168786e8adfe8c3135ce668ecfd6fab400130680d95",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/types.ts": {
+        "version": "827f8b602a02a6374633e91e5c0a6f5568891c08fd4d562e71635117d16716b6",
+        "signature": "b4fd74c9bbf4dfb7aba68c4e68632ab36194446d1aa7d1fa664c72d66261637b",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/utils/language.ts": {
+        "version": "4cdabf5015c41e71fadcca7842321bbe020d0c696202d43a6d3247570091eebb",
+        "signature": "3fbf96bab1096b5c982e81e68ad4ad09ffb5465e43619ee447c2353288b984dc",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/utils/files.ts": {
+        "version": "30746011b87b534f75b58c9a97751bb1fdb21a5f24ae8e27c3508d32b97b0665",
+        "signature": "a1a3059d7bb3eb888f065bc4a25e0a1793056b7b52cd10d523ce2bf6805e1db1",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/views/folder/compositions/tree.ts": {
+        "version": "905d600b0adb29088e2eee68b3e46ef0d79c04118002bb2a760b4457482b7adf",
+        "signature": "85e0631dfd319f0953928c3c626aab226391d3d150529e0d3627dae388fc859d",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/components/content.vue.ts": {
+        "version": "d70005d4be122a6b293f6afbf97c29c00e0c80ccbe6a29bd5b1b62289059c480",
+        "signature": "25894c8ae4ee0535de3aacd3e47dc247c251795d0d7514d63f710a2e0f9a4b96",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/components/translate.vue.ts": {
+        "version": "be53abec86d124a41cc42610a23834527088670a72f8374dc2b27c97f87f6be9",
+        "signature": "77740b5954119596fc6b6fdef471e8d7cf2854675c1f1bd7ad771148e88a118c",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/components/translationprogresspanel.vue.ts": {
+        "version": "8aa1fe838aa82f37662a2e71972680922b998ca89c29875a73059451baf113a6",
+        "signature": "a075dde3ed82be1a1f761480ad01f2858271cc76a9cc8420d84d34ea393e6643",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/components/tree.vue.ts": {
+        "version": "4a6ba83b41d20751f819b69f220fdfa39660766c3c443383053b311a4c30efae",
+        "signature": "d55c4dc43419169943aa02173e877363ede142b76c92adbc4a1257dd2068dfdd",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/components/contextmenu.vue.ts": {
+        "version": "cbee003fdd90233b79448a7442c7747cf506ae180832a768eff41f9ee843243e",
+        "signature": "cc54ce743675724e73b828ee870fb9235561c4b6ba32d1929846c04f3159fc41",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/views/folder/folder.vue.ts": {
+        "version": "8ad0bc3f2064ce20c0f38ccc9b587e761c8f191e273324aa2b3f66311e22af1d",
+        "signature": "efe3b69bad1b52a6f96e87e5e9fc752a3904e512a70695cb31636f70c77698a3",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/views/folder/index.ts": {
+        "version": "0f9ba7a7be26a526790e0fdf1bb3782d58d65a4b2da4d398d1ade317ea43d100",
+        "signature": "7001ab4323b5eac73a6df71f83360ef7e1c920504c711f2f3081ddfe1777d665",
+        "affectsGlobalScope": false
+      },
+      "./src/router/index.ts": {
+        "version": "56822821cf002ae4f1375c9000bcd917ceef43ab55df2edc5ad449f9c88f025a",
+        "signature": "2746c4beefcdb14d6b912733269b9c3af24c277a990f3a43ccb0c96aa3c8b0b9",
+        "affectsGlobalScope": false
+      },
+      "./src/store/modules/global.ts": {
+        "version": "57ab1ef9eb155cb1c3fecd793e4b385f0b3ceaa8deac5fda7929433bfd33cb85",
+        "signature": "d75ef90fba94a98f1747518a2f0c7b83f9c4af79a663867be5d01f34ae4cbf16",
+        "affectsGlobalScope": false
+      },
+      "./package.json": {
+        "version": "ca8fdbdf37701864c31b46cb67b2f8041bd4860017fa532dc118125baa8c8246",
+        "signature": "84964222887ebf62c057f6fc016f5ec4c4e541b4c9008c87fc1d8cd197c5c190",
+        "affectsGlobalScope": true
+      },
+      "./src/home/store.ts": {
+        "version": "8828e012ee3398faadb4af68998fa07941649445e2e4dec0e9fd747b2ab43082",
+        "signature": "2e58d2b7d0591295fce17a178e73a8c2781bd4cad22d2cbb6035861d8243100a",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/axios/index.d.ts": {
+        "version": "e7df7eb51c5090db4bdcdbf9efe053530dff0e33796f40b08b1a3be6c3a351d0",
+        "signature": "e7df7eb51c5090db4bdcdbf9efe053530dff0e33796f40b08b1a3be6c3a351d0",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/fast-deep-equal/index.d.ts": {
+        "version": "37ffe3c12813b6a6d512f7c27b71f3388d03dafa10555ad5094cea393ed3d1f6",
+        "signature": "37ffe3c12813b6a6d512f7c27b71f3388d03dafa10555ad5094cea393ed3d1f6",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/utils/translate.ts": {
+        "version": "ae8d0a4d4a97e6f7ee19093f21379ffe456c0006b1fd801f2955ada072987345",
+        "signature": "90e618dec91c8435bd49bff1a307450d972857bbc46fffe755b89d5c318a0950",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/deepmerge/index.d.ts": {
+        "version": "146ba4b99c5feb82663e17a671bf9f53bb39c704cd76345d6c5a801c26372f44",
+        "signature": "146ba4b99c5feb82663e17a671bf9f53bb39c704cd76345d6c5a801c26372f44",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/utils/tree.ts": {
+        "version": "aa56b2866b39df55d3b8677d4aae1e82df25050a416d10208b09af11123c7b66",
+        "signature": "06545b4cced6c9376d63f0e596cd49d69c6f1954a7182dc189be398be56810c4",
+        "affectsGlobalScope": false
+      },
+      "./src/folder/store.ts": {
+        "version": "2009d17da6fe86eea89f3ba46c71d8a03265841fd8f87a67898577aefc977365",
+        "signature": "44707974d3b24f388fb5adfd01400372ae026ab529f25d3b7c9196b6dc796a23",
+        "affectsGlobalScope": false
+      },
+      "./src/settings/store.ts": {
+        "version": "0859441a929a9affa47c88208bc6777b499d0bf133ec34b878bd0816bdee4388",
+        "signature": "fac113e74f49953820b691b045ea60283b846856e3a4c54e3319e73ce617df9d",
+        "affectsGlobalScope": false
+      },
+      "./src/store/index.ts": {
+        "version": "021a53faa3ef48ef036f277ea5d60b8b65583ec74b6b0178c6ffaac4c5ded86a",
+        "signature": "09a25bbbd1468bb3ee735703e71f5e013c3de0788e9e6fe3c67f7e67c20a42bb",
+        "affectsGlobalScope": false
+      },
+      "./src/plugins/vuetify.ts": {
+        "version": "d736846c5036af780f25f0eb821d94aa21af4cf57e36ba489b26022ae0d473ff",
+        "signature": "1e0aec0c03f8a73d18267804cd8eaebb707039fb40fa8e5d100186db0918bbb3",
+        "affectsGlobalScope": false
+      },
+      "./src/main.ts": {
+        "version": "42560945e1a7927eb75fe2251592dda0cdedeaa9d75bf17b1d7e101883477d0a",
+        "signature": "32d5ea44edae07046ca77ed8bfe28314f8538c5ecf1b787627c2a551951dc0d4",
+        "affectsGlobalScope": false
+      },
+      "./src/shims-tsx.d.ts": {
+        "version": "0d7ca11ecd2fcaee947da04bf3e9184c28db4b309552e452be715067199ee5b9",
+        "signature": "0d7ca11ecd2fcaee947da04bf3e9184c28db4b309552e452be715067199ee5b9",
+        "affectsGlobalScope": true
+      },
+      "./src/shims-vue.d.ts": {
+        "version": "ab05d299a2eff563d52e82f5853d7e75fb77d53d13c1da07a94ed57b1f026d3e",
+        "signature": "ab05d299a2eff563d52e82f5853d7e75fb77d53d13c1da07a94ed57b1f026d3e",
+        "affectsGlobalScope": false
+      },
+      "./typings/vue-virtual-scroller/index.d.ts": {
+        "version": "3f83e9828bfcaa2465f4a7e464e6379368799edb11f196f028fb1f8a52654a65",
+        "signature": "3f83e9828bfcaa2465f4a7e464e6379368799edb11f196f028fb1f8a52654a65",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@types/webpack-env/index.d.ts": {
+        "version": "c9cc4c881c910ce378659524d985d2b72b79029b0c473df5d4d3557b4cf6010a",
+        "signature": "c9cc4c881c910ce378659524d985d2b72b79029b0c473df5d4d3557b4cf6010a",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/vuetify/types/services/goto.d.ts": {
+        "version": "e2b6cb377eddc75ff79119b8cebf1c2ceb9f1e30b1cfd54a37d766e869a0e8fa",
+        "signature": "e2b6cb377eddc75ff79119b8cebf1c2ceb9f1e30b1cfd54a37d766e869a0e8fa",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/lib.d.ts": {
+        "version": "aaa4975fbd5e36f8b8fc89788751f8acaa41b1fe717a20283cb27ec7a34bd2e4",
+        "signature": "aaa4975fbd5e36f8b8fc89788751f8acaa41b1fe717a20283cb27ec7a34bd2e4",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/alacarte.d.ts": {
+        "version": "ca8378064e7af4c549d9dc41d9db67b91f6a6ea892410ed57ad54adebf01a70f",
+        "signature": "ca8378064e7af4c549d9dc41d9db67b91f6a6ea892410ed57ad54adebf01a70f",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/colors.d.ts": {
+        "version": "d4f4104ba4392f889dff6346e06cb8fd3f66396267c0fbc228529eeef660c7eb",
+        "signature": "d4f4104ba4392f889dff6346e06cb8fd3f66396267c0fbc228529eeef660c7eb",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/services/application.d.ts": {
+        "version": "54cdbf8a515dec32b74df883e464f59146423f8ca864578c90e49f9b46d95c2a",
+        "signature": "54cdbf8a515dec32b74df883e464f59146423f8ca864578c90e49f9b46d95c2a",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/services/breakpoint.d.ts": {
+        "version": "d07a8e252ab9129f1453103fe454301d0aa4291bcf678f6b5db1e4b8392444b7",
+        "signature": "d07a8e252ab9129f1453103fe454301d0aa4291bcf678f6b5db1e4b8392444b7",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/services/icons.d.ts": {
+        "version": "ed8faab7eb8664b0c99f2b3f79c9693bacb9f032b2f7a87ca50934291df5e8ee",
+        "signature": "ed8faab7eb8664b0c99f2b3f79c9693bacb9f032b2f7a87ca50934291df5e8ee",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/services/lang.d.ts": {
+        "version": "fbff249ba1097a78bcb5e4f6e0e964890b77c99ae991ba771ed76e1de4626355",
+        "signature": "fbff249ba1097a78bcb5e4f6e0e964890b77c99ae991ba771ed76e1de4626355",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/services/theme.d.ts": {
+        "version": "9745a5c4c094155f21b10fa1cb276ef5abebbf4c4ab11303d9db89180844f1db",
+        "signature": "9745a5c4c094155f21b10fa1cb276ef5abebbf4c4ab11303d9db89180844f1db",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/services/presets.d.ts": {
+        "version": "ee1554d302b0c58b4006224834cb7e73f71db63a85e8f2d6876db1dedc3cac56",
+        "signature": "ee1554d302b0c58b4006224834cb7e73f71db63a85e8f2d6876db1dedc3cac56",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/vuetify/types/index.d.ts": {
+        "version": "d57af382221f8e68957e0357c469fc33911465cfc97722b826ba044cb924ff40",
+        "signature": "d57af382221f8e68957e0357c469fc33911465cfc97722b826ba044cb924ff40",
+        "affectsGlobalScope": false
+      }
+    },
+    "options": {
+      "incremental": true,
+      "target": 2,
+      "module": 99,
+      "strict": true,
+      "jsx": 1,
+      "importHelpers": true,
+      "moduleResolution": 2,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "resolveJsonModule": true,
+      "sourceMap": false,
+      "baseUrl": "./",
+      "types": [
+        "webpack-env",
+        "vuetify"
+      ],
+      "typeRoots": [
+        "./node_modules/@types",
+        "./typings"
+      ],
+      "paths": {
+        "@/*": [
+          "src/*"
+        ],
+        "@common/*": [
+          "common/*"
+        ]
+      },
+      "lib": [
+        "lib.esnext.d.ts",
+        "lib.dom.d.ts",
+        "lib.dom.iterable.d.ts",
+        "lib.scripthost.d.ts",
+        "lib.es2019.d.ts"
+      ],
+      "skipLibCheck": true,
+      "inlineSourceMap": false,
+      "declarationMap": false,
+      "configFilePath": "./tsconfig.json"
+    },
+    "referencedMap": {
+      "./common/language.ts": [
+        "./common/locales.ts",
+        "./node_modules/@types/lodash/fp.d.ts"
+      ],
+      "./main/events.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./main/filemanager.ts",
+        "./main/settings.ts",
+        "./main/windowmanager.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/filemanager.ts": [
+        "./common/types.ts",
+        "./main/pluginmanager.ts",
+        "./main/settings.ts",
+        "./main/windowmanager.ts",
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/electron/electron.d.ts",
+        "./node_modules/node-watch/lib/watch.d.ts"
+      ],
+      "./main/index.ts": [
+        "./main/events.ts",
+        "./main/menu/index.ts",
+        "./main/windowmanager.ts",
+        "./node_modules/electron-is-dev/index.d.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/menu/app.ts": [
+        "./main/menu/shared.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/menu/file.ts": [
+        "./main/filemanager.ts",
+        "./main/menu/shared.ts",
+        "./main/windowmanager.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/menu/help.ts": [
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/menu/index.ts": [
+        "./main/menu/app.ts",
+        "./main/menu/edit.ts",
+        "./main/menu/file.ts",
+        "./main/menu/help.ts",
+        "./main/menu/view.ts",
+        "./main/menu/window.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/menu/shared.ts": [
+        "./main/windowmanager.ts"
+      ],
+      "./main/menu/window.ts": [
+        "./main/menu/shared.ts"
+      ],
+      "./main/pathutils.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/node/path.d.ts"
+      ],
+      "./main/pluginmanager.ts": [
+        "./common/language.ts",
+        "./common/types.ts",
+        "./main/plugins/index.ts",
+        "./main/settings.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/path.d.ts",
+        "./node_modules/@types/node/util.d.ts"
+      ],
+      "./main/plugins/index.ts": [
+        "./main/plugins/json/index.ts",
+        "./main/plugins/yaml/index.ts"
+      ],
+      "./main/plugins/json/index.ts": [
+        "./main/settings.ts"
+      ],
+      "./main/plugins/yaml/index.ts": [
+        "./node_modules/@types/js-yaml/index.d.ts"
+      ],
+      "./main/settings.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/path.d.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/windowmanager.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./main/pathutils.ts",
+        "./main/settings.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/electron-is-dev/index.d.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/array.d.ts": [
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/collection.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/common.d.ts": [
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/date.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/function.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/lang.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/math.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/number.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/object.d.ts": [
+        "./node_modules/@types/lodash/common/common.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/seq.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/string.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/util.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/fp.d.ts": [
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/index.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/common.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/object.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts"
+      ],
+      "./node_modules/@types/node/child_process.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/cluster.d.ts": [
+        "./node_modules/@types/node/child_process.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/net.d.ts"
+      ],
+      "./node_modules/@types/node/crypto.d.ts": [
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/dgram.d.ts": [
+        "./node_modules/@types/node/dns.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/net.d.ts"
+      ],
+      "./node_modules/@types/node/domain.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/events.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/fs.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/http.d.ts": [
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/http2.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/tls.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/https.d.ts": [
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/tls.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/index.d.ts": [
+        "./node_modules/@types/node/assert.d.ts",
+        "./node_modules/@types/node/async_hooks.d.ts",
+        "./node_modules/@types/node/buffer.d.ts",
+        "./node_modules/@types/node/child_process.d.ts",
+        "./node_modules/@types/node/cluster.d.ts",
+        "./node_modules/@types/node/console.d.ts",
+        "./node_modules/@types/node/constants.d.ts",
+        "./node_modules/@types/node/crypto.d.ts",
+        "./node_modules/@types/node/dgram.d.ts",
+        "./node_modules/@types/node/dns.d.ts",
+        "./node_modules/@types/node/domain.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/globals.d.ts",
+        "./node_modules/@types/node/globals.global.d.ts",
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/http2.d.ts",
+        "./node_modules/@types/node/https.d.ts",
+        "./node_modules/@types/node/inspector.d.ts",
+        "./node_modules/@types/node/module.d.ts",
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/os.d.ts",
+        "./node_modules/@types/node/path.d.ts",
+        "./node_modules/@types/node/perf_hooks.d.ts",
+        "./node_modules/@types/node/process.d.ts",
+        "./node_modules/@types/node/punycode.d.ts",
+        "./node_modules/@types/node/querystring.d.ts",
+        "./node_modules/@types/node/readline.d.ts",
+        "./node_modules/@types/node/repl.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/string_decoder.d.ts",
+        "./node_modules/@types/node/timers.d.ts",
+        "./node_modules/@types/node/tls.d.ts",
+        "./node_modules/@types/node/trace_events.d.ts",
+        "./node_modules/@types/node/tty.d.ts",
+        "./node_modules/@types/node/url.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/v8.d.ts",
+        "./node_modules/@types/node/vm.d.ts",
+        "./node_modules/@types/node/wasi.d.ts",
+        "./node_modules/@types/node/worker_threads.d.ts",
+        "./node_modules/@types/node/zlib.d.ts"
+      ],
+      "./node_modules/@types/node/inspector.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/net.d.ts": [
+        "./node_modules/@types/node/dns.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/perf_hooks.d.ts": [
+        "./node_modules/@types/node/async_hooks.d.ts"
+      ],
+      "./node_modules/@types/node/process.d.ts": [
+        "./node_modules/@types/node/tty.d.ts"
+      ],
+      "./node_modules/@types/node/readline.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/repl.d.ts": [
+        "./node_modules/@types/node/readline.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/vm.d.ts"
+      ],
+      "./node_modules/@types/node/stream.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/tls.d.ts": [
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/tty.d.ts": [
+        "./node_modules/@types/node/net.d.ts"
+      ],
+      "./node_modules/@types/node/url.d.ts": [
+        "./node_modules/@types/node/querystring.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/v8.d.ts": [
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/worker_threads.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/vm.d.ts"
+      ],
+      "./node_modules/@types/node/zlib.d.ts": [
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/apis/computed.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/apis/state.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/apis/watch.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/component/component.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/types/basic.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/component.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/component/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/component.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/createelement.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/apis/computed.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/inject.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/lifecycle.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/state.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/watch.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/createelement.d.ts",
+        "./node_modules/@vue/composition-api/dist/runtimecontext.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/reactive.d.ts",
+        "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts",
+        "./node_modules/@vue/composition-api/dist/reactivity/set.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/reactivity/reactive.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts",
+        "./node_modules/@vue/composition-api/dist/types/basic.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/types/basic.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/runtimecontext.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/electron/electron.d.ts": [
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/index.d.ts"
+      ],
+      "./node_modules/node-watch/lib/watch.d.ts": [
+        "./node_modules/@types/node/fs.d.ts"
+      ],
+      "./node_modules/vue-router/types/composables.d.ts": [
+        "./node_modules/vue-router/types/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vue-router/types/index.d.ts": [
+        "./node_modules/vue-router/types/composables.d.ts",
+        "./node_modules/vue-router/types/router.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts"
+      ],
+      "./node_modules/vue-router/types/router.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vue-router/types/vue.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue-router/types/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/vue.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/built-in-components.d.ts": [
+        "./node_modules/vue/types/v3-define-component.d.ts"
+      ],
+      "./node_modules/vue/types/index.d.ts": [
+        "./node_modules/vue/types/built-in-components.d.ts",
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/jsx.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/plugin.d.ts",
+        "./node_modules/vue/types/umd.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-define-async-component.d.ts",
+        "./node_modules/vue/types/v3-define-component.d.ts",
+        "./node_modules/vue/types/v3-directive.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/v3-manual-apis.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/v3-setup-helpers.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/jsx.d.ts": [
+        "./node_modules/csstype/index.d.ts",
+        "./node_modules/vue/types/vnode.d.ts"
+      ],
+      "./node_modules/vue/types/options.d.ts": [
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-define-component.d.ts",
+        "./node_modules/vue/types/v3-directive.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/plugin.d.ts": [
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/umd.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts"
+      ],
+      "./node_modules/vue/types/v3-component-options.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-component-props.d.ts": [
+        "./node_modules/vue/types/common.d.ts"
+      ],
+      "./node_modules/vue/types/v3-component-public-instance.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-define-async-component.d.ts": [
+        "./node_modules/vue/types/options.d.ts"
+      ],
+      "./node_modules/vue/types/v3-define-component.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/umd.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts"
+      ],
+      "./node_modules/vue/types/v3-directive.d.ts": [
+        "./node_modules/vue/types/vnode.d.ts"
+      ],
+      "./node_modules/vue/types/v3-manual-apis.d.ts": [
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-setup-context.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-setup-helpers.d.ts": [
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts"
+      ],
+      "./node_modules/vue/types/vnode.d.ts": [
+        "./node_modules/vue/types/jsx.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/vue.d.ts": [
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/plugin.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-define-component.d.ts",
+        "./node_modules/vue/types/v3-directive.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/vnode.d.ts"
+      ],
+      "./node_modules/vuetify/types/alacarte.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuetify/types/index.d.ts"
+      ],
+      "./node_modules/vuetify/types/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/vue.d.ts",
+        "./node_modules/vuetify/types/services/application.d.ts",
+        "./node_modules/vuetify/types/services/breakpoint.d.ts",
+        "./node_modules/vuetify/types/services/goto.d.ts",
+        "./node_modules/vuetify/types/services/icons.d.ts",
+        "./node_modules/vuetify/types/services/lang.d.ts",
+        "./node_modules/vuetify/types/services/presets.d.ts",
+        "./node_modules/vuetify/types/services/theme.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/vuetify/types/lib.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuetify/types/colors.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuetify/types/lib.d.ts",
+        "./node_modules/vuetify/types/services/goto.d.ts"
+      ],
+      "./node_modules/vuetify/types/services/goto.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vuetify/types/services/icons.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vuetify/types/services/presets.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuetify/types/services/breakpoint.d.ts",
+        "./node_modules/vuetify/types/services/icons.d.ts",
+        "./node_modules/vuetify/types/services/lang.d.ts",
+        "./node_modules/vuetify/types/services/theme.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/index.d.ts": [
+        "./node_modules/vuex-module-decorators/dist/types/action.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/module/index.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/mutation.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/mutationaction.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/vuexmodule.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/module/index.d.ts": [
+        "./node_modules/vuex-module-decorators/dist/types/moduleoptions.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/moduleoptions.d.ts": [
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/vuexmodule.d.ts": [
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex/types/helpers.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex/types/index.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuex/types/helpers.d.ts",
+        "./node_modules/vuex/types/logger.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/vuex/types/logger.d.ts": [
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex/types/vue.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/vue.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./src/app.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/settings/views/settings.vue.ts",
+        "./src/store/utils.ts"
+      ],
+      "./src/components/remotelink.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts"
+      ],
+      "./src/folder/components/content.vue.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/files.ts",
+        "./src/folder/utils/language.ts"
+      ],
+      "./src/folder/components/contextmenu.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/components/translate.vue.ts": [
+        "./common/types.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/store/utils.ts"
+      ],
+      "./src/folder/components/translationprogresspanel.vue.ts": [
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/language.ts"
+      ],
+      "./src/folder/components/tree.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/index.d.ts"
+      ],
+      "./src/folder/store.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./node_modules/axios/index.d.ts",
+        "./node_modules/fast-deep-equal/index.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/files.ts",
+        "./src/folder/utils/language.ts",
+        "./src/folder/utils/translate.ts",
+        "./src/folder/utils/tree.ts",
+        "./src/router/index.ts",
+        "./src/store/plugins/ipc.ts"
+      ],
+      "./src/folder/utils/files.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/language.ts"
+      ],
+      "./src/folder/utils/language.ts": [
+        "./common/language.ts",
+        "./common/types.ts",
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/files.ts"
+      ],
+      "./src/folder/utils/translate.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./node_modules/axios/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/files.ts",
+        "./src/folder/utils/language.ts"
+      ],
+      "./src/folder/utils/tree.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./node_modules/deepmerge/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/files.ts",
+        "./src/folder/utils/language.ts"
+      ],
+      "./src/folder/views/folder/compositions/tree.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/fp.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/files.ts"
+      ],
+      "./src/folder/views/folder/folder.vue.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/components/content.vue.ts",
+        "./src/folder/components/contextmenu.vue.ts",
+        "./src/folder/components/translate.vue.ts",
+        "./src/folder/components/translationprogresspanel.vue.ts",
+        "./src/folder/components/tree.vue.ts",
+        "./src/folder/types.ts",
+        "./src/folder/utils/files.ts",
+        "./src/folder/views/folder/compositions/tree.ts",
+        "./src/store/plugins/ipc.ts",
+        "./src/store/utils.ts"
+      ],
+      "./src/folder/views/folder/index.ts": [
+        "./src/folder/views/folder/folder.vue.ts"
+      ],
+      "./src/home/store.ts": [
+        "./common/types.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts",
+        "./package.json"
+      ],
+      "./src/home/views/home.vue.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/components/remotelink.vue.ts",
+        "./src/store/plugins/ipc.ts",
+        "./src/store/utils.ts"
+      ],
+      "./src/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts"
+      ],
+      "./src/main.ts": [
+        "./common/ipcmessages.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/app.vue.ts",
+        "./src/plugins/vuetify.ts",
+        "./src/router/index.ts",
+        "./src/store/index.ts",
+        "./src/store/plugins/ipc.ts",
+        "./typings/vue-virtual-scroller/index.d.ts"
+      ],
+      "./src/plugins/vuetify.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuetify/types/lib.d.ts"
+      ],
+      "./src/router/index.ts": [
+        "./node_modules/vue-router/types/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/folder/views/folder/index.ts",
+        "./src/home/views/home.vue.ts"
+      ],
+      "./src/settings/store.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts",
+        "./src/store/plugins/ipc.ts"
+      ],
+      "./src/settings/views/settings.vue.ts": [
+        "./common/types.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/components/remotelink.vue.ts",
+        "./src/store/utils.ts"
+      ],
+      "./src/shims-tsx.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/shims-vue.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/store/index.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts",
+        "./src/folder/store.ts",
+        "./src/home/store.ts",
+        "./src/settings/store.ts",
+        "./src/store/modules/global.ts",
+        "./src/store/plugins/ipc.ts",
+        "./src/store/types.ts"
+      ],
+      "./src/store/modules/global.ts": [
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts"
+      ],
+      "./src/store/plugins/ipc.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./node_modules/electron/electron.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts",
+        "./src/router/index.ts",
+        "./src/store/types.ts"
+      ],
+      "./src/store/utils.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./typings/vue-virtual-scroller/index.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ]
+    },
+    "exportedModulesMap": {
+      "./common/language.ts": [
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./main/filemanager.ts": [
+        "./common/types.ts"
+      ],
+      "./main/menu/index.ts": [
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./main/pathutils.ts": [
+        "./common/types.ts"
+      ],
+      "./main/pluginmanager.ts": [
+        "./common/types.ts",
+        "./main/plugins/index.ts"
+      ],
+      "./main/settings.ts": [
+        "./common/types.ts"
+      ],
+      "./main/windowmanager.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/electron/electron.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/array.d.ts": [
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/collection.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/common.d.ts": [
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/date.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/function.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/lang.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/math.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/number.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/object.d.ts": [
+        "./node_modules/@types/lodash/common/common.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/seq.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/string.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/common/util.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/fp.d.ts": [
+        "./node_modules/@types/lodash/index.d.ts"
+      ],
+      "./node_modules/@types/lodash/index.d.ts": [
+        "./node_modules/@types/lodash/common/array.d.ts",
+        "./node_modules/@types/lodash/common/collection.d.ts",
+        "./node_modules/@types/lodash/common/common.d.ts",
+        "./node_modules/@types/lodash/common/date.d.ts",
+        "./node_modules/@types/lodash/common/function.d.ts",
+        "./node_modules/@types/lodash/common/lang.d.ts",
+        "./node_modules/@types/lodash/common/math.d.ts",
+        "./node_modules/@types/lodash/common/number.d.ts",
+        "./node_modules/@types/lodash/common/object.d.ts",
+        "./node_modules/@types/lodash/common/seq.d.ts",
+        "./node_modules/@types/lodash/common/string.d.ts",
+        "./node_modules/@types/lodash/common/util.d.ts"
+      ],
+      "./node_modules/@types/node/child_process.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/cluster.d.ts": [
+        "./node_modules/@types/node/child_process.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/net.d.ts"
+      ],
+      "./node_modules/@types/node/crypto.d.ts": [
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/dgram.d.ts": [
+        "./node_modules/@types/node/dns.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/net.d.ts"
+      ],
+      "./node_modules/@types/node/domain.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/events.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/fs.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/http.d.ts": [
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/http2.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/tls.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/https.d.ts": [
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/tls.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/index.d.ts": [
+        "./node_modules/@types/node/assert.d.ts",
+        "./node_modules/@types/node/async_hooks.d.ts",
+        "./node_modules/@types/node/buffer.d.ts",
+        "./node_modules/@types/node/child_process.d.ts",
+        "./node_modules/@types/node/cluster.d.ts",
+        "./node_modules/@types/node/console.d.ts",
+        "./node_modules/@types/node/constants.d.ts",
+        "./node_modules/@types/node/crypto.d.ts",
+        "./node_modules/@types/node/dgram.d.ts",
+        "./node_modules/@types/node/dns.d.ts",
+        "./node_modules/@types/node/domain.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/globals.d.ts",
+        "./node_modules/@types/node/globals.global.d.ts",
+        "./node_modules/@types/node/http.d.ts",
+        "./node_modules/@types/node/http2.d.ts",
+        "./node_modules/@types/node/https.d.ts",
+        "./node_modules/@types/node/inspector.d.ts",
+        "./node_modules/@types/node/module.d.ts",
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/os.d.ts",
+        "./node_modules/@types/node/path.d.ts",
+        "./node_modules/@types/node/perf_hooks.d.ts",
+        "./node_modules/@types/node/process.d.ts",
+        "./node_modules/@types/node/punycode.d.ts",
+        "./node_modules/@types/node/querystring.d.ts",
+        "./node_modules/@types/node/readline.d.ts",
+        "./node_modules/@types/node/repl.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/string_decoder.d.ts",
+        "./node_modules/@types/node/timers.d.ts",
+        "./node_modules/@types/node/tls.d.ts",
+        "./node_modules/@types/node/trace_events.d.ts",
+        "./node_modules/@types/node/tty.d.ts",
+        "./node_modules/@types/node/url.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/v8.d.ts",
+        "./node_modules/@types/node/vm.d.ts",
+        "./node_modules/@types/node/wasi.d.ts",
+        "./node_modules/@types/node/worker_threads.d.ts",
+        "./node_modules/@types/node/zlib.d.ts"
+      ],
+      "./node_modules/@types/node/inspector.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/net.d.ts": [
+        "./node_modules/@types/node/dns.d.ts",
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/perf_hooks.d.ts": [
+        "./node_modules/@types/node/async_hooks.d.ts"
+      ],
+      "./node_modules/@types/node/process.d.ts": [
+        "./node_modules/@types/node/tty.d.ts"
+      ],
+      "./node_modules/@types/node/readline.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/repl.d.ts": [
+        "./node_modules/@types/node/readline.d.ts",
+        "./node_modules/@types/node/util.d.ts",
+        "./node_modules/@types/node/vm.d.ts"
+      ],
+      "./node_modules/@types/node/stream.d.ts": [
+        "./node_modules/@types/node/events.d.ts"
+      ],
+      "./node_modules/@types/node/tls.d.ts": [
+        "./node_modules/@types/node/net.d.ts",
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/tty.d.ts": [
+        "./node_modules/@types/node/net.d.ts"
+      ],
+      "./node_modules/@types/node/url.d.ts": [
+        "./node_modules/@types/node/querystring.d.ts",
+        "./node_modules/@types/node/url.d.ts"
+      ],
+      "./node_modules/@types/node/v8.d.ts": [
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@types/node/worker_threads.d.ts": [
+        "./node_modules/@types/node/events.d.ts",
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/stream.d.ts",
+        "./node_modules/@types/node/vm.d.ts"
+      ],
+      "./node_modules/@types/node/zlib.d.ts": [
+        "./node_modules/@types/node/stream.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/apis/computed.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/apis/state.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/apis/watch.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/component/component.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/types/basic.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/component.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/component/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/component.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/createelement.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/apis/computed.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/inject.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/lifecycle.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/state.d.ts",
+        "./node_modules/@vue/composition-api/dist/apis/watch.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/createelement.d.ts",
+        "./node_modules/@vue/composition-api/dist/runtimecontext.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/reactive.d.ts",
+        "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts",
+        "./node_modules/@vue/composition-api/dist/reactivity/set.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/reactivity/reactive.d.ts": [
+        "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts",
+        "./node_modules/@vue/composition-api/dist/types/basic.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/types/basic.d.ts"
+      ],
+      "./node_modules/@vue/composition-api/dist/runtimecontext.d.ts": [
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/electron/electron.d.ts": [
+        "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/index.d.ts"
+      ],
+      "./node_modules/node-watch/lib/watch.d.ts": [
+        "./node_modules/@types/node/fs.d.ts"
+      ],
+      "./node_modules/vue-router/types/composables.d.ts": [
+        "./node_modules/vue-router/types/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vue-router/types/index.d.ts": [
+        "./node_modules/vue-router/types/composables.d.ts",
+        "./node_modules/vue-router/types/router.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts"
+      ],
+      "./node_modules/vue-router/types/router.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vue-router/types/vue.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue-router/types/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/vue.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/built-in-components.d.ts": [
+        "./node_modules/vue/types/v3-define-component.d.ts"
+      ],
+      "./node_modules/vue/types/index.d.ts": [
+        "./node_modules/vue/types/built-in-components.d.ts",
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/jsx.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/plugin.d.ts",
+        "./node_modules/vue/types/umd.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-define-async-component.d.ts",
+        "./node_modules/vue/types/v3-define-component.d.ts",
+        "./node_modules/vue/types/v3-directive.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/v3-manual-apis.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/v3-setup-helpers.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/jsx.d.ts": [
+        "./node_modules/csstype/index.d.ts",
+        "./node_modules/vue/types/vnode.d.ts"
+      ],
+      "./node_modules/vue/types/options.d.ts": [
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-define-component.d.ts",
+        "./node_modules/vue/types/v3-directive.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/plugin.d.ts": [
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/umd.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts"
+      ],
+      "./node_modules/vue/types/v3-component-options.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-component-props.d.ts": [
+        "./node_modules/vue/types/common.d.ts"
+      ],
+      "./node_modules/vue/types/v3-component-public-instance.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-define-async-component.d.ts": [
+        "./node_modules/vue/types/options.d.ts"
+      ],
+      "./node_modules/vue/types/v3-define-component.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/umd.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts"
+      ],
+      "./node_modules/vue/types/v3-directive.d.ts": [
+        "./node_modules/vue/types/vnode.d.ts"
+      ],
+      "./node_modules/vue/types/v3-manual-apis.d.ts": [
+        "./node_modules/vue/types/v3-setup-context.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-setup-context.d.ts": [
+        "./node_modules/vue/types/common.d.ts",
+        "./node_modules/vue/types/vnode.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/v3-setup-helpers.d.ts": [
+        "./node_modules/vue/types/v3-component-props.d.ts",
+        "./node_modules/vue/types/v3-setup-context.d.ts"
+      ],
+      "./node_modules/vue/types/vnode.d.ts": [
+        "./node_modules/vue/types/jsx.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/vue.d.ts"
+      ],
+      "./node_modules/vue/types/vue.d.ts": [
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/plugin.d.ts",
+        "./node_modules/vue/types/v3-component-options.d.ts",
+        "./node_modules/vue/types/v3-component-public-instance.d.ts",
+        "./node_modules/vue/types/v3-define-component.d.ts",
+        "./node_modules/vue/types/v3-directive.d.ts",
+        "./node_modules/vue/types/v3-generated.d.ts",
+        "./node_modules/vue/types/vnode.d.ts"
+      ],
+      "./node_modules/vuetify/types/alacarte.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuetify/types/index.d.ts"
+      ],
+      "./node_modules/vuetify/types/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/vue.d.ts",
+        "./node_modules/vuetify/types/services/application.d.ts",
+        "./node_modules/vuetify/types/services/breakpoint.d.ts",
+        "./node_modules/vuetify/types/services/goto.d.ts",
+        "./node_modules/vuetify/types/services/icons.d.ts",
+        "./node_modules/vuetify/types/services/lang.d.ts",
+        "./node_modules/vuetify/types/services/presets.d.ts",
+        "./node_modules/vuetify/types/services/theme.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/vuetify/types/lib.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuetify/types/colors.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuetify/types/lib.d.ts",
+        "./node_modules/vuetify/types/services/goto.d.ts"
+      ],
+      "./node_modules/vuetify/types/services/goto.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vuetify/types/services/icons.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./node_modules/vuetify/types/services/presets.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuetify/types/services/breakpoint.d.ts",
+        "./node_modules/vuetify/types/services/icons.d.ts",
+        "./node_modules/vuetify/types/services/lang.d.ts",
+        "./node_modules/vuetify/types/services/theme.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/index.d.ts": [
+        "./node_modules/vuex-module-decorators/dist/types/action.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/module/index.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/mutation.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/mutationaction.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/vuexmodule.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/module/index.d.ts": [
+        "./node_modules/vuex-module-decorators/dist/types/moduleoptions.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/moduleoptions.d.ts": [
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex-module-decorators/dist/types/vuexmodule.d.ts": [
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex/types/helpers.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex/types/index.d.ts": [
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuex/types/helpers.d.ts",
+        "./node_modules/vuex/types/logger.d.ts",
+        "./node_modules/vuex/types/vue.d.ts"
+      ],
+      "./node_modules/vuex/types/logger.d.ts": [
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./node_modules/vuex/types/vue.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue-router/types/vue.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vue/types/options.d.ts",
+        "./node_modules/vue/types/vue.d.ts",
+        "./node_modules/vuetify/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./src/app.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/components/remotelink.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/folder/components/content.vue.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/components/contextmenu.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/components/translate.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/components/translationprogresspanel.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/components/tree.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/store.ts": [
+        "./common/types.ts",
+        "./node_modules/axios/index.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/utils/files.ts": [
+        "./common/types.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/utils/language.ts": [
+        "./common/types.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/utils/translate.ts": [
+        "./common/types.ts",
+        "./node_modules/axios/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/utils/tree.ts": [
+        "./common/types.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/views/folder/compositions/tree.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/views/folder/folder.vue.ts": [
+        "./common/types.ts",
+        "./node_modules/@types/lodash/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./src/folder/types.ts"
+      ],
+      "./src/folder/views/folder/index.ts": [
+        "./src/folder/views/folder/folder.vue.ts"
+      ],
+      "./src/home/store.ts": [
+        "./common/types.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts"
+      ],
+      "./src/home/views/home.vue.ts": [
+        "./common/types.ts",
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/index.d.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts"
+      ],
+      "./src/plugins/vuetify.ts": [
+        "./node_modules/vuetify/types/lib.d.ts"
+      ],
+      "./src/router/index.ts": [
+        "./node_modules/vue-router/types/index.d.ts"
+      ],
+      "./src/settings/store.ts": [
+        "./common/types.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts"
+      ],
+      "./src/settings/views/settings.vue.ts": [
+        "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+        "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/shims-tsx.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/shims-vue.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ],
+      "./src/store/index.ts": [
+        "./node_modules/vuex/types/index.d.ts",
+        "./src/store/types.ts"
+      ],
+      "./src/store/modules/global.ts": [
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts"
+      ],
+      "./src/store/plugins/ipc.ts": [
+        "./common/ipcmessages.ts",
+        "./common/types.ts",
+        "./node_modules/electron/electron.d.ts",
+        "./node_modules/vuex-module-decorators/dist/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts",
+        "./src/store/types.ts"
+      ],
+      "./src/store/utils.ts": [
+        "./node_modules/@vue/composition-api/dist/index.d.ts",
+        "./node_modules/vue/types/index.d.ts",
+        "./node_modules/vuex/types/index.d.ts"
+      ],
+      "./typings/vue-virtual-scroller/index.d.ts": [
+        "./node_modules/vue/types/index.d.ts"
+      ]
+    },
+    "semanticDiagnosticsPerFile": [
+      "./common/ipcmessages.ts",
+      [
+        "./common/language.ts",
+        [
+          {
+            "file": "./common/language.ts",
+            "start": 577,
+            "length": 1,
+            "messageText": "Parameter 'l' implicitly has an 'any' type.",
+            "category": 1,
+            "code": 7006
+          }
+        ]
+      ],
+      "./common/locales.ts",
+      "./common/types.ts",
+      "./main/events.ts",
+      "./main/filemanager.ts",
+      "./main/index.ts",
+      "./main/menu/app.ts",
+      "./main/menu/edit.ts",
+      "./main/menu/file.ts",
+      [
+        "./main/menu/help.ts",
+        [
+          {
+            "file": "./main/menu/help.ts",
+            "start": 415,
+            "length": 6,
+            "messageText": "Object is possibly 'undefined'.",
+            "category": 1,
+            "code": 2532
+          }
+        ]
+      ],
+      "./main/menu/index.ts",
+      "./main/menu/shared.ts",
+      "./main/menu/view.ts",
+      "./main/menu/window.ts",
+      "./main/pathutils.ts",
+      [
+        "./main/pluginmanager.ts",
+        [
+          {
+            "file": "./main/pluginmanager.ts",
+            "start": 7483,
+            "length": 2,
+            "messageText": "Parameter 'it' implicitly has an 'any' type.",
+            "category": 1,
+            "code": 7006
+          },
+          {
+            "file": "./main/pluginmanager.ts",
+            "start": 7557,
+            "length": 347,
+            "code": 2322,
+            "category": 1,
+            "messageText": {
+              "messageText": "Type 'unknown[]' is not assignable to type 'LoadedGroup[]'.",
+              "category": 1,
+              "code": 2322,
+              "next": [
+                {
+                  "messageText": "Type 'unknown' is not assignable to type 'LoadedGroup'.",
+                  "category": 1,
+                  "code": 2322
+                }
+              ]
+            }
+          },
+          {
+            "file": "./main/pluginmanager.ts",
+            "start": 7701,
+            "length": 5,
+            "code": 2345,
+            "category": 1,
+            "messageText": "Argument of type 'unknown' is not assignable to parameter of type 'IFileDetails[]'."
+          },
+          {
+            "file": "./main/pluginmanager.ts",
+            "start": 7883,
+            "length": 2,
+            "messageText": "Object is of type 'unknown'.",
+            "category": 1,
+            "code": 2571
+          }
+        ]
+      ],
+      "./main/plugins/index.ts",
+      "./main/plugins/json/index.ts",
+      "./main/plugins/yaml/index.ts",
+      [
+        "./main/settings.ts",
+        [
+          {
+            "file": "./main/settings.ts",
+            "start": 994,
+            "length": 5,
+            "code": 2339,
+            "category": 1,
+            "messageText": "Property 'merge' does not exist on type 'LoDashStatic'."
+          },
+          {
+            "file": "./main/settings.ts",
+            "start": 1719,
+            "length": 22,
+            "code": 2322,
+            "category": 1,
+            "messageText": {
+              "messageText": "Type 'unknown[]' is not assignable to type 'string[]'.",
+              "category": 1,
+              "code": 2322,
+              "next": [
+                {
+                  "messageText": "Type 'unknown' is not assignable to type 'string'.",
+                  "category": 1,
+                  "code": 2322
+                }
+              ]
+            }
+          },
+          {
+            "file": "./main/settings.ts",
+            "start": 1955,
+            "length": 22,
+            "code": 2322,
+            "category": 1,
+            "messageText": "Type 'unknown[]' is not assignable to type 'string[]'."
+          }
+        ]
+      ],
+      "./main/windowmanager.ts",
+      "./node_modules/@types/js-yaml/index.d.ts",
+      "./node_modules/@types/lodash/common/array.d.ts",
+      "./node_modules/@types/lodash/common/collection.d.ts",
+      "./node_modules/@types/lodash/common/common.d.ts",
+      "./node_modules/@types/lodash/common/date.d.ts",
+      "./node_modules/@types/lodash/common/function.d.ts",
+      "./node_modules/@types/lodash/common/lang.d.ts",
+      "./node_modules/@types/lodash/common/math.d.ts",
+      "./node_modules/@types/lodash/common/number.d.ts",
+      "./node_modules/@types/lodash/common/object.d.ts",
+      "./node_modules/@types/lodash/common/seq.d.ts",
+      "./node_modules/@types/lodash/common/string.d.ts",
+      "./node_modules/@types/lodash/common/util.d.ts",
+      "./node_modules/@types/lodash/fp.d.ts",
+      "./node_modules/@types/lodash/index.d.ts",
+      "./node_modules/@types/node/assert.d.ts",
+      "./node_modules/@types/node/async_hooks.d.ts",
+      "./node_modules/@types/node/buffer.d.ts",
+      "./node_modules/@types/node/child_process.d.ts",
+      "./node_modules/@types/node/cluster.d.ts",
+      "./node_modules/@types/node/console.d.ts",
+      "./node_modules/@types/node/constants.d.ts",
+      "./node_modules/@types/node/crypto.d.ts",
+      "./node_modules/@types/node/dgram.d.ts",
+      "./node_modules/@types/node/dns.d.ts",
+      "./node_modules/@types/node/domain.d.ts",
+      "./node_modules/@types/node/events.d.ts",
+      "./node_modules/@types/node/fs.d.ts",
+      "./node_modules/@types/node/globals.d.ts",
+      "./node_modules/@types/node/globals.global.d.ts",
+      "./node_modules/@types/node/http.d.ts",
+      "./node_modules/@types/node/http2.d.ts",
+      "./node_modules/@types/node/https.d.ts",
+      "./node_modules/@types/node/index.d.ts",
+      "./node_modules/@types/node/inspector.d.ts",
+      "./node_modules/@types/node/module.d.ts",
+      "./node_modules/@types/node/net.d.ts",
+      "./node_modules/@types/node/os.d.ts",
+      "./node_modules/@types/node/path.d.ts",
+      "./node_modules/@types/node/perf_hooks.d.ts",
+      "./node_modules/@types/node/process.d.ts",
+      "./node_modules/@types/node/punycode.d.ts",
+      "./node_modules/@types/node/querystring.d.ts",
+      "./node_modules/@types/node/readline.d.ts",
+      "./node_modules/@types/node/repl.d.ts",
+      "./node_modules/@types/node/stream.d.ts",
+      "./node_modules/@types/node/string_decoder.d.ts",
+      "./node_modules/@types/node/timers.d.ts",
+      "./node_modules/@types/node/tls.d.ts",
+      "./node_modules/@types/node/trace_events.d.ts",
+      "./node_modules/@types/node/tty.d.ts",
+      "./node_modules/@types/node/url.d.ts",
+      "./node_modules/@types/node/util.d.ts",
+      "./node_modules/@types/node/v8.d.ts",
+      "./node_modules/@types/node/vm.d.ts",
+      "./node_modules/@types/node/wasi.d.ts",
+      "./node_modules/@types/node/worker_threads.d.ts",
+      "./node_modules/@types/node/zlib.d.ts",
+      "./node_modules/@types/webpack-env/index.d.ts",
+      "./node_modules/@vue/composition-api/dist/apis/computed.d.ts",
+      "./node_modules/@vue/composition-api/dist/apis/inject.d.ts",
+      "./node_modules/@vue/composition-api/dist/apis/lifecycle.d.ts",
+      "./node_modules/@vue/composition-api/dist/apis/state.d.ts",
+      "./node_modules/@vue/composition-api/dist/apis/watch.d.ts",
+      "./node_modules/@vue/composition-api/dist/component/component.d.ts",
+      "./node_modules/@vue/composition-api/dist/component/componentprops.d.ts",
+      "./node_modules/@vue/composition-api/dist/component/index.d.ts",
+      "./node_modules/@vue/composition-api/dist/createelement.d.ts",
+      "./node_modules/@vue/composition-api/dist/index.d.ts",
+      "./node_modules/@vue/composition-api/dist/reactivity/index.d.ts",
+      "./node_modules/@vue/composition-api/dist/reactivity/reactive.d.ts",
+      "./node_modules/@vue/composition-api/dist/reactivity/ref.d.ts",
+      "./node_modules/@vue/composition-api/dist/reactivity/set.d.ts",
+      "./node_modules/@vue/composition-api/dist/runtimecontext.d.ts",
+      "./node_modules/@vue/composition-api/dist/types/basic.d.ts",
+      "./node_modules/axios/index.d.ts",
+      "./node_modules/csstype/index.d.ts",
+      "./node_modules/deepmerge/index.d.ts",
+      "./node_modules/electron-is-dev/index.d.ts",
+      "./node_modules/electron/electron.d.ts",
+      "./node_modules/fast-deep-equal/index.d.ts",
+      "./node_modules/node-watch/lib/watch.d.ts",
+      "./node_modules/tslib/tslib.d.ts",
+      "./node_modules/typescript/lib/lib.dom.d.ts",
+      "./node_modules/typescript/lib/lib.dom.iterable.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.collection.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.core.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.generator.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.iterable.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.promise.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.proxy.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.reflect.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.symbol.d.ts",
+      "./node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts",
+      "./node_modules/typescript/lib/lib.es2016.array.include.d.ts",
+      "./node_modules/typescript/lib/lib.es2016.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.intl.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.object.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.string.d.ts",
+      "./node_modules/typescript/lib/lib.es2017.typedarrays.d.ts",
+      "./node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts",
+      "./node_modules/typescript/lib/lib.es2018.asynciterable.d.ts",
+      "./node_modules/typescript/lib/lib.es2018.d.ts",
+      "./node_modules/typescript/lib/lib.es2018.intl.d.ts",
+      "./node_modules/typescript/lib/lib.es2018.promise.d.ts",
+      "./node_modules/typescript/lib/lib.es2018.regexp.d.ts",
+      "./node_modules/typescript/lib/lib.es2019.array.d.ts",
+      "./node_modules/typescript/lib/lib.es2019.d.ts",
+      "./node_modules/typescript/lib/lib.es2019.object.d.ts",
+      "./node_modules/typescript/lib/lib.es2019.string.d.ts",
+      "./node_modules/typescript/lib/lib.es2019.symbol.d.ts",
+      "./node_modules/typescript/lib/lib.es2020.bigint.d.ts",
+      "./node_modules/typescript/lib/lib.es2020.d.ts",
+      "./node_modules/typescript/lib/lib.es2020.promise.d.ts",
+      "./node_modules/typescript/lib/lib.es2020.string.d.ts",
+      "./node_modules/typescript/lib/lib.es2020.symbol.wellknown.d.ts",
+      "./node_modules/typescript/lib/lib.es5.d.ts",
+      "./node_modules/typescript/lib/lib.esnext.d.ts",
+      "./node_modules/typescript/lib/lib.esnext.intl.d.ts",
+      "./node_modules/typescript/lib/lib.esnext.promise.d.ts",
+      "./node_modules/typescript/lib/lib.esnext.string.d.ts",
+      "./node_modules/typescript/lib/lib.scripthost.d.ts",
+      "./node_modules/vue-router/types/composables.d.ts",
+      "./node_modules/vue-router/types/index.d.ts",
+      "./node_modules/vue-router/types/router.d.ts",
+      "./node_modules/vue-router/types/vue.d.ts",
+      "./node_modules/vue/types/built-in-components.d.ts",
+      "./node_modules/vue/types/common.d.ts",
+      "./node_modules/vue/types/index.d.ts",
+      "./node_modules/vue/types/jsx.d.ts",
+      "./node_modules/vue/types/options.d.ts",
+      "./node_modules/vue/types/plugin.d.ts",
+      "./node_modules/vue/types/umd.d.ts",
+      "./node_modules/vue/types/v3-component-options.d.ts",
+      "./node_modules/vue/types/v3-component-props.d.ts",
+      "./node_modules/vue/types/v3-component-public-instance.d.ts",
+      "./node_modules/vue/types/v3-define-async-component.d.ts",
+      "./node_modules/vue/types/v3-define-component.d.ts",
+      "./node_modules/vue/types/v3-directive.d.ts",
+      "./node_modules/vue/types/v3-generated.d.ts",
+      "./node_modules/vue/types/v3-manual-apis.d.ts",
+      "./node_modules/vue/types/v3-setup-context.d.ts",
+      "./node_modules/vue/types/v3-setup-helpers.d.ts",
+      "./node_modules/vue/types/vnode.d.ts",
+      "./node_modules/vue/types/vue.d.ts",
+      "./node_modules/vuetify/types/alacarte.d.ts",
+      "./node_modules/vuetify/types/colors.d.ts",
+      "./node_modules/vuetify/types/index.d.ts",
+      "./node_modules/vuetify/types/lib.d.ts",
+      "./node_modules/vuetify/types/services/application.d.ts",
+      "./node_modules/vuetify/types/services/breakpoint.d.ts",
+      "./node_modules/vuetify/types/services/goto.d.ts",
+      "./node_modules/vuetify/types/services/icons.d.ts",
+      "./node_modules/vuetify/types/services/lang.d.ts",
+      "./node_modules/vuetify/types/services/presets.d.ts",
+      "./node_modules/vuetify/types/services/theme.d.ts",
+      "./node_modules/vuex-module-decorators/dist/types/action.d.ts",
+      "./node_modules/vuex-module-decorators/dist/types/index.d.ts",
+      "./node_modules/vuex-module-decorators/dist/types/module/index.d.ts",
+      "./node_modules/vuex-module-decorators/dist/types/moduleoptions.d.ts",
+      "./node_modules/vuex-module-decorators/dist/types/mutation.d.ts",
+      "./node_modules/vuex-module-decorators/dist/types/mutationaction.d.ts",
+      "./node_modules/vuex-module-decorators/dist/types/vuexmodule.d.ts",
+      "./node_modules/vuex/types/helpers.d.ts",
+      "./node_modules/vuex/types/index.d.ts",
+      "./node_modules/vuex/types/logger.d.ts",
+      "./node_modules/vuex/types/vue.d.ts",
+      "./package.json",
+      "./src/app.vue.ts",
+      "./src/components/remotelink.vue.ts",
+      "./src/folder/components/content.vue.ts",
+      "./src/folder/components/contextmenu.vue.ts",
+      "./src/folder/components/translate.vue.ts",
+      "./src/folder/components/translationprogresspanel.vue.ts",
+      "./src/folder/components/tree.vue.ts",
+      "./src/folder/store.ts",
+      "./src/folder/types.ts",
+      "./src/folder/utils/files.ts",
+      "./src/folder/utils/language.ts",
+      "./src/folder/utils/translate.ts",
+      "./src/folder/utils/tree.ts",
+      [
+        "./src/folder/views/folder/compositions/tree.ts",
+        [
+          {
+            "file": "./src/folder/views/folder/compositions/tree.ts",
+            "start": 3019,
+            "length": 23,
+            "code": 2322,
+            "category": 1,
+            "messageText": {
+              "messageText": "Type 'unknown[]' is not assignable to type 'TreeItem[]'.",
+              "category": 1,
+              "code": 2322,
+              "next": [
+                {
+                  "messageText": "Type 'unknown' is not assignable to type 'TreeItem'.",
+                  "category": 1,
+                  "code": 2322
+                }
+              ]
+            }
+          },
+          {
+            "file": "./src/folder/views/folder/compositions/tree.ts",
+            "start": 3326,
+            "length": 2,
+            "messageText": "Binding element 'id' implicitly has an 'any' type.",
+            "category": 1,
+            "code": 7031
+          }
+        ]
+      ],
+      "./src/folder/views/folder/folder.vue.ts",
+      "./src/folder/views/folder/index.ts",
+      "./src/home/store.ts",
+      "./src/home/views/home.vue.ts",
+      "./src/index.d.ts",
+      "./src/main.ts",
+      "./src/plugins/vuetify.ts",
+      "./src/router/index.ts",
+      "./src/settings/store.ts",
+      "./src/settings/views/settings.vue.ts",
+      "./src/shims-tsx.d.ts",
+      "./src/shims-vue.d.ts",
+      "./src/store/index.ts",
+      "./src/store/modules/global.ts",
+      "./src/store/plugins/ipc.ts",
+      "./src/store/types.ts",
+      [
+        "./src/store/utils.ts",
+        [
+          {
+            "file": "./src/store/utils.ts",
+            "start": 1780,
+            "length": 11,
+            "code": 2322,
+            "category": 1,
+            "messageText": "Type 'T' is not assignable to type 'HasDefined<T> extends true ? T : unknown'."
+          },
+          {
+            "file": "./src/store/utils.ts",
+            "start": 1839,
+            "length": 13,
+            "code": 2322,
+            "category": 1,
+            "messageText": {
+              "messageText": "Type 'Ref<HasDefined<T> extends true ? T : unknown>' is not assignable to type 'Ref<T>'.",
+              "category": 1,
+              "code": 2322,
+              "next": [
+                {
+                  "messageText": "Type 'HasDefined<T> extends true ? T : unknown' is not assignable to type 'T'.",
+                  "category": 1,
+                  "code": 2322,
+                  "next": [
+                    {
+                      "messageText": "'T' could be instantiated with an arbitrary type which could be unrelated to 'HasDefined<T> extends true ? T : unknown'.",
+                      "category": 1,
+                      "code": 5082,
+                      "next": [
+                        {
+                          "messageText": "Type 'unknown' is not assignable to type 'T'.",
+                          "category": 1,
+                          "code": 2322,
+                          "next": [
+                            {
+                              "messageText": "'T' could be instantiated with an arbitrary type which could be unrelated to 'unknown'.",
+                              "category": 1,
+                              "code": 5082
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      ],
+      "./typings/vue-virtual-scroller/index.d.ts"
+    ]
+  },
+  "version": "3.9.10"
+}

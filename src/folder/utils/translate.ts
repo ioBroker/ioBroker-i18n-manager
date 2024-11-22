@@ -18,7 +18,7 @@ export const translate = async (
   settings: CustomSettings,
   cancelToken: CancelTokenSource,
   isFolderFromIoBroker: boolean,
-): Promise<string | TranslationError | undefined> => {
+): Promise<string | TranslationError | undefined | Record<string, string>> => {
   // "Google Translate" doesn't support localized languages
   const targetLanguage = target.split('-')[0];
   const sourceLanguage = source.split('-')[0];
@@ -42,7 +42,9 @@ export const translate = async (
           text
         }
       );
-      return response.data[targetLanguage];
+      response.data.zh = response.data['zh-cn'];
+      response.data['zh-CN'] = response.data['zh-cn'];
+      return response.data;
     } else if (settings.translationEngine === 'googleIoBroker') {
       if (!isFolderFromIoBroker) {
         return {
@@ -58,7 +60,9 @@ export const translate = async (
           service: 'google',
         }
       );
-      return response.data[targetLanguage];
+      response.data.zh = response.data['zh-cn'];
+      response.data['zh-CN'] = response.data['zh-cn'];
+      return response.data;
     } else if (settings.translationEngine === 'deeplIoBroker') {
       if (!isFolderFromIoBroker) {
         return {
@@ -74,7 +78,9 @@ export const translate = async (
           service: 'deepl',
         }
       );
-      return response.data[targetLanguage];
+      response.data.zh = response.data['zh-cn'];
+      response.data['zh-CN'] = response.data['zh-cn'];
+      return response.data;
     } else if (settings.translationEngine === 'awsIoBroker') {
       if (!isFolderFromIoBroker) {
         return {
@@ -90,7 +96,9 @@ export const translate = async (
           service: 'aws',
         }
       );
-      return response.data[targetLanguage];
+      response.data.zh = response.data['zh-cn'];
+      response.data['zh-CN'] = response.data['zh-cn'];
+      return response.data;
     } else if (settings.translationEngine === 'aws') {
       return {
         path,
@@ -102,6 +110,7 @@ export const translate = async (
         error: 'Not implemented',
       };
     } else {
+      debugger;
       // google
       const response = await fetchAPI(
         `${GOOGLE_TRANSLATE_URL}?key=${settings.googleTranslateApiKey}`,
@@ -232,14 +241,29 @@ export function getTranslationItems(
         continue;
       }
 
-      translationItems.push({
-        sourceLanguage: source.language,
-        targetLanguage: currentFile.language,
-        sourceText,
-        formattedPath,
-        index: parsedFileIndex,
-        itemId: item.id,
-      });
+      if (typeof sourceText === 'object') {
+        Object.keys(sourceText).forEach(key => {
+          if (payload.overwrite || !currentFile.data[key]) {
+            translationItems.push({
+              sourceLanguage: source.language,
+              targetLanguage: currentFile.language,
+              sourceText: sourceText[key],
+              formattedPath: [...formattedPath, key],
+              index: parsedFileIndex,
+              itemId: `${item.id}.${key}`,
+            });
+          }
+        });
+      } else {
+        translationItems.push({
+          sourceLanguage: source.language,
+          targetLanguage: currentFile.language,
+          sourceText,
+          formattedPath,
+          index: parsedFileIndex,
+          itemId: item.id,
+        });
+      }
     }
   }
 
@@ -261,11 +285,12 @@ export const TRANSLATE_ERRORS = {
     `Google Translate error: "${errorMessage}"\n translating from "${getLanguageLabel(sourceLanguage)}" to "${getLanguageLabel(targetLanguage)}"`,
 };
 
-interface TranslationItem {
+export interface TranslationItem {
   sourceLanguage: string;
   targetLanguage: string;
   sourceText: string;
   formattedPath: string[];
   index: number;
   itemId: string;
+  done?: boolean;
 }

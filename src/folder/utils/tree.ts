@@ -125,7 +125,7 @@ export const createTreeStatus = (
     updateTreeItemStatus(item, folder, originalFolder);
   }
 
-  const parents = _.uniq(items.map((it) => it.parent));
+  const parents: string[] = _.uniq(items.map((it) => it.parent));
   for (const parent of parents) {
     updateTreeStatus(tree, folder, originalFolder, parent);
   }
@@ -211,7 +211,7 @@ export const getDuplicatedCount = (content: ContentItem[]): number =>
     _.filter((it: ContentItem) => it.value),
     _.groupBy('value'),
     Object.entries,
-    _.filter(([key, value]) => key !== undefined && value.length > 1),
+    _.filter(([key, value]: [string, ContentItem[]]) => key !== undefined && value.length > 1),
     _.sumBy(([key, value]) => value.length),
   )(content);
 
@@ -219,7 +219,7 @@ const isNewItem = (originalContent: ContentItem[]) =>
   originalContent.filter((it) => it.value !== undefined).length === 0;
 
 const isChangedItem = (content: ContentItem[], originalContent: ContentItem[]) =>
-  _.zip(content, originalContent).filter(
+  _.zip<ContentItem, ContentItem>(content, originalContent).filter(
     ([item, originalItem]) => item?.value !== originalItem?.value,
   ).length > 0;
 

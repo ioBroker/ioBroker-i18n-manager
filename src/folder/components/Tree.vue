@@ -8,7 +8,7 @@
       @click.right="handleRightClick"
       class="label"
       :class="[item.status, item.type]"
-      :style="{ paddingLeft: item.level * 16 + 8 + 'px' }"
+      :style="{ paddingLeft: `${item.level * 16 + 8}px` }"
     >
       <v-icon class="folder-arrow">
         mdi-menu-right
@@ -19,17 +19,17 @@
       <v-tooltip bottom open-delay="1000" color="rgba(0, 0, 0, 1)">
         <template v-slot:activator="{ on }">
           <span class="item-name" v-on="on">
-            {{ item.label }}
+            {{ !item.level && item.label === 'Unknown Prefix' ? 'i18n': item.label }}
           </span>
         </template>
 
-        {{ item.label }}
+        {{ !item.level && item.label === 'Unknown Prefix' ? 'i18n': item.label }}
       </v-tooltip>
 
-      <span v-if="item.missingCount > 0" class="badge missing-count" title="Missing items">
+      <span v-if="item.missingCount > 0" class="badge missing-count" title="Missing items" @click="onMissingCount">
         {{ item.missingCount }}
       </span>
-      <span v-if="item.duplicatedCount > 0" class="badge duplicated-count" title="Duplicated items">
+      <span v-if="item.duplicatedCount > 0" class="badge duplicated-count" title="Duplicated items" @click="onDuplicatedCount">
         {{ item.duplicatedCount }}
       </span>
     </div>
@@ -61,7 +61,18 @@
       const selectedItem = useSelectedItem(emit, props);
 
       const handleRightClick = (event: MouseEvent) => emit('right-click', event, props.item);
-
+      const onMissingCount = (event: MouseEvent) => {
+        if (!props.item.level) {
+          event.stopPropagation();
+          window.postMessage('missing', '*');
+        }
+      };
+      const onDuplicatedCount = (event: MouseEvent) => {
+        if (!props.item.level) {
+          event.stopPropagation();
+          window.postMessage('duplicated', '*');
+        }
+      };
       const isClipboardItem = () => props.item.id === props.clipboardItemId;
       const isItemBeingCopied = () =>
         isClipboardItem() && props.clipboardItemAction === ClipboardItemAction.copy;
@@ -73,6 +84,8 @@
         handleRightClick,
         isItemBeingCopied,
         isItemBeingCut,
+        onMissingCount,
+        onDuplicatedCount,
         ...selectedItem,
       };
     },

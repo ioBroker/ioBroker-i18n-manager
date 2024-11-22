@@ -1,4 +1,4 @@
-<p align="left"><img src="logo/horizontal.png" alt="i18n-manager" height="120px"></p>
+<img src="logo/horizontal.png" alt="i18n-manager" height="120px">
 
 ![CI](https://github.com/gilmarsquinelato/i18n-manager/workflows/CI/badge.svg?branch=development)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8acca046a7fc462fbfe69677984cff91)](https://www.codacy.com/project/gilmarsquinelato/i18n-manager/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gilmarsquinelato/i18n-manager&amp;utm_campaign=Badge_Grade_Dashboard)
@@ -55,26 +55,27 @@ Any type of contributions are welcome.
 
 ## Setup
 
-```yarn install```
+`npm install`
 
 ## Developing
 
-```yarn start```
+`npm run start`
 
-OPPURE
-```1 - cross-env NODE_ENV=development yarn start:web```
-
-```2 - cross-env NODE_ENV=development yarn start:main```
+then
+1 - `cross-env NODE_ENV=development npm run start:web`
+2 - `cross-env NODE_ENV=development npm run start:main`
 
 ## Building
 
-```yarn build```
+`npm build`
 
-OPPURE
-```npm run build:win```
-```npm run build:mac``` (serve un mac)
-```npm run build:linux```
+then one of the following:
+```shell
+npm run build:win
+npm run build:mac && echo "(serve for mac)"
+npm run build:linux
+```
 
 ## Contributors
 
-logo designed by [@reallinfo](https://github.com/reallinfo)
+Logo designed by [@reallinfo](https://github.com/reallinfo)

@@ -85,7 +85,7 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
     // Sort it
     tree = _.pipe(
       Object.entries,
-      _.sortBy(([id]) => id),
+      _.sortBy(([id]: string[]) => id),
       Object.fromEntries,
     )(tree);
 
@@ -268,6 +268,10 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
 
       updateProgress();
 
+      if (item.done) {
+        continue;
+      }
+
       try {
         const start = new Date().getTime();
         const result = await translate(
@@ -293,6 +297,23 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
           } as ChangeFolderValuePayload);
 
           commit('updateTreeItemStatus', item.itemId);
+        } else if (typeof result === 'object' && (result as Record<string, string>)[item.targetLanguage] !== undefined) {
+          Object.keys(result).forEach(lang => {
+            if (lang === item.sourceLanguage) {
+              return;
+            }
+            let lItem = translationItems.find(it => it.sourceText === item.sourceText && it.targetLanguage === lang);
+            // find index for language
+            if (lItem) {
+              lItem.done = true;
+              commit('updateValue', {
+                index: lItem.index,
+                value: (result as Record<string, string>)[lang],
+                itemId: lItem.itemId,
+              } as ChangeFolderValuePayload);
+              commit('updateTreeItemStatus', lItem.itemId);
+            }
+          });
         } else if (result) {
           commit('addTranslationError', result);
         }
@@ -348,8 +369,8 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
     tree = _.pipe(
       Object.entries,
       // Remove the removed item and its children
-      _.filter(([id]) => id !== item.id && !id.startsWith(`${item.id}.`)),
-      _.sortBy(([id]) => id),
+      _.filter(([id]: string[]) => id !== item.id && !id.startsWith(`${item.id}.`)),
+      _.sortBy(([id]: string[]) => id),
       Object.fromEntries,
     )(tree);
 
@@ -375,7 +396,7 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
 
     tree = _.pipe(
       Object.entries,
-      _.sortBy(([id]) => id),
+      _.sortBy(([id]: string[]) => id),
       Object.fromEntries,
     )(tree);
 
@@ -406,8 +427,8 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
     tree = _.pipe(
       Object.entries,
       // Remove the old item and its children
-      _.filter(([id]) => id !== item.id && !id.startsWith(`${item.id}.`)),
-      _.sortBy(([id]) => id),
+      _.filter(([id]: string[]) => id !== item.id && !id.startsWith(`${item.id}.`)),
+      _.sortBy(([id]: string[]) => id),
       Object.fromEntries,
     )(tree);
 
@@ -453,7 +474,7 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
       tree = _.pipe(
         Object.entries,
         // Remove the removed item and its children
-        _.filter(([id]) => id !== item.id && !id.startsWith(`${item.id}.`)),
+        _.filter(([id]: string[]) => id !== item.id && !id.startsWith(`${item.id}.`)),
         Object.fromEntries,
       )(tree);
     }
@@ -462,7 +483,7 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
 
     tree = _.pipe(
       Object.entries,
-      _.sortBy(([id]) => id),
+      _.sortBy(([id]: string[]) => id),
       Object.fromEntries,
     )(tree);
 

@@ -1,4 +1,4 @@
-import { LoadedPath } from '@common/types';
+import { LoadedPath, ParsedFile } from '@common/types';
 import _ from 'lodash/fp';
 
 import { getLocale, getLocaleLabel } from '@common/language';
@@ -30,11 +30,11 @@ export const createLanguageList = (
     // get from tree the file items
     _.filter((it: TreeItem) => it.type === 'file'),
     // get the parsed files for each item
-    _.flatMap(it => getParsedFiles(folder, it.path)),
+    _.flatMap((it: TreeItem) => getParsedFiles(folder, it.path)),
     // get only items with valid language names
-    _.filter(it => getLocale(it.language) !== undefined),
+    _.filter((it: ParsedFile) => getLocale(it.language) !== undefined),
     _.map(
-      it =>
+        (it: ParsedFile) =>
         ({
           language: it.language,
           label: getLanguageLabel(it.language),
@@ -42,9 +42,9 @@ export const createLanguageList = (
         } as LanguageListItem),
     ),
     // unique languages
-    _.uniqBy(it => it.language),
-    _.sortBy(it => it.language),
-  )(Object.values(tree));
+    _.uniqBy((it: LanguageListItem) => it.language),
+    _.sortBy((it: LanguageListItem) => it.language),
+  )(Object.values(tree)) as LanguageListItem[];
 };
 
 const isSupportedLanguage = (supportedLanguages: string[]) => (language: string): boolean =>

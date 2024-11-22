@@ -187,6 +187,14 @@ export default function useTree(
 
   const filterTree = _.debounce(500, filterTreeItems);
 
+  window.addEventListener('message', e => {
+    if (e.data === 'missing') {
+      treeVisibilityFilter.value = 'missing';
+    } else if (e.data === 'duplicated') {
+      treeVisibilityFilter.value = 'duplicated';
+    }
+  }, false);
+
   return {
     treeFilter,
     treeVisibilityFilter,
