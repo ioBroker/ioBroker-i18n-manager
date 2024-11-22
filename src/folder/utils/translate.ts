@@ -110,7 +110,6 @@ export const translate = async (
         error: 'Not implemented',
       };
     } else {
-      debugger;
       // google
       const response = await fetchAPI(
         `${GOOGLE_TRANSLATE_URL}?key=${settings.googleTranslateApiKey}`,

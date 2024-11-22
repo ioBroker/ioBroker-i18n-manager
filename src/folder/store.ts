@@ -363,6 +363,8 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
   deleteItem({ item }: DeleteItemPayload) {
     this.folder = deleteItem(this.folder, item.path);
 
+    // Todo: update non-translated and duplicated count
+
     // Hack to retrieve pure object instead the Observer one
     let tree = Object.assign({}, this.tree);
 
