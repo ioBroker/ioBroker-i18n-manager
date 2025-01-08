@@ -130,10 +130,10 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
 
   @Action
   async createLanguageList() {
-    const { googleTranslateApiKey } = this.context.rootState.settings.settings;
+    const { googleTranslateApiKey, translationEngine, deepLTranslateApiKey, awsTranslateApiKey } = this.context.rootState.settings.settings;
 
     let supportedLanguages: string[] = [];
-    if (googleTranslateApiKey) {
+    if (googleTranslateApiKey && (translationEngine === 'google' || !translationEngine)) {
       try {
         const supportedLanguagesResponse = await fetch(
           `${GOOGLE_TRANSLATE_LANGUAGES_URL}?key=${googleTranslateApiKey}`,
@@ -147,6 +147,18 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
       } catch (e) {
         this.context.commit('setTranslationEnabled', false);
       }
+    } else if (translationEngine === 'deepl' && deepLTranslateApiKey) {
+      this.context.commit('setTranslationEnabled', true);
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru'];
+    } else if (translationEngine === 'aws' && awsTranslateApiKey) {
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'zh-CN'];
+      this.context.commit('setTranslationEnabled', true);
+    } else if (translationEngine === 'deeplIoBroker') {
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru'];
+      this.context.commit('setTranslationEnabled', true);
+    } else if (translationEngine === 'awsIoBroker' || translationEngine === 'googleIoBroker' || translationEngine === 'libreIoBroker') {
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'zh-CN'];
+      this.context.commit('setTranslationEnabled', true);
     }
 
     const languageList = createLanguageList(this.tree, this.folder, supportedLanguages);
