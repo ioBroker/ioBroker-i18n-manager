@@ -149,15 +149,15 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
       }
     } else if (translationEngine === 'deepl' && deepLTranslateApiKey) {
       this.context.commit('setTranslationEnabled', true);
-      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru'];
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk'];
     } else if (translationEngine === 'aws' && awsTranslateApiKey) {
-      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'zh-CN'];
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk', 'zh-CN'];
       this.context.commit('setTranslationEnabled', true);
     } else if (translationEngine === 'deeplIoBroker') {
-      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru'];
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk'];
       this.context.commit('setTranslationEnabled', true);
     } else if (translationEngine === 'awsIoBroker' || translationEngine === 'googleIoBroker' || translationEngine === 'libreIoBroker') {
-      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'zh-CN'];
+      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk', 'zh-CN'];
       this.context.commit('setTranslationEnabled', true);
     }
 
