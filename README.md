@@ -50,9 +50,9 @@ Any type of contributions are welcome.
 
 `npm run start`
 
-then
-1 - `cross-env NODE_ENV=development npm run start:web`
-2 - `cross-env NODE_ENV=development npm run start:main`
+then  
+1 - `cross-env NODE_ENV=development npm run start:web`  
+2 - `cross-env NODE_ENV=development npm run start:main`  
 
 ## Building
 
