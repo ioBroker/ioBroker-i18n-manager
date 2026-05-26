@@ -1,5 +1,6 @@
 import { BrowserWindow, dialog } from 'electron';
-import electronIsDev from 'electron-is-dev';
+import { is } from '@electron-toolkit/utils';
+import { join } from 'node:path';
 import * as _ from 'lodash';
 
 import * as ipcMessages from '../common/ipcMessages';
@@ -20,17 +21,19 @@ export const createWindow = (): BrowserWindow => {
     minWidth: 1280,
     minHeight: 720,
     show: false,
-    icon: '../icons/icon.png',
+    icon: join(__dirname, '../../icons/icon.png'),
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false,
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   });
 
-  if (electronIsDev) {
-    window.loadURL('http://localhost:8080/');
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    window.loadURL(process.env['ELECTRON_RENDERER_URL']);
   } else {
-    window.loadFile('build/view/index.html');
+    window.loadFile(join(__dirname, '../renderer/index.html'));
   }
 
   registerEvents(window);

@@ -1,27 +1,15 @@
 <template>
   <v-app style="height: 100%">
-    <v-content class="app">
+    <v-main class="app">
       <router-view />
-    </v-content>
+    </v-main>
 
     <Settings />
   </v-app>
 </template>
 
-<script lang="ts">
-  import { provideStore } from '@/store/utils';
-  import { defineComponent } from '@vue/composition-api';
-  import Settings from '@/settings/views/Settings.vue';
-
-  export default defineComponent({
-    name: 'App',
-    components: {
-      Settings,
-    },
-    setup(props, ctx) {
-      provideStore(ctx.root.$store);
-    },
-  });
+<script setup lang="ts">
+import Settings from '@/settings/views/Settings.vue';
 </script>
 
 <style lang="scss">

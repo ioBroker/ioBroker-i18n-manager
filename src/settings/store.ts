@@ -1,41 +1,37 @@
-import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
 import { CustomSettings } from '@common/types';
-import { sendIpc } from '@/store/plugins/ipc';
+import { sendIpc } from '@/ipc';
 import * as ipcMessages from '@common/ipcMessages';
+import { useGlobalStore } from '@/store/global';
 
-@Module({
-  namespaced: true,
-})
-export default class SettingsModule extends VuexModule {
-  settings: CustomSettings = {
-    translationEngine: 'google',
-    googleTranslateApiKey: '',
-    awsTranslateApiKey: '',
-    deepLTranslateApiKey: '',
-    iobrokerTranslateApiKey: '',
-    sortOnSave: 'no sort',
-    spacesIndentation: '2',
-    translationFrom: 'en',
-    translationTo: [],
-    translationMode: 'this',
-    translationOverwrite: false,
-  };
+const defaultSettings = (): CustomSettings => ({
+  translationEngine: 'google',
+  googleTranslateApiKey: '',
+  awsTranslateApiKey: '',
+  deepLTranslateApiKey: '',
+  iobrokerTranslateApiKey: '',
+  sortOnSave: 'no sort',
+  spacesIndentation: '2',
+  translationFrom: 'en',
+  translationTo: [],
+  translationMode: 'this',
+  translationOverwrite: false,
+});
 
-  @Action({ commit: 'setSettings' })
-  loadSettings(settings: CustomSettings) {
-    return settings;
+export const useSettingsStore = defineStore('settings', () => {
+  const settings = ref<CustomSettings>(defaultSettings());
+
+  function loadSettings(value: CustomSettings): void {
+    settings.value = value;
   }
 
-  @Action({ commit: 'setSettings' })
-  saveSettings(settings: CustomSettings) {
-    sendIpc(ipcMessages.saveSettings, settings);
-    this.context.commit('global/hideSettings', null, { root: true });
-    return settings;
+  function saveSettings(value: CustomSettings): void {
+    sendIpc(ipcMessages.saveSettings, value);
+    useGlobalStore().hideSettings();
+    settings.value = value;
   }
 
-  @Mutation
-  setSettings(settings: CustomSettings) {
-    this.settings = settings;
-  }
-}
+  return { settings, loadSettings, saveSettings };
+});

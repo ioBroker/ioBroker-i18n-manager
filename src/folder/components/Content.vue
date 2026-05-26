@@ -7,38 +7,37 @@
         </v-col>
         <v-col>
           <v-textarea
-            @keyup="onChange($event, item.languageIndex)"
             v-model="item.value"
             :label="getLanguageLabel(item.language)"
             placeholder=" "
             :tabindex="index"
-            outlined
             class="item-input"
-            :class="itemStatusColor(item, originalContent[index])"
+            :base-color="itemStatusColor(item, originalContent[index])"
+            :color="itemStatusColor(item, originalContent[index])"
             hide-details
             rows="1"
             auto-grow
-            dense
+            density="compact"
+            @keyup="onChange($event, item.languageIndex)"
           />
         </v-col>
         <v-col cols="1">
           <v-menu max-height="90vh">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" icon tabindex="-1">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" icon variant="text" tabindex="-1">
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list>
-              <v-list-item disabled>Translate from</v-list-item>
+              <v-list-item disabled title="Translate from" />
 
               <v-list-item
                 v-for="languageItem in contextLanguageList"
                 :key="languageItem.language"
-                @click="translate(languageItem.language, item.language)"
+                :title="getLanguageLabel(languageItem.language)"
                 :disabled="languageItem.disabled || languageItem.language === item.language"
-              >
-                <v-list-item-title>{{ getLanguageLabel(languageItem.language) }}</v-list-item-title>
-              </v-list-item>
+                @click="translate(languageItem.language, item.language)"
+              />
             </v-list>
           </v-menu>
         </v-col>
@@ -47,127 +46,106 @@
   </div>
 </template>
 
-<script lang="ts">
-  import { defineComponent, Ref, ref, watch } from '@vue/composition-api';
-  import _ from 'lodash';
+<script setup lang="ts">
+import { Ref, ref, watch } from 'vue';
+import _ from 'lodash';
 
-  import { LoadedPath } from '@common/types';
-  import { getLanguageLabel } from '../utils/language';
-  import { getContentFromPath } from '../utils/files';
-  import {
-    ChangeFolderValuePayload,
-    ContentItem,
-    LanguageListItem,
-    TranslatePayload,
-    TreeItem,
-  } from '../types';
+import { LoadedPath } from '@common/types';
+import { getLanguageLabel } from '../utils/language';
+import { getContentFromPath } from '../utils/files';
+import {
+  ChangeFolderValuePayload,
+  ContentItem,
+  LanguageListItem,
+  TranslatePayload,
+  TreeItem,
+} from '../types';
 
-  export default defineComponent({
-    name: 'Content',
-    props: {
-      selectedItem: Object as () => TreeItem,
-      isTranslationEnabled: Boolean,
-      folder: {
-        type: Array as () => LoadedPath[],
-        required: true,
-      },
-      originalFolder: {
-        type: Array as () => LoadedPath[],
-        required: true,
-      },
-      languageList: {
-        type: Array as () => LanguageListItem[],
-        required: true,
-      },
-    },
-    setup(props, { emit }) {
-      const { content, originalContent, refreshContent } = useContent();
-      const { contextLanguageList, updateLanguageList } = useContextLanguageList();
+const props = defineProps<{
+  selectedItem?: TreeItem | null;
+  isTranslationEnabled?: boolean;
+  folder: LoadedPath[];
+  originalFolder: LoadedPath[];
+  languageList: LanguageListItem[];
+}>();
 
-      watch([() => props.folder, () => props.selectedItem, () => props.languageList], () => {
-        refreshContent(props.folder, props.originalFolder, props.selectedItem);
-        updateLanguageList(props.languageList, content);
-      });
+const emit = defineEmits<{
+  (e: 'update-value', payload: ChangeFolderValuePayload): void;
+  (e: 'translate', payload: TranslatePayload): void;
+}>();
 
-      function updateValue(event: any, index: number) {
-        emit('update-value', {
-          index,
-          value: event.target.value,
-          itemId: props.selectedItem!.id,
-        } as ChangeFolderValuePayload);
-      }
+const { content, originalContent, refreshContent } = useContent();
+const { contextLanguageList, updateLanguageList } = useContextLanguageList();
 
-      function translate(sourceLanguage: string, targetLanguage: string) {
-        emit('translate', {
-          mode: 'this',
-          overwrite: true,
-          sourceLanguage,
-          targetLanguages: [targetLanguage],
-        } as TranslatePayload);
-      }
+watch(
+  [() => props.folder, () => props.selectedItem, () => props.languageList],
+  () => {
+    refreshContent(props.folder, props.originalFolder, props.selectedItem ?? undefined);
+    updateLanguageList(props.languageList, content);
+  },
+  { immediate: true },
+);
 
-      return {
-        content,
-        originalContent,
-        itemStatusColor,
-        getLanguageLabel,
-        contextLanguageList,
-        onChange: _.throttle(updateValue, 500),
-        translate,
-      };
-    },
-  });
+function updateValue(event: any, index: number): void {
+  emit('update-value', {
+    index,
+    value: event.target.value,
+    itemId: props.selectedItem!.id,
+  } as ChangeFolderValuePayload);
+}
 
-  function itemStatusColor(item: ContentItem, originalItem: ContentItem): string {
-    if (item.value !== undefined && originalItem.value === undefined) return 'status-success';
+const onChange = _.throttle(updateValue, 500);
 
-    if (item.value && item.value !== originalItem.value) return 'status-warning';
+function translate(sourceLanguage: string, targetLanguage: string): void {
+  emit('translate', {
+    mode: 'this',
+    overwrite: true,
+    sourceLanguage,
+    targetLanguages: [targetLanguage],
+  } as TranslatePayload);
+}
 
-    if (!item.value) return 'status-error';
+function itemStatusColor(item: ContentItem, originalItem?: ContentItem): string | undefined {
+  if (item.value !== undefined && originalItem?.value === undefined) return 'success';
 
-    return '';
-  }
+  if (item.value && item.value !== originalItem?.value) return 'warning-darken-1';
 
-  function useContent() {
-    const content = ref<ContentItem[]>([]);
-    const originalContent = ref<ContentItem[]>([]);
+  if (!item.value) return 'error';
 
-    function refreshContent(
-      folder: LoadedPath[],
-      originalFolder: LoadedPath[],
-      selectedItem?: TreeItem,
-    ) {
-      if (!selectedItem || selectedItem.type !== 'item') {
-        content.value = [];
-        return;
-      }
+  return undefined;
+}
 
-      content.value = getContentFromPath(folder, selectedItem.path);
-      originalContent.value = getContentFromPath(originalFolder, selectedItem.path);
+function useContent() {
+  const content = ref<ContentItem[]>([]);
+  const originalContent = ref<ContentItem[]>([]);
+
+  function refreshContent(
+    folder: LoadedPath[],
+    originalFolder: LoadedPath[],
+    selectedItem?: TreeItem,
+  ): void {
+    if (!selectedItem || selectedItem.type !== 'item') {
+      content.value = [];
+      return;
     }
 
-    return {
-      content,
-      originalContent,
-      refreshContent,
-    };
+    content.value = getContentFromPath(folder, selectedItem.path);
+    originalContent.value = getContentFromPath(originalFolder, selectedItem.path);
   }
 
-  function useContextLanguageList() {
-    const contextLanguageList = ref<LanguageListItem[]>([]);
+  return { content, originalContent, refreshContent };
+}
 
-    let contentLanguages: string[] = [];
+function useContextLanguageList() {
+  const contextLanguageList = ref<LanguageListItem[]>([]);
 
-    function updateLanguageList(languageList: LanguageListItem[], content: Ref<ContentItem[]>) {
-      contentLanguages = content.value.map(it => it.language);
-      contextLanguageList.value = languageList.filter(it => contentLanguages.includes(it.language));
-    }
-
-    return {
-      contextLanguageList,
-      updateLanguageList,
-    };
+  function updateLanguageList(languageList: LanguageListItem[], content: Ref<ContentItem[]>): void {
+    const contentLanguages = content.value.map(it => it.language);
+    contextLanguageList.value = languageList.filter(it => contentLanguages.includes(it.language));
   }
+
+  return { contextLanguageList, updateLanguageList };
+}
 </script>
 
 <style lang="scss">
@@ -180,33 +158,7 @@
     border-radius: 50%;
     line-height: 32px;
     text-align: center;
-    background-color: var(--v-primary-base);
+    background-color: rgb(var(--v-theme-primary));
     color: #ffffff;
-  }
-
-  @mixin input-color($color) {
-    &,
-    label,
-    &:hover {
-      color: $color !important;
-      caret-color: $color !important;
-    }
-
-    fieldset {
-      border-color: $color !important;
-      border-width: 2px;
-    }
-  }
-
-  .item-input {
-    &.status-success {
-      @include input-color(var(--v-success-base));
-    }
-    &.status-warning {
-      @include input-color(var(--v-warning-darken1));
-    }
-    &.status-error {
-      @include input-color(var(--v-error-base));
-    }
   }
 </style>

@@ -1,49 +1,35 @@
 <template>
   <div class="folder">
-    <v-row>
-      <v-col class="pa-0">
-        <v-card tile>
-          <v-toolbar
-            color="primary"
-            dark
-            class="flex-grow-0"
-          >
-            <v-row>
-              <v-col cols="2">
-                <v-select
-                  id="treeVisibilityFilter"
-                  v-model="treeVisibilityFilter"
-                  :items="treeVisibilityFilterOptions"
-                  item-value="value"
-                  item-text="label"
-                  label="Show"
-                  outlined
-                  hide-details
-                  dense
-                />
-              </v-col>
-              <v-col>
-                <v-text-field
-                  v-model="treeFilter"
-                  @input="filterTree"
-                  hide-details
-                  prepend-icon="mdi-magnify"
-                  single-line
-                  label="Search"
-                  outlined
-                  dense
-                />
-              </v-col>
-              <v-col v-if="isFolders()">
-                <v-btn color="#dddddd" class="black--text" @click="onConvert">
-                  Convert folders
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-toolbar>
-        </v-card>
-      </v-col>
-    </v-row>
+    <div class="folder-toolbar">
+      <v-select
+        id="treeVisibilityFilter"
+        v-model="treeVisibilityFilter"
+        :items="treeVisibilityFilterOptions"
+        item-value="value"
+        item-title="label"
+        label="Show"
+        density="compact"
+        hide-details
+        class="show-select"
+      />
+      <v-text-field
+        v-model="treeFilter"
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        density="compact"
+        hide-details
+        class="search-field"
+        @update:model-value="() => filterTree()"
+      />
+      <v-btn
+        v-if="isFolders()"
+        color="white"
+        variant="tonal"
+        @click="onConvert"
+      >
+        Convert folders
+      </v-btn>
+    </div>
     <v-row class="main ma-0 mt-2">
       <v-col
         cols="4"
@@ -102,7 +88,7 @@
     <v-row class="status-bar">
       <v-col class="pb-0 pt-2">
         <v-card
-          tile
+          rounded="0"
           class="d-flex align-center"
         >
           <div
@@ -115,9 +101,9 @@
             class="status-item"
             v-if="!isSaving && selectedItem"
           >
-            <template v-for="(item, index) in selectedItemPath(selectedItem)">
-              <span :key="item">{{ item }}</span>
-              <span :key="index"><v-icon v-if="index < selectedItemPath(selectedItem).length - 1">mdi-arrow-right</v-icon></span>
+            <template v-for="(part, index) in selectedItemPath(selectedItem)" :key="index">
+              <span>{{ part }}</span>
+              <span><v-icon v-if="index < selectedItemPath(selectedItem).length - 1">mdi-arrow-right</v-icon></span>
             </template>
           </div>
         </v-card>
@@ -147,22 +133,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
+<script setup lang="ts">
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import {
   AddItemPayload,
   ChangeFolderValuePayload,
-  ClipboardItemAction,
-  LanguageListItem,
   PasteItemPayload,
-  TranslationError,
-  TranslationProgress,
   TreeItem,
-  TreeMap,
 } from '@/folder/types';
-import { useNamespace } from '@/store/utils';
-import { CustomSettings, LoadedFolder, LoadedGroup, LoadedPath } from '@common/types';
+import { LoadedGroup } from '@common/types';
+import { useFolderStore } from '@/folder/store';
+import { useGlobalStore } from '@/store/global';
 import useTree from './compositions/tree';
 
 import Content from '../../components/Content.vue';
@@ -170,143 +153,147 @@ import Translate from '../../components/Translate.vue';
 import TranslationProgressPanel from '../../components/TranslationProgressPanel.vue';
 import Tree from '../../components/Tree.vue';
 import ContextMenu from '../../components/ContextMenu.vue';
-import { getParsedFiles } from '@/folder/utils/files';
-import { writeFileSync } from 'fs';
-import { sendIpc } from '@/store/plugins/ipc';
+import { sendIpc } from '@/ipc';
 import { convert } from '@common/ipcMessages';
 
-export default defineComponent({
-  name: 'Folder',
-  components: { TranslationProgressPanel, Translate, Content, Tree, ContextMenu },
-  setup() {
-    const globalModule = useNamespace('global');
-    const showSettings = globalModule.useMutation('showSettings');
+const globalStore = useGlobalStore();
+const folderStore = useFolderStore();
 
-    const settingsModule = useNamespace('settings');
-    const settings = settingsModule.useState<CustomSettings>('settings');
+const {
+  tree,
+  treeItems,
+  folder,
+  originalFolder,
+  selectedItem,
+  languageList,
+  isTranslationEnabled,
+  isTranslating,
+  translationProgress,
+  translationErrors,
+  isSaving,
+  clipboardItemId,
+  clipboardItemAction,
+} = storeToRefs(folderStore);
 
-    const folderModule = useNamespace('folder');
-    const tree = folderModule.useState<TreeMap>('tree');
-    const treeItems = folderModule.useGetter<TreeItem[]>('treeItems');
-    const folder = folderModule.useState<LoadedGroup[]>('folder');
-    const originalFolder = folderModule.useState<LoadedPath[]>('originalFolder');
-    const selectedItem = folderModule.useState<TreeItem>('selectedItem');
-    const sendModifiedContent = folderModule.useAction('sendModifiedContent');
-    const setSelectedItem = folderModule.useMutation('setSelectedItem');
-    const updateValue = folderModule.useMutation('updateValue');
-    const updateTreeStatus = folderModule.useMutation('updateTreeStatus');
-    const deleteItem = folderModule.useMutation('deleteItem');
-    const renameItem = folderModule.useMutation('renameItem');
-    const addItem = folderModule.useMutation('addItem');
+const showSettings = (): void => globalStore.showSettings();
 
-    const languageList = folderModule.useState<LanguageListItem[]>('languageList');
-    const isTranslationEnabled = folderModule.useState<boolean>('isTranslationEnabled');
-    const isTranslating = folderModule.useState<boolean>('isTranslating');
-    const translationProgress = folderModule.useState<TranslationProgress>('translationProgress');
-    const translationErrors = folderModule.useState<TranslationError[]>('translationErrors');
-    const translate = folderModule.useAction('translate');
-    const cancelTranslate = folderModule.useAction('cancelTranslate');
-    const setIsTranslating = folderModule.useMutation('setIsTranslating');
+const treeComposition = useTree(tree, treeItems, folder);
+const {
+  treeFilter,
+  treeVisibilityFilter,
+  treeVisibilityFilterOptions,
+  expandedTreeItems,
+  expandTreeNode,
+  toggleTreeNode,
+  isParentExpanded,
+  filterTree,
+} = treeComposition;
 
-    const isSaving = folderModule.useState<boolean>('isSaving');
+const contextMenuRef = ref<InstanceType<typeof ContextMenu> | null>(null);
 
-    const setClipboard = folderModule.useMutation('setClipboard');
-    const pasteItem = folderModule.useMutation('pasteItem');
-    const clipboardItemId = folderModule.useState<string>('clipboardItemId');
-    const clipboardItemAction = folderModule.useState<ClipboardItemAction>('clipboardItemAction');
+function onConvert(): void {
+  const first = folder.value[0] as LoadedGroup | undefined;
+  sendIpc(
+    convert,
+    first?.items.map(item => ({
+      path: item.filePath,
+      language: item.language,
+    })),
+  );
+}
 
-    const onConvert = () => {
-      sendIpc(convert, folder.value[0]?.items.map(item => ({
-        path: item.filePath,
-        language: item.language,
-      })));
-    }
+function isFolders(): boolean {
+  const first = folder.value[0] as LoadedGroup | undefined;
+  return !!first?.items.find(item => item.filePath.match(/translations\.json$/));
+}
 
-    const isFolders = () => {
-      return folder.value[0]?.items.find(item => item.filePath.match(/translations\.json$/));
-    }
+function selectItem(item: TreeItem): void {
+  folderStore.setSelectedItem(item);
+  if (item.type !== 'item') {
+    toggleTreeNode(item);
+  }
+}
 
-    const treeComposition = useTree(tree, treeItems, folder);
+function updateFolderValue(payload: ChangeFolderValuePayload): void {
+  folderStore.updateValue(payload);
+  folderStore.updateTreeStatus();
+  folderStore.sendModifiedContent();
+}
 
-    const contextMenuRef = ref<any>(null);
+function onAddItem(payload: AddItemPayload): void {
+  folderStore.addItem(payload);
+  expandTreeNode(payload.parent);
+}
 
-    function selectItem(item: TreeItem) {
-      setSelectedItem(item);
-      if (item.type !== 'item') {
-        treeComposition.toggleTreeNode(item);
-      }
-    }
+function onPasteItem(payload: PasteItemPayload): void {
+  folderStore.pasteItem(payload);
+  expandTreeNode(payload.parent);
+}
 
-    function updateFolderValue(payload: ChangeFolderValuePayload) {
-      updateValue(payload);
-      updateTreeStatus();
-      sendModifiedContent();
-    }
+function handleItemRightClick(event: MouseEvent, item: TreeItem): void {
+  contextMenuRef.value?.handleRightClick(event, item);
+}
 
-    function onAddItem(payload: AddItemPayload) {
-      addItem(payload);
-      treeComposition.expandTreeNode(payload.parent);
-    }
+function selectedItemPath(item: TreeItem): any[] {
+  return item.path.slice(item.path.length - item.level, item.path.length);
+}
 
-    function onPasteItem(payload: PasteItemPayload) {
-      pasteItem(payload);
-      treeComposition.expandTreeNode(payload.parent);
-    }
-
-    function handleItemRightClick(event: MouseEvent, item: TreeItem) {
-      contextMenuRef.value?.handleRightClick(event, item);
-    }
-
-    function selectedItemPath(item: TreeItem) {
-      return item.path.slice(item.path.length - item.level, item.path.length);
-    }
-
-    return {
-      showSettings,
-      settings,
-      folder,
-      originalFolder,
-      selectedItem,
-      selectItem,
-      updateFolderValue,
-
-      tree,
-      treeItems,
-
-      ...treeComposition,
-      contextMenuRef,
-      handleItemRightClick,
-      onAddItem,
-      onPasteItem,
-      renameItem,
-      deleteItem,
-      setClipboard,
-      sendModifiedContent,
-      selectedItemPath,
-      onConvert,
-
-      languageList,
-      isTranslationEnabled,
-      translate,
-      isTranslating,
-      translationProgress,
-      translationErrors,
-      setIsTranslating,
-      cancelTranslate,
-
-      isSaving,
-      isFolders,
-
-      clipboardItemId,
-      clipboardItemAction,
-    };
-  },
-});
+// Actions forwarded to the template / child components.
+const translate = folderStore.translate;
+const cancelTranslate = folderStore.cancelTranslate;
+const setIsTranslating = folderStore.setIsTranslating;
+const renameItem = folderStore.renameItem;
+const deleteItem = folderStore.deleteItem;
+const setClipboard = folderStore.setClipboard;
+const sendModifiedContent = folderStore.sendModifiedContent;
 </script>
 
 <style scoped lang="scss">
 .folder {
   height: 100vh;
+}
+
+.folder-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+  padding: 0 16px;
+  background-color: rgb(var(--v-theme-primary));
+
+  // White text/icons/labels on the blue toolbar
+  :deep(.v-field__input),
+  :deep(.v-field__input input),
+  :deep(input),
+  :deep(.v-label),
+  :deep(.v-field-label),
+  :deep(.v-select__selection-text),
+  :deep(.v-icon) {
+    color: #ffffff !important;
+    opacity: 1;
+  }
+
+  :deep(input::placeholder) {
+    color: #ffffff;
+    opacity: 0.85;
+  }
+
+  // Underline of the filled fields
+  :deep(.v-field__outline::before) {
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+  :deep(.v-field__outline::after) {
+    border-color: #ffffff;
+  }
+}
+
+.show-select {
+  flex: 0 0 220px;
+  max-width: 220px;
+}
+
+.search-field {
+  flex: 1 1 auto;
 }
 
 .main {

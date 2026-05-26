@@ -1,38 +1,33 @@
 <template>
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-header style="padding-top: 8px; padding-bottom: 8px">
+      <v-expansion-panel-title style="padding-top: 8px; padding-bottom: 8px">
         <v-btn
-            color="primary"
-            v-if="isTranslationEnabled"
-            style="width: 122px; max-width: 122px; margin-right: 16px"
-            @click="translate"
+          color="primary"
+          v-if="isTranslationEnabled"
+          style="width: 122px; max-width: 122px; margin-right: 16px"
+          @click="translate"
         >
           Translate
         </v-btn>
         <div
-            v-if="!isTranslationEnabled"
-            style="width: 122px; max-width: 122px; margin-right: 16px"
+          v-if="!isTranslationEnabled"
+          style="width: 122px; max-width: 122px; margin-right: 16px"
         >
           Translate
         </div>
         {{ hint() }}
-      </v-expansion-panel-header>
-      <v-expansion-panel-content>
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
         <v-row>
           <v-col>
             <v-autocomplete
               label="From"
               v-model="settings.translationFrom"
-              v-on:change="handleChange"
-              :items="languageList"
-              item-disabled="disabled"
-              item-text="label"
-              item-value="language"
-              class="source"
-              outlined
-              dense
+              :items="languageItems"
+              class="source"              density="compact"
               hide-details
+              @update:model-value="handleChange"
             />
           </v-col>
         </v-row>
@@ -41,125 +36,117 @@
             <v-autocomplete
               label="To"
               v-model="settings.translationTo"
-              v-on:change="handleChange"
-              :items="languageList"
-              item-disabled="disabled"
-              item-text="label"
-              item-value="language"
-              class="targets"
-              outlined
-              multiple
-              dense
-              small-chips
-              deletable-chips
+              :items="languageItems"
+              class="targets"              multiple
+              density="compact"
+              chips
+              closable-chips
               counter
               clearable
+              @update:model-value="handleChange"
             />
           </v-col>
           <v-col cols="2" class="pb-0">
-            <v-btn @click="selectAll" class="select-all" outlined>All</v-btn>
+            <v-btn @click="selectAll" class="select-all" variant="tonal">All</v-btn>
           </v-col>
         </v-row>
         <v-row align="center">
           <v-col cols="3" class="pt-0">
-            <v-radio-group v-model="settings.translationMode" v-on:change="handleChange">
+            <v-radio-group v-model="settings.translationMode" @update:model-value="handleChange">
               <v-radio label="This Key" value="this" :disabled="!selectedItem" />
               <v-radio label="All Keys" value="all" class="all-keys" />
             </v-radio-group>
           </v-col>
           <v-col cols="4" class="pt-0">
-            <v-checkbox label="Overwrite not empty fields" v-model="settings.translationOverwrite" v-on:change="handleChange" />
+            <v-checkbox label="Overwrite not empty fields" v-model="settings.translationOverwrite" @update:model-value="handleChange" />
           </v-col>
           <v-col class="pt-0">
             <v-btn v-if="isTranslationEnabled" color="primary" @click="translate">
               Translate
             </v-btn>
-            <v-btn v-if="!isTranslationEnabled" color="error" @click="$emit('showSettings')">
+            <v-btn v-if="!isTranslationEnabled" color="error" @click="emit('showSettings')">
               Configure Google Translate™
             </v-btn>
           </v-col>
         </v-row>
-      </v-expansion-panel-content>
+      </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
-<script lang="ts">
-  import { defineComponent, ref, watch } from '@vue/composition-api';
-  import { LanguageListItem, TranslatePayload, TreeItem } from '../types';
-import { useNamespace } from '@/store/utils';
-import { CustomSettings } from '@common/types';
+<script setup lang="ts">
+import { computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
-  export default defineComponent({
-    name: 'Translate',
-    props: {
-      languageList: {
-        type: Array as () => LanguageListItem[],
-        required: true,
-      },
-      selectedItem: Object as () => TreeItem,
-      isTranslationEnabled: Boolean,
-    },
-    setup(props, { emit }) {
-      // const source = ref('');
+import { LanguageListItem, TranslatePayload, TreeItem } from '../types';
+import { useSettingsStore } from '@/settings/store';
 
-      const settingsModule = useNamespace('settings');
-      const settings = settingsModule.useState<CustomSettings>('settings', { immediate: true });
-      const saveSettings = settingsModule.useAction('saveSettings');
+const props = defineProps<{
+  languageList: LanguageListItem[];
+  selectedItem?: TreeItem | null;
+  isTranslationEnabled?: boolean;
+}>();
 
-      async function handleChange() {
-        await saveSettings(settings.value);
-      }
+const emit = defineEmits<{
+  (e: 'translate', payload: TranslatePayload): void;
+  (e: 'showSettings'): void;
+}>();
 
-      function selectAll() {
-        settings.value.translationTo = props.languageList.filter(it => !it.disabled).map(it => it.language);
-      }
+const settingsStore = useSettingsStore();
+const { settings } = storeToRefs(settingsStore);
 
-      watch(() => settings.value.translationMode, (current, previous) => {
-        if (current === 'all' && settings.value.translationOverwrite) {
-          const result = confirm(xOptionSelectedWarningMessage('Overwrite'));
-          if (!result) {
-            settings.value.translationMode = 'this'
-          }
-        }
-      });
+const languageItems = computed(() =>
+  props.languageList.map(it => ({
+    title: it.label,
+    value: it.language,
+    props: { disabled: it.disabled },
+  })),
+);
 
-      watch(() => settings.value.translationOverwrite, (current, previous) => {
-        if (current && settings.value.translationMode === 'all') {
-          const result = confirm(xOptionSelectedWarningMessage('All Keys'));
-          if (!result) {
-            settings.value.translationOverwrite = false
-          }
-        }
-      });
+function handleChange(): void {
+  settingsStore.saveSettings(settings.value);
+}
 
-      function translate(e: MouseEvent) {
-        e?.stopPropagation();
-        emit('translate', {
-          mode: settings.value.translationMode,
-          overwrite: settings.value.translationOverwrite,
-          sourceLanguage: settings.value.translationFrom,
-          targetLanguages: settings.value.translationTo,
-        } as TranslatePayload);
-      }
+function selectAll(): void {
+  settings.value.translationTo = props.languageList.filter(it => !it.disabled).map(it => it.language);
+  handleChange();
+}
 
-      const hint = () => {
-        return `${settings.value.translationFrom} -> ${settings.value.translationTo.join(', ')} (${settings.value.translationEngine})${settings.value.translationMode === 'all' ? ' | All' : ''}${settings.value.translationOverwrite ? ' | Overwrite empty' : ''}`
-      }
-
-      return {
-        settings,
-        handleChange,
-        selectAll,
-        translate,
-        hint,
-      };
-    },
-  });
-
-  function xOptionSelectedWarningMessage(option: string) {
-    return `The "${option}" option is selected, this will overwrite ALL your keys, are you sure?`;
+watch(() => settings.value.translationMode, current => {
+  if (current === 'all' && settings.value.translationOverwrite) {
+    const result = confirm(xOptionSelectedWarningMessage('Overwrite'));
+    if (!result) {
+      settings.value.translationMode = 'this';
+    }
   }
+});
+
+watch(() => settings.value.translationOverwrite, current => {
+  if (current && settings.value.translationMode === 'all') {
+    const result = confirm(xOptionSelectedWarningMessage('All Keys'));
+    if (!result) {
+      settings.value.translationOverwrite = false;
+    }
+  }
+});
+
+function translate(e?: MouseEvent): void {
+  e?.stopPropagation();
+  emit('translate', {
+    mode: settings.value.translationMode,
+    overwrite: settings.value.translationOverwrite,
+    sourceLanguage: settings.value.translationFrom,
+    targetLanguages: settings.value.translationTo,
+  } as TranslatePayload);
+}
+
+function hint(): string {
+  return `${settings.value.translationFrom} -> ${settings.value.translationTo.join(', ')} (${settings.value.translationEngine})${settings.value.translationMode === 'all' ? ' | All' : ''}${settings.value.translationOverwrite ? ' | Overwrite empty' : ''}`;
+}
+
+function xOptionSelectedWarningMessage(option: string): string {
+  return `The "${option}" option is selected, this will overwrite ALL your keys, are you sure?`;
+}
 </script>
 
 <style lang="scss">
@@ -174,7 +161,7 @@ import { CustomSettings } from '@common/types';
 
   .all-keys {
     label {
-      color: var(--v-error-base) !important;
+      color: rgb(var(--v-theme-error)) !important;
     }
   }
 </style>

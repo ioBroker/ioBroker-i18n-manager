@@ -90,7 +90,7 @@ export const saveFile = async (parsedFile: ParsedFile): Promise<boolean> => {
       serializedContent = await plugin.serialize(updatedData, indent);
     }
 
-    if (serializedContent === null) {
+    if (serializedContent === null || serializedContent === undefined) {
       return false;
     }
 

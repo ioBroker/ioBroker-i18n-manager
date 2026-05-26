@@ -1,46 +1,16 @@
-import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 import { FormattedFolderPath } from '@common/types';
 import packageJson from '../../package.json';
 
-// const RELEASES_URL = 'https://api.github.com/repos/gilmarsquinelato/i18n-manager/releases';
+export const useHomeStore = defineStore('home', () => {
+  const recentFolders = ref<FormattedFolderPath[]>([]);
+  const currentVersion = ref<string>(packageJson.version);
+  const latestVersion = ref<string>('');
 
-@Module({
-  namespaced: true,
-})
-export default class HomeModule extends VuexModule {
-  recentFolders: FormattedFolderPath[] = [];
-  currentVersion: string = packageJson.version;
-  latestVersion = '';
-
-  @Action({ commit: 'setRecentFolders' })
-  receiveRecentFolders(data: FormattedFolderPath[]) {
-    return data;
+  function receiveRecentFolders(data: FormattedFolderPath[]): void {
+    recentFolders.value = data;
   }
 
-  @Mutation
-  setRecentFolders(folders: FormattedFolderPath[]) {
-    this.recentFolders = folders;
-  }
-
-  /*
-  @Action({ commit: 'setLatestVersion' })
-  async checkVersion() {
-    try {
-      const response = await fetch(RELEASES_URL);
-      const releases: any[] = await response.json();
-      const latestRelease = releases[0];
-      return latestRelease.name;
-    } catch (e) {
-      //
-    }
-
-    return '';
-  }
-   */
-
-  /*@Mutation
-  setLatestVersion(version: string) {
-    this.latestVersion = version;
-  }
-  */
-}
+  return { recentFolders, currentVersion, latestVersion, receiveRecentFolders };
+});

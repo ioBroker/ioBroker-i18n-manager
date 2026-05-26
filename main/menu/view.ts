@@ -1,4 +1,6 @@
-const isDev = require('electron-is-dev');
+import { is } from '@electron-toolkit/utils';
+
+const isDev = is.dev;
 
 const viewMenu: Electron.MenuItemConstructorOptions = {
   label: 'View',

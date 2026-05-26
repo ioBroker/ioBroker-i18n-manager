@@ -1,11 +1,14 @@
-import router from '@/router';
-import { sendIpc } from '@/store/plugins/ipc';
-import * as ipcMessages from '@common/ipcMessages';
-import { CustomSettings, LoadedPath } from '@common/types';
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 import axios, { CancelTokenSource } from 'axios';
 import deepEqual from 'fast-deep-equal';
 import _ from 'lodash/fp';
-import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+
+import router from '@/router';
+import { sendIpc } from '@/ipc';
+import * as ipcMessages from '@common/ipcMessages';
+import { LoadedPath } from '@common/types';
+import { useSettingsStore } from '@/settings/store';
 
 import {
   AddItemPayload,
@@ -22,115 +25,108 @@ import {
   TreeItem,
   TreeMap,
 } from './types';
-import { addItem, deleteItem, pasteItem, renameItem } from './utils/files';
-import { createLanguageList, getLanguageLabel, getLanguagePath } from './utils/language';
-import { getTranslationItems, translate, isIoBroker } from './utils/translate';
-import { createTree, createTreeStatus, pathToString, updateTreeStatus } from './utils/tree';
+import { addItem as addItemToFolder, deleteItem as deleteItemFromFolder, pasteItem as pasteItemInFolder, renameItem as renameItemInFolder } from './utils/files';
+import { createLanguageList as buildLanguageList, getLanguageLabel, getLanguagePath } from './utils/language';
+import { getTranslationItems, translate as translateText, isIoBroker } from './utils/translate';
+import { createTree, createTreeStatus, pathToString, updateTreeStatus as updateTreeStatusUtil } from './utils/tree';
 
 const GOOGLE_TRANSLATE_LANGUAGES_URL =
   'https://translation.googleapis.com/language/translate/v2/languages';
 
-@Module({
-  namespaced: true,
-})
-export default class FolderModule extends VuexModule<any, {settings: {settings: CustomSettings}}> {
-  tree: TreeMap = {};
-  folder: LoadedPath[] = [];
-  originalFolder: LoadedPath[] = [];
-  selectedItem: TreeItem | null = null;
-  modifiedContent = false;
-  languageList: LanguageListItem[] = [];
+const sortTree = (tree: TreeMap): TreeMap =>
+  _.pipe(
+    Object.entries,
+    _.sortBy(([id]: string[]) => id),
+    Object.fromEntries,
+  )(tree) as TreeMap;
 
-  isTranslationEnabled = false;
-  isTranslating = false;
-  translationProgress: TranslationProgress | null = null;
-  translationErrors: TranslationError[] = [];
-  cancelToken: CancelTokenSource | null = null;
+export const useFolderStore = defineStore('folder', () => {
+  const tree = ref<TreeMap>({});
+  const folder = ref<LoadedPath[]>([]);
+  const originalFolder = ref<LoadedPath[]>([]);
+  const selectedItem = ref<TreeItem | null>(null);
+  const modifiedContent = ref(false);
+  const languageList = ref<LanguageListItem[]>([]);
 
-  clipboardItemId: string | null = null;
-  clipboardItemAction: ClipboardItemAction | null = null;
+  const isTranslationEnabled = ref(false);
+  const isTranslating = ref(false);
+  const translationProgress = ref<TranslationProgress | null>(null);
+  const translationErrors = ref<TranslationError[]>([]);
 
-  isSaving = false;
+  const clipboardItemId = ref<string | null>(null);
+  const clipboardItemAction = ref<ClipboardItemAction | null>(null);
 
-  get treeItems() {
-    return Object.values(this.tree);
+  const isSaving = ref(false);
+
+  // Not part of the reactive state, just kept across the translate run.
+  let cancelToken: CancelTokenSource | null = null;
+
+  const treeItems = computed<TreeItem[]>(() => Object.values(tree.value));
+
+  function setSelectedItem(item: TreeItem | null): void {
+    selectedItem.value = item;
   }
 
-  @Action
-  async closeFolder() {
+  function setIsTranslating(value: boolean): void {
+    isTranslating.value = value;
+  }
+
+  function sendModifiedContent(): void {
+    sendIpc(ipcMessages.dataChanged, modifiedContent.value);
+  }
+
+  async function closeFolder(): Promise<void> {
     await router.push('/');
 
-    const { commit, dispatch } = this.context;
-
-    commit('setTree', {});
-    commit('setFolder', []);
-    commit('setOriginalFolder', []);
-    commit('setSelectedItem', null);
-    commit('setModifiedContent', false);
-    commit('setClipboard', { item: null, action: null });
-    await dispatch('sendModifiedContent');
+    tree.value = {};
+    folder.value = [];
+    originalFolder.value = [];
+    selectedItem.value = null;
+    modifiedContent.value = false;
+    clipboardItemId.value = null;
+    clipboardItemAction.value = null;
+    sendModifiedContent();
   }
 
-  @Action
-  async openFolder(folder: LoadedPath[]) {
-    const { commit, dispatch } = this.context;
+  async function openFolder(loaded: LoadedPath[]): Promise<void> {
+    folder.value = _.cloneDeep(loaded);
+    originalFolder.value = _.cloneDeep(loaded);
+    modifiedContent.value = false;
 
-    commit('setFolder', _.cloneDeep(folder));
-    commit('setOriginalFolder', _.cloneDeep(folder));
+    let newTree: TreeMap = {};
+    createTree(newTree, folder.value);
+    newTree = sortTree(newTree);
+    // Compute the status before committing so reactivity fires once.
+    createTreeStatus(newTree, folder.value, folder.value);
+    tree.value = newTree;
 
-    // Hack to retrieve pure object instead the Observer one
-    let tree = Object.assign({}, this.tree);
-    createTree(tree, folder);
-
-    // Sort it
-    tree = _.pipe(
-      Object.entries,
-      _.sortBy(([id]: string[]) => id),
-      Object.fromEntries,
-    )(tree);
-
-    // we display the tree without any statuses
-    commit('setTree', tree);
-    // after we update the status
-    // since this second part takes a longer time
-    createTreeStatus(tree, folder, folder);
-    commit('setTree', tree);
-
-    await dispatch('createLanguageList');
-    await dispatch('sendModifiedContent');
+    await createLanguageList();
+    sendModifiedContent();
   }
 
-  @Action
-  async refreshFolder(folder: LoadedPath[]) {
-    await this.context.dispatch('openFolder', folder);
+  async function refreshFolder(loaded: LoadedPath[]): Promise<void> {
+    await openFolder(loaded);
   }
 
-  @Action
-  async save(data: any) {
-    this.context.commit('setIsSaving', true);
-    sendIpc(ipcMessages.save, { data, payload: this.folder });
+  function save(data: unknown): void {
+    isSaving.value = true;
+    sendIpc(ipcMessages.save, { data, payload: folder.value });
   }
 
-  @Action
-  async saveComplete(data: any) {
-    this.context.commit('setIsSaving', false);
+  function saveComplete(_data: unknown): void {
+    isSaving.value = false;
   }
 
-  @Action
-  sendModifiedContent() {
-    sendIpc(ipcMessages.dataChanged, this.modifiedContent);
+  async function refreshTranslationKey(): Promise<void> {
+    if (folder.value.length === 0) {
+      return;
+    }
+    await createLanguageList();
   }
 
-  @Action
-  async refreshTranslationKey() {
-    if (this.folder.length === 0) return;
-
-    await this.context.dispatch('createLanguageList');
-  }
-
-  @Action
-  async createLanguageList() {
-    const { googleTranslateApiKey, translationEngine, deepLTranslateApiKey, awsTranslateApiKey } = this.context.rootState.settings.settings;
+  async function createLanguageList(): Promise<void> {
+    const { googleTranslateApiKey, translationEngine, deepLTranslateApiKey, awsTranslateApiKey } =
+      useSettingsStore().settings;
 
     let supportedLanguages: string[] = [];
     if (googleTranslateApiKey && (translationEngine === 'google' || !translationEngine)) {
@@ -143,116 +139,68 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
         supportedLanguages = _.get('data.languages', supportedLanguagesBody).map(
           (it: any) => it.language,
         );
-        this.context.commit('setTranslationEnabled', true);
+        isTranslationEnabled.value = true;
       } catch (e) {
-        this.context.commit('setTranslationEnabled', false);
+        isTranslationEnabled.value = false;
       }
     } else if (translationEngine === 'deepl' && deepLTranslateApiKey) {
-      this.context.commit('setTranslationEnabled', true);
+      isTranslationEnabled.value = true;
       supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk'];
     } else if (translationEngine === 'aws' && awsTranslateApiKey) {
       supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk', 'zh-CN'];
-      this.context.commit('setTranslationEnabled', true);
+      isTranslationEnabled.value = true;
     } else if (translationEngine === 'deeplIoBroker') {
       supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk'];
-      this.context.commit('setTranslationEnabled', true);
+      isTranslationEnabled.value = true;
     } else if (translationEngine === 'awsIoBroker' || translationEngine === 'googleIoBroker' || translationEngine === 'libreIoBroker') {
       supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk', 'zh-CN'];
-      this.context.commit('setTranslationEnabled', true);
+      isTranslationEnabled.value = true;
     }
 
-    const languageList = createLanguageList(this.tree, this.folder, supportedLanguages);
-
-    this.context.commit('setLanguageList', languageList);
+    languageList.value = buildLanguageList(tree.value, folder.value, supportedLanguages);
   }
 
-  @Mutation
-  setIsSaving(isSaving: boolean) {
-    this.isSaving = isSaving;
-  }
-
-  @Mutation
-  setFolder(folder: LoadedPath[]) {
-    this.folder = folder;
-    this.modifiedContent = !deepEqual(this.folder, this.originalFolder);
-  }
-
-  @Mutation
-  setOriginalFolder(folder: LoadedPath[]) {
-    this.originalFolder = folder;
-    this.modifiedContent = !deepEqual(this.folder, this.originalFolder);
-  }
-
-  @Mutation
-  setTree(tree: TreeMap) {
-    this.tree = tree;
-  }
-
-  @Mutation
-  setSelectedItem(item: TreeItem) {
-    this.selectedItem = item;
-  }
-
-  @Mutation
-  updateValue(payload: ChangeFolderValuePayload) {
-    const itemPath = this.tree[payload.itemId].path;
+  function updateValue(payload: ChangeFolderValuePayload): void {
+    const itemPath = tree.value[payload.itemId].path;
 
     const path = getLanguagePath(itemPath, payload.index);
-    this.folder = _.set(path, payload.value, this.folder);
+    folder.value = _.set(path, payload.value, folder.value);
 
-    this.modifiedContent = !deepEqual(this.folder, this.originalFolder);
+    modifiedContent.value = !deepEqual(folder.value, originalFolder.value);
   }
 
-  @Mutation
-  updateTreeStatus() {
-    if (!this.selectedItem) return;
-
-    updateTreeStatus(this.tree, this.folder, this.originalFolder, this.selectedItem.id);
+  function updateTreeStatus(): void {
+    if (!selectedItem.value) {
+      return;
+    }
+    updateTreeStatusUtil(tree.value, folder.value, originalFolder.value, selectedItem.value.id);
   }
 
-  @Mutation
-  updateTreeItemStatus(itemId: string) {
-    if (!itemId) return;
-
-    updateTreeStatus(this.tree, this.folder, this.originalFolder, itemId);
+  function updateTreeItemStatus(itemId: string): void {
+    if (!itemId) {
+      return;
+    }
+    updateTreeStatusUtil(tree.value, folder.value, originalFolder.value, itemId);
   }
 
-  @Mutation
-  setModifiedContent(modifiedContent: boolean) {
-    this.modifiedContent = modifiedContent;
+  function addTranslationError(error: TranslationError): void {
+    translationErrors.value.push(error);
   }
 
-  @Mutation
-  setTranslationEnabled(enabled: boolean) {
-    this.isTranslationEnabled = enabled;
+  async function cancelTranslate(): Promise<void> {
+    cancelToken?.cancel();
   }
 
-  @Mutation
-  setLanguageList(languageList: LanguageListItem[]) {
-    this.languageList = languageList;
-  }
-
-  @Action
-  async cancelTranslate() {
-    this.cancelToken?.cancel();
-  }
-
-  @Action
-  async translate(payload: TranslatePayload) {
-    const { commit, dispatch } = this.context;
-
-    const tree = Object.assign({}, this.tree);
-    const folder = this.folder;
-
+  async function translate(payload: TranslatePayload): Promise<void> {
     const items =
-      payload.mode === 'this' && this.selectedItem
-        ? [this.selectedItem]
-        : Object.values(tree).filter(it => it.type === 'item');
+      payload.mode === 'this' && selectedItem.value
+        ? [selectedItem.value]
+        : Object.values(tree.value).filter(it => it.type === 'item');
 
-    commit('setTranslationErrors', []);
-    const translationItems = getTranslationItems(commit, folder, items, payload);
+    translationErrors.value = [];
+    const translationItems = getTranslationItems(addTranslationError, folder.value, items, payload);
 
-    const isFolderFromIoBroker = isIoBroker(this.folder);
+    const isFolderFromIoBroker = isIoBroker(folder.value);
 
     const progress: TranslationProgress = {
       total: translationItems.length,
@@ -262,19 +210,19 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
       estimatedTimeInMs: 0,
     };
 
-    const updateProgress = _.throttle(1000, () => commit('setTranslationProgress', progress));
+    const updateProgress = _.throttle(1000, () => {
+      translationProgress.value = { ...progress };
+    });
 
     updateProgress();
-    commit('createTranslationCancelToken');
-    commit('setIsTranslating', true);
+    cancelToken = axios.CancelToken.source();
+    isTranslating.value = true;
 
     let totalTime = 0;
     for (let index = 0; index < translationItems.length; index++) {
       const item = translationItems[index];
 
-      // Adjust the progress bar
       progress.current = index + 1;
-
       progress.path = item.formattedPath;
       progress.language = getLanguageLabel(item.targetLanguage);
 
@@ -286,13 +234,13 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
 
       try {
         const start = new Date().getTime();
-        const result = await translate(
+        const result = await translateText(
           item.sourceText,
           item.sourceLanguage,
           item.targetLanguage,
           item.formattedPath,
-          this.context.rootState.settings.settings,
-          this.cancelToken!,
+          useSettingsStore().settings,
+          cancelToken!,
           isFolderFromIoBroker,
         );
         const end = new Date().getTime();
@@ -302,216 +250,202 @@ export default class FolderModule extends VuexModule<any, {settings: {settings: 
         progress.estimatedTimeInMs = (progress.total - progress.current) * meanTime;
 
         if (typeof result === 'string') {
-          commit('updateValue', {
+          updateValue({
             index: item.index,
             value: result,
             itemId: item.itemId,
           } as ChangeFolderValuePayload);
 
-          commit('updateTreeItemStatus', item.itemId);
+          updateTreeItemStatus(item.itemId);
         } else if (typeof result === 'object' && (result as Record<string, string>)[item.targetLanguage] !== undefined) {
           Object.keys(result).forEach(lang => {
             if (lang === item.sourceLanguage) {
               return;
             }
-            let lItem = translationItems.find(it => it.sourceText === item.sourceText && it.targetLanguage === lang);
-            // find index for language
+            const lItem = translationItems.find(it => it.sourceText === item.sourceText && it.targetLanguage === lang);
             if (lItem) {
               lItem.done = true;
-              commit('updateValue', {
+              updateValue({
                 index: lItem.index,
                 value: (result as Record<string, string>)[lang],
                 itemId: lItem.itemId,
               } as ChangeFolderValuePayload);
-              commit('updateTreeItemStatus', lItem.itemId);
+              updateTreeItemStatus(lItem.itemId);
             }
           });
         } else if (result) {
-          commit('addTranslationError', result);
+          addTranslationError(result as TranslationError);
         }
       } catch (e) {
         // Request was cancelled
-        commit('setIsTranslating', false);
+        isTranslating.value = false;
         break;
       }
     }
 
     updateProgress();
-    await dispatch('sendModifiedContent');
+    sendModifiedContent();
 
-    if (this.translationErrors.length === 0) {
+    if (translationErrors.value.length === 0) {
       setTimeout(() => {
-        commit('setIsTranslating', false);
+        isTranslating.value = false;
       }, 500);
     }
   }
 
-  @Mutation
-  createTranslationCancelToken() {
-    this.cancelToken = axios.CancelToken.source();
-  }
+  function deleteItem({ item }: DeleteItemPayload): void {
+    folder.value = deleteItemFromFolder(folder.value, item.path);
 
-  @Mutation
-  setIsTranslating(isTranslating: boolean) {
-    this.isTranslating = isTranslating;
-  }
-
-  @Mutation
-  setTranslationProgress(progress: TranslationProgress) {
-    this.translationProgress = progress;
-  }
-
-  @Mutation
-  setTranslationErrors(errors: TranslationError[]) {
-    this.translationErrors = errors;
-  }
-
-  @Mutation
-  addTranslationError(error: TranslationError) {
-    this.translationErrors.push(error);
-  }
-
-  @Mutation
-  deleteItem({ item }: DeleteItemPayload) {
-    this.folder = deleteItem(this.folder, item.path);
-
-    // Todo: update non-translated and duplicated count
-
-    // Hack to retrieve pure object instead the Observer one
-    let tree = Object.assign({}, this.tree);
-
-    tree = _.pipe(
+    let newTree = _.pipe(
       Object.entries,
-      // Remove the removed item and its children
       _.filter(([id]: string[]) => id !== item.id && !id.startsWith(`${item.id}.`)),
       _.sortBy(([id]: string[]) => id),
       Object.fromEntries,
-    )(tree);
+    )(Object.assign({}, tree.value)) as TreeMap;
 
-    this.tree = tree;
-    this.modifiedContent = true;
+    tree.value = newTree;
+    modifiedContent.value = true;
 
-    if (this.selectedItem?.id === item.id) {
-      this.selectedItem = null;
+    if (selectedItem.value?.id === item.id) {
+      selectedItem.value = null;
     }
   }
 
-  @Mutation
-  addItem({ parent, label, isItem }: AddItemPayload) {
+  function addItem({ parent, label, isItem }: AddItemPayload): void {
     const path = parent.path.slice();
     path.push(label);
 
-    this.folder = addItem(this.folder, path, label, isItem);
+    folder.value = addItemToFolder(folder.value, path, label, isItem);
 
-    // Hack to retrieve pure object instead the Observer one
-    let tree = Object.assign({}, this.tree);
-
-    createTree(tree, this.folder);
-
-    tree = _.pipe(
-      Object.entries,
-      _.sortBy(([id]: string[]) => id),
-      Object.fromEntries,
-    )(tree);
+    let newTree: TreeMap = Object.assign({}, tree.value);
+    createTree(newTree, folder.value);
+    newTree = sortTree(newTree);
 
     const newId = pathToString(path);
-    updateTreeStatus(tree, this.folder, this.originalFolder, newId);
+    updateTreeStatusUtil(newTree, folder.value, originalFolder.value, newId);
 
-    this.tree = tree;
-    this.modifiedContent = true;
+    tree.value = newTree;
+    modifiedContent.value = true;
 
     if (isItem) {
-      this.selectedItem = tree[newId];
+      selectedItem.value = newTree[newId];
     }
   }
 
-  @Mutation
-  renameItem({ item, label }: RenameItemPayload) {
+  function renameItem({ item, label }: RenameItemPayload): void {
     const newPath = item.path.slice();
     newPath.pop();
     newPath.push(label);
 
-    this.folder = renameItem(this.folder, item.path, newPath);
+    folder.value = renameItemInFolder(folder.value, item.path, newPath);
 
-    // Hack to retrieve pure object instead the Observer one
-    let tree = Object.assign({}, this.tree);
-
-    createTree(tree, this.folder);
-
-    tree = _.pipe(
+    let newTree: TreeMap = Object.assign({}, tree.value);
+    createTree(newTree, folder.value);
+    newTree = _.pipe(
       Object.entries,
-      // Remove the old item and its children
       _.filter(([id]: string[]) => id !== item.id && !id.startsWith(`${item.id}.`)),
       _.sortBy(([id]: string[]) => id),
       Object.fromEntries,
-    )(tree);
+    )(newTree) as TreeMap;
 
     const newId = pathToString(newPath);
-    updateTreeStatus(tree, this.folder, this.originalFolder, newId);
+    updateTreeStatusUtil(newTree, folder.value, originalFolder.value, newId);
 
-    this.tree = tree;
-    this.modifiedContent = true;
-    if (tree[newId].type === 'item') {
-      this.selectedItem = tree[newId];
+    tree.value = newTree;
+    modifiedContent.value = true;
+    if (newTree[newId].type === 'item') {
+      selectedItem.value = newTree[newId];
     }
   }
 
-  @Mutation
-  setClipboard({ item, action }: SetClipboardPayload) {
+  function setClipboard({ item, action }: SetClipboardPayload): void {
     if (!item) {
-      this.clipboardItemId = null;
-      this.clipboardItemAction = null;
+      clipboardItemId.value = null;
+      clipboardItemAction.value = null;
       return;
     }
 
-    this.clipboardItemId = item.id;
-    this.clipboardItemAction = action;
+    clipboardItemId.value = item.id;
+    clipboardItemAction.value = action;
   }
 
-  @Mutation
-  pasteItem({ parent, label }: PasteItemPayload) {
-    if (!this.clipboardItemId) return;
+  function pasteItem({ parent, label }: PasteItemPayload): void {
+    if (!clipboardItemId.value) {
+      return;
+    }
 
-    const item = this.tree[this.clipboardItemId];
+    const item = tree.value[clipboardItemId.value];
 
     const newPath = parent.path.slice();
     newPath.push(label);
 
-    this.folder = pasteItem(this.folder, item.path, newPath);
+    folder.value = pasteItemInFolder(folder.value, item.path, newPath);
 
-    // Hack to retrieve pure object instead the Observer one
-    let tree = Object.assign({}, this.tree);
+    let newTree: TreeMap = Object.assign({}, tree.value);
 
-    if (this.clipboardItemAction === ClipboardItemAction.cut) {
-      this.folder = deleteItem(this.folder, item.path);
+    if (clipboardItemAction.value === ClipboardItemAction.cut) {
+      folder.value = deleteItemFromFolder(folder.value, item.path);
 
-      tree = _.pipe(
+      newTree = _.pipe(
         Object.entries,
-        // Remove the removed item and its children
         _.filter(([id]: string[]) => id !== item.id && !id.startsWith(`${item.id}.`)),
         Object.fromEntries,
-      )(tree);
+      )(newTree) as TreeMap;
     }
 
-    createTree(tree, this.folder);
+    createTree(newTree, folder.value);
+    newTree = sortTree(newTree);
+    createTreeStatus(newTree, folder.value, originalFolder.value);
 
-    tree = _.pipe(
-      Object.entries,
-      _.sortBy(([id]: string[]) => id),
-      Object.fromEntries,
-    )(tree);
+    tree.value = newTree;
+    modifiedContent.value = true;
 
-    createTreeStatus(tree, this.folder, this.originalFolder);
-
-    this.tree = tree;
-    this.modifiedContent = true;
-
-    this.clipboardItemId = null;
-    this.clipboardItemAction = null;
+    clipboardItemId.value = null;
+    clipboardItemAction.value = null;
 
     const newId = pathToString(newPath);
-    if (tree[newId].type === 'item') {
-      this.selectedItem = tree[newId];
+    if (newTree[newId].type === 'item') {
+      selectedItem.value = newTree[newId];
     }
   }
-}
+
+  return {
+    // state
+    tree,
+    folder,
+    originalFolder,
+    selectedItem,
+    modifiedContent,
+    languageList,
+    isTranslationEnabled,
+    isTranslating,
+    translationProgress,
+    translationErrors,
+    clipboardItemId,
+    clipboardItemAction,
+    isSaving,
+    // getters
+    treeItems,
+    // actions
+    setSelectedItem,
+    setIsTranslating,
+    sendModifiedContent,
+    closeFolder,
+    openFolder,
+    refreshFolder,
+    save,
+    saveComplete,
+    refreshTranslationKey,
+    createLanguageList,
+    updateValue,
+    updateTreeStatus,
+    updateTreeItemStatus,
+    cancelTranslate,
+    translate,
+    deleteItem,
+    addItem,
+    renameItem,
+    setClipboard,
+    pasteItem,
+  };
+});

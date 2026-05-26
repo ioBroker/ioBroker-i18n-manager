@@ -16,9 +16,9 @@
 
       <v-icon>{{ icon }}</v-icon>
 
-      <v-tooltip bottom open-delay="1000" color="rgba(0, 0, 0, 1)">
-        <template v-slot:activator="{ on }">
-          <span class="item-name" v-on="on">
+      <v-tooltip location="bottom" open-delay="1000" color="rgba(0, 0, 0, 1)">
+        <template v-slot:activator="{ props: tooltipProps }">
+          <span class="item-name" v-bind="tooltipProps">
             {{ !item.level && item.label === 'Unknown Prefix' ? 'i18n': item.label }}
           </span>
         </template>
@@ -36,94 +36,72 @@
   </div>
 </template>
 
-<script lang="ts">
-  import { defineComponent, ref, watch } from '@vue/composition-api';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
 
-  import { ComponentEmit } from '@/index';
+import { ClipboardItemAction, TreeItem } from '../types';
 
-  import { ClipboardItemAction, TreeItem } from '../types';
+const props = defineProps<{
+  item: TreeItem;
+  selectedItem?: TreeItem | null;
+  expanded?: boolean;
+  hasCopiedItem?: boolean;
+  clipboardItemId?: string | null;
+  clipboardItemAction?: ClipboardItemAction | null;
+}>();
 
-  export default defineComponent({
-    name: 'Tree',
-    props: {
-      item: {
-        type: Object as () => TreeItem,
-        required: true,
-      },
-      selectedItem: Object as () => TreeItem,
-      expanded: Boolean,
-      hasCopiedItem: Boolean,
-      clipboardItemId: String,
-      clipboardItemAction: Number as () => ClipboardItemAction,
-    },
-    setup(props, { emit }) {
-      const icon = getIcon(props.item);
-      const selectedItem = useSelectedItem(emit, props);
+const emit = defineEmits<{
+  (e: 'select', item: TreeItem): void;
+  (e: 'right-click', event: MouseEvent, item: TreeItem): void;
+}>();
 
-      const handleRightClick = (event: MouseEvent) => emit('right-click', event, props.item);
-      const onMissingCount = (event: MouseEvent) => {
-        if (!props.item.level) {
-          event.stopPropagation();
-          window.postMessage('missing', '*');
-        }
-      };
-      const onDuplicatedCount = (event: MouseEvent) => {
-        if (!props.item.level) {
-          event.stopPropagation();
-          window.postMessage('duplicated', '*');
-        }
-      };
-      const isClipboardItem = () => props.item.id === props.clipboardItemId;
-      const isItemBeingCopied = () =>
-        isClipboardItem() && props.clipboardItemAction === ClipboardItemAction.copy;
-      const isItemBeingCut = () =>
-        isClipboardItem() && props.clipboardItemAction === ClipboardItemAction.cut;
+const icon = getIcon(props.item);
 
-      return {
-        icon,
-        handleRightClick,
-        isItemBeingCopied,
-        isItemBeingCut,
-        onMissingCount,
-        onDuplicatedCount,
-        ...selectedItem,
-      };
-    },
-  });
+const selected = ref(false);
+const select = (): void => emit('select', props.item);
 
-  function useSelectedItem(
-    emit: ComponentEmit,
-    options: { item: TreeItem; selectedItem?: TreeItem },
-  ) {
-    const selected = ref(false);
+watch(
+  () => props.selectedItem,
+  item => {
+    selected.value = item?.id === props.item?.id;
+  },
+);
 
-    const select = () => emit('select', options.item);
+const handleRightClick = (event: MouseEvent): void => emit('right-click', event, props.item);
 
-    watch(
-      () => options.selectedItem,
-      item => {
-        selected.value = item?.id === options.item?.id ?? false;
-      },
-    );
-
-    return {
-      selected,
-      select,
-    };
+const onMissingCount = (event: MouseEvent): void => {
+  if (!props.item.level) {
+    event.stopPropagation();
+    window.postMessage('missing', '*');
   }
+};
 
-  function getIcon(item: TreeItem) {
-    switch (item.type) {
-      case 'folder':
-        return 'mdi-folder-outline';
-      case 'file':
-        return 'mdi-file-document-outline';
-      case 'node':
-        return 'mdi-menu';
-      case 'item':
-        return 'mdi-minus';
-    }
+const onDuplicatedCount = (event: MouseEvent): void => {
+  if (!props.item.level) {
+    event.stopPropagation();
+    window.postMessage('duplicated', '*');
   }
+};
+
+const isClipboardItem = (): boolean => props.item.id === props.clipboardItemId;
+const isItemBeingCopied = (): boolean =>
+  isClipboardItem() && props.clipboardItemAction === ClipboardItemAction.copy;
+const isItemBeingCut = (): boolean =>
+  isClipboardItem() && props.clipboardItemAction === ClipboardItemAction.cut;
+
+function getIcon(item: TreeItem): string {
+  switch (item.type) {
+    case 'folder':
+      return 'mdi-folder-outline';
+    case 'file':
+      return 'mdi-file-document-outline';
+    case 'node':
+      return 'mdi-menu';
+    case 'item':
+    default:
+      return 'mdi-minus';
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -146,11 +124,11 @@
     }
 
     &.copy {
-      border: 2px solid var(--v-primary-base);
+      border: 2px solid rgb(var(--v-theme-primary));
     }
 
     &.cut {
-      border: 2px dashed var(--v-primary-base);
+      border: 2px dashed rgb(var(--v-theme-primary));
     }
 
     .label {
@@ -174,15 +152,15 @@
       }
 
       &.missing {
-        color: var(--v-error-base);
+        color: rgb(var(--v-theme-error));
       }
 
       &.changed {
-        color: var(--v-warning-darken1);
+        color: rgb(var(--v-theme-warning-darken-1));
       }
 
       &.new {
-        color: var(--v-success-base);
+        color: rgb(var(--v-theme-success));
       }
     }
 
@@ -196,7 +174,7 @@
       height: $size;
       min-width: $size;
 
-      border-radius: $size / 2;
+      border-radius: 12px;
       line-height: 16px;
       padding: 4px;
 
@@ -207,12 +185,12 @@
     }
 
     .missing-count {
-      background-color: var(--v-error-base);
+      background-color: rgb(var(--v-theme-error));
       color: #ffffff;
     }
 
     .duplicated-count {
-      background-color: var(--v-warning-base);
+      background-color: rgb(var(--v-theme-warning));
       color: #ffffff;
     }
 

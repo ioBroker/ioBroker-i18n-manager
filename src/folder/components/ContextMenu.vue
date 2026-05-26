@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-menu absolute v-model="isOpened" :position-x="positionX" :position-y="positionY">
+    <v-menu v-model="isOpened" :target="[positionX, positionY]">
       <v-list>
         <v-list-item v-if="hasChildren()" @click="addItem">
           <v-list-item-title>Add Item</v-list-item-title>
@@ -51,7 +51,7 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="cancelAction">Cancel</v-btn>
+          <v-btn variant="text" @click="cancelAction">Cancel</v-btn>
           <v-btn color="primary" @click="finishAction">Ok</v-btn>
           <v-spacer />
         </v-card-actions>
@@ -60,229 +60,201 @@
   </div>
 </template>
 
-<script lang="ts">
-  import { defineComponent, reactive, Ref, ref, toRefs, watch } from '@vue/composition-api';
+<script setup lang="ts">
+import { reactive, ref, toRefs, watch } from 'vue';
 
-  import {
-    AddItemPayload,
-    ClipboardItemAction,
-    DeleteItemPayload,
-    PasteItemPayload,
-    RenameItemPayload,
-    SetClipboardPayload,
-    TreeItem,
-    TreeMap,
-  } from '@/folder/types';
+import {
+  AddItemPayload,
+  ClipboardItemAction,
+  DeleteItemPayload,
+  PasteItemPayload,
+  RenameItemPayload,
+  SetClipboardPayload,
+  TreeItem,
+  TreeMap,
+} from '@/folder/types';
 
-  export default defineComponent({
-    props: {
-      tree: {
-        required: true,
-        type: Object as () => TreeMap,
-      },
-      treeItems: {
-        required: true,
-        type: Array as () => TreeItem[],
-      },
-      clipboardItemId: {
-        type: String,
-      },
-    },
-    setup(props, { emit }) {
-      const itemLabelRef = ref<any>(null);
-      const clickedItem = ref<TreeItem | null>(null);
-      const isDialogVisible = ref<boolean>(false);
-      const siblings = ref<TreeItem[]>([]);
-      const actionTitle = ref<String>('');
-      const itemLabel = ref<String>('');
-      const isValidLabel = ref<boolean>(true);
-      const finishAction = ref<Function | null>(null);
+const props = defineProps<{
+  tree: TreeMap;
+  treeItems: TreeItem[];
+  clipboardItemId?: string | null;
+}>();
 
-      const contextMenu = useContextMenu(clickedItem);
+const emit = defineEmits<{
+  (e: 'send-modified-content'): void;
+  (e: 'add-item', payload: AddItemPayload): void;
+  (e: 'paste-item', payload: PasteItemPayload): void;
+  (e: 'rename-item', payload: RenameItemPayload): void;
+  (e: 'delete-item', payload: DeleteItemPayload): void;
+  (e: 'set-clipboard', payload: SetClipboardPayload): void;
+}>();
 
-      const sendModifiedContent = () => emit('send-modified-content');
+const itemLabelRef = ref<any>(null);
+const clickedItem = ref<TreeItem | null>(null);
+const isDialogVisible = ref(false);
+const siblings = ref<TreeItem[]>([]);
+const actionTitle = ref('');
+const itemLabel = ref('');
+const isValidLabel = ref(true);
+const finishAction = ref<() => void>(() => undefined);
 
-      watch([siblings, itemLabel], () => {
-        isValidLabel.value =
-          siblings.value.filter((it) => it.label === itemLabel.value).length === 0;
-      });
+const menuState = reactive({
+  isOpened: false,
+  positionX: 0,
+  positionY: 0,
+});
+const { isOpened, positionX, positionY } = toRefs(menuState);
 
-      const getItemType = () => clickedItem.value?.type;
-      const hasChildren = () => getItemType() !== 'item';
-      const isItemOrNode = () => getItemType() === 'item' || getItemType() === 'node';
-      const isFileOrNode = () => getItemType() !== 'folder' && getItemType() !== 'item';
+const handleRightClick = (event: MouseEvent, item: TreeItem): void => {
+  clickedItem.value = item;
+  menuState.positionX = event.clientX;
+  menuState.positionY = event.clientY;
+  menuState.isOpened = true;
+};
 
-      const focusLabelInput = () => setTimeout(itemLabelRef.value!.focus, 100);
+const sendModifiedContent = (): void => emit('send-modified-content');
 
-      const showDialog = () => (isDialogVisible.value = true);
-      const hideDialog = () => (isDialogVisible.value = false);
-      const cancelAction = () => {
-        itemLabel.value = '';
-        isValidLabel.value = true;
-        hideDialog();
-      };
-      finishAction.value = cancelAction;
+watch([siblings, itemLabel], () => {
+  isValidLabel.value = siblings.value.filter(it => it.label === itemLabel.value).length === 0;
+});
 
-      const addItemStart = (isItem: boolean) => () => {
-        finishAction.value = addItemFinish(isItem);
-        siblings.value = props.treeItems.filter((it) => it.parent === clickedItem.value!.id);
-        actionTitle.value = 'Add Item';
-        showDialog();
-        focusLabelInput();
-      };
-      const addItemFinish = (isItem: boolean) => () => {
-        if (!isValidLabel.value) {
-          return;
-        }
+const getItemType = () => clickedItem.value?.type;
+const hasChildren = () => getItemType() !== 'item';
+const isItemOrNode = () => getItemType() === 'item' || getItemType() === 'node';
+const isFileOrNode = () => getItemType() !== 'folder' && getItemType() !== 'item';
 
-        emit('add-item', {
-          parent: clickedItem.value,
-          label: itemLabel.value,
-          isItem,
-        } as AddItemPayload);
-        cancelAction();
-        sendModifiedContent();
-      };
+const focusLabelInput = (): void => {
+  setTimeout(() => itemLabelRef.value?.focus?.(), 100);
+};
 
-      const addItem = addItemStart(true);
-      const addNode = addItemStart(false);
+const showDialog = (): void => {
+  isDialogVisible.value = true;
+};
+const hideDialog = (): void => {
+  isDialogVisible.value = false;
+};
+const cancelAction = (): void => {
+  itemLabel.value = '';
+  isValidLabel.value = true;
+  hideDialog();
+};
+finishAction.value = cancelAction;
 
-      const copyItem = () => {
-        emit('set-clipboard', {
-          item: clickedItem.value,
-          action: ClipboardItemAction.copy,
-        } as SetClipboardPayload);
-      };
-
-      const cutItem = () => {
-        emit('set-clipboard', {
-          item: clickedItem.value,
-          action: ClipboardItemAction.cut,
-        } as SetClipboardPayload);
-      };
-
-      const duplicateItem = () => {
-        copyItem();
-
-        finishAction.value = pasteItemFinish;
-        siblings.value = props.treeItems.filter((it) => it.parent === clickedItem.value!.parent);
-        actionTitle.value = 'Duplicate Item';
-        itemLabel.value = clickedItem.value!.label;
-        clickedItem.value = props.tree[clickedItem.value!.parent];
-
-        showDialog();
-        focusLabelInput();
-      };
-
-      const pasteItem = () => {
-        finishAction.value = pasteItemFinish;
-        siblings.value = props.treeItems.filter((it) => it.parent === clickedItem.value!.id);
-        actionTitle.value = 'Paste Item';
-        itemLabel.value = props.tree[props.clipboardItemId!]?.label;
-
-        showDialog();
-        focusLabelInput();
-      };
-      const pasteItemFinish = () => {
-        if (!isValidLabel.value) return;
-
-        emit('paste-item', {
-          parent: clickedItem.value,
-          label: itemLabel.value,
-        } as PasteItemPayload);
-        cancelAction();
-        sendModifiedContent();
-      };
-
-      const renameItem = () => {
-        finishAction.value = renameItemFinish;
-
-        siblings.value = props.treeItems.filter(
-          (it) => it.parent === clickedItem.value!.parent && it.id !== clickedItem.value!.id,
-        );
-        actionTitle.value = 'Rename Item';
-        itemLabel.value = clickedItem.value!.label;
-
-        showDialog();
-        focusLabelInput();
-      };
-      const renameItemFinish = () => {
-        if (!isValidLabel.value || itemLabel.value === clickedItem.value!.label) return;
-
-        emit('rename-item', {
-          item: clickedItem.value,
-          label: itemLabel.value,
-        } as RenameItemPayload);
-        cancelAction();
-        sendModifiedContent();
-      };
-
-      const deleteItem = () => {
-        if (confirm('Are you sure to delete this item?')) {
-          emit('delete-item', {
-            item: clickedItem.value,
-          } as DeleteItemPayload);
-          sendModifiedContent();
-        }
-      };
-
-      const copyItemPath = () => {
-        let path = '';
-        for (let i = 0; i < clickedItem.value!.level; i++) {
-          if (i > 0) {
-            path = '.'.concat(path);
-          }
-          path = clickedItem.value!.path[clickedItem.value!.path.length - 1 - i].concat(path);
-        }
-        navigator.clipboard.writeText(path);
-      };
-
-      return {
-        ...contextMenu,
-        isDialogVisible,
-        actionTitle,
-        itemLabelRef,
-        itemLabel,
-        isValidLabel,
-
-        hasChildren,
-        isItemOrNode,
-        isFileOrNode,
-
-        addItem,
-        addNode,
-        copyItem,
-        cutItem,
-        duplicateItem,
-        pasteItem,
-        renameItem,
-        deleteItem,
-        copyItemPath,
-        finishAction,
-        cancelAction,
-      };
-    },
-  });
-
-  function useContextMenu(clickedItem: Ref<TreeItem | null>) {
-    const state = reactive({
-      isOpened: false,
-      positionX: 0,
-      positionY: 0,
-    });
-
-    const handleRightClick = (event: MouseEvent, item: TreeItem) => {
-      clickedItem.value = item;
-      state.positionX = event.clientX;
-      state.positionY = event.clientY;
-      state.isOpened = true;
-    };
-
-    return {
-      ...toRefs(state),
-      handleRightClick,
-    };
+const addItemStart = (isItem: boolean) => () => {
+  finishAction.value = addItemFinish(isItem);
+  siblings.value = props.treeItems.filter(it => it.parent === clickedItem.value!.id);
+  actionTitle.value = 'Add Item';
+  showDialog();
+  focusLabelInput();
+};
+const addItemFinish = (isItem: boolean) => () => {
+  if (!isValidLabel.value) {
+    return;
   }
+
+  emit('add-item', {
+    parent: clickedItem.value,
+    label: itemLabel.value,
+    isItem,
+  } as unknown as AddItemPayload);
+  cancelAction();
+  sendModifiedContent();
+};
+
+const addItem = addItemStart(true);
+const addNode = addItemStart(false);
+
+const copyItem = (): void => {
+  emit('set-clipboard', {
+    item: clickedItem.value,
+    action: ClipboardItemAction.copy,
+  } as unknown as SetClipboardPayload);
+};
+
+const cutItem = (): void => {
+  emit('set-clipboard', {
+    item: clickedItem.value,
+    action: ClipboardItemAction.cut,
+  } as unknown as SetClipboardPayload);
+};
+
+const duplicateItem = (): void => {
+  copyItem();
+
+  finishAction.value = pasteItemFinish;
+  siblings.value = props.treeItems.filter(it => it.parent === clickedItem.value!.parent);
+  actionTitle.value = 'Duplicate Item';
+  itemLabel.value = clickedItem.value!.label;
+  clickedItem.value = props.tree[clickedItem.value!.parent];
+
+  showDialog();
+  focusLabelInput();
+};
+
+const pasteItem = (): void => {
+  finishAction.value = pasteItemFinish;
+  siblings.value = props.treeItems.filter(it => it.parent === clickedItem.value!.id);
+  actionTitle.value = 'Paste Item';
+  itemLabel.value = props.tree[props.clipboardItemId!]?.label;
+
+  showDialog();
+  focusLabelInput();
+};
+const pasteItemFinish = (): void => {
+  if (!isValidLabel.value) return;
+
+  emit('paste-item', {
+    parent: clickedItem.value,
+    label: itemLabel.value,
+  } as unknown as PasteItemPayload);
+  cancelAction();
+  sendModifiedContent();
+};
+
+const renameItem = (): void => {
+  finishAction.value = renameItemFinish;
+
+  siblings.value = props.treeItems.filter(
+    it => it.parent === clickedItem.value!.parent && it.id !== clickedItem.value!.id,
+  );
+  actionTitle.value = 'Rename Item';
+  itemLabel.value = clickedItem.value!.label;
+
+  showDialog();
+  focusLabelInput();
+};
+const renameItemFinish = (): void => {
+  if (!isValidLabel.value || itemLabel.value === clickedItem.value!.label) return;
+
+  emit('rename-item', {
+    item: clickedItem.value,
+    label: itemLabel.value,
+  } as unknown as RenameItemPayload);
+  cancelAction();
+  sendModifiedContent();
+};
+
+const deleteItem = (): void => {
+  if (confirm('Are you sure to delete this item?')) {
+    emit('delete-item', {
+      item: clickedItem.value,
+    } as unknown as DeleteItemPayload);
+    sendModifiedContent();
+  }
+};
+
+const copyItemPath = (): void => {
+  let path = '';
+  for (let i = 0; i < clickedItem.value!.level; i++) {
+    if (i > 0) {
+      path = '.'.concat(path);
+    }
+    path = clickedItem.value!.path[clickedItem.value!.path.length - 1 - i].concat(path);
+  }
+  void navigator.clipboard.writeText(path);
+};
+
+defineExpose({ handleRightClick });
 </script>
 
 <style scoped></style>

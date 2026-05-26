@@ -48,4 +48,4 @@ export const createLanguageList = (
 };
 
 const isSupportedLanguage = (supportedLanguages: string[]) => (language: string): boolean =>
-  !!supportedLanguages?.find(it => language.startsWith(it)) ?? false;
+  !!supportedLanguages?.find(it => language.startsWith(it));

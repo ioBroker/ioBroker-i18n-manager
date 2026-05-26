@@ -9,91 +9,53 @@
             <v-list-item
               v-for="folder in recentFolders"
               :key="folder.fullPath"
+              :title="folder.folder"
+              :subtitle="folder.fullPath"
               @click="openFolder(folder)"
-              two-line
-            >
-              <v-list-item-content>
-                <v-list-item-title>{{ folder.folder }}</v-list-item-title>
-                <v-list-item-subtitle>{{ folder.fullPath }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+            />
           </v-list>
         </v-card>
       </v-col>
 
       <v-col>
-        <v-card>
-          <v-card-title>ioBroker edition Version</v-card-title>
+        <v-card class="info-card">
+          <v-card-item>
+            <template v-slot:prepend>
+              <v-icon size="32" color="primary">mdi-translate</v-icon>
+            </template>
+            <v-card-title>i18n Manager</v-card-title>
+            <v-card-subtitle>ioBroker edition</v-card-subtitle>
+          </v-card-item>
+          <v-card-text class="d-flex align-center">
+            <span class="text-medium-emphasis mr-2">Version</span>
+            <v-chip size="small" color="primary" variant="tonal">{{ currentVersion }}</v-chip>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
   </div>
 </template>
 
-<script lang="ts">
-  import { defineComponent } from '@vue/composition-api';
-  import { useNamespace } from '@/store/utils';
-  import { sendIpc } from '@/store/plugins/ipc';
-  import { FormattedFolderPath } from '@common/types';
-  import * as ipcMessages from '@common/ipcMessages';
-  import RemoteLink from '@/components/RemoteLink.vue';
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useHomeStore } from '@/home/store';
+import { sendIpc } from '@/ipc';
+import { FormattedFolderPath } from '@common/types';
+import * as ipcMessages from '@common/ipcMessages';
 
-  export default defineComponent({
-    name: 'Home',
-    components: {
-      RemoteLink,
-    },
-    setup() {
-      const homeModule = useNamespace('home');
-      const recentFolders = homeModule.useState<FormattedFolderPath[]>('recentFolders');
-      // const checkVersion = homeModule.useAction('checkVersion');
-      const currentVersion = homeModule.useState<string>('currentVersion');
-      const latestVersion = homeModule.useState<string>('latestVersion');
+const homeStore = useHomeStore();
+const { recentFolders, currentVersion } = storeToRefs(homeStore);
 
-      function openFolder(folder: FormattedFolderPath) {
-        sendIpc(ipcMessages.open, folder.fullPath);
-      }
+function openFolder(folder: FormattedFolderPath): void {
+  sendIpc(ipcMessages.open, folder.fullPath);
+}
 
-      sendIpc(ipcMessages.recentFolders);
-      // checkVersion();
-
-      return {
-        recentFolders,
-        openFolder,
-        currentVersion,
-        latestVersion,
-      };
-    },
-  });
+sendIpc(ipcMessages.recentFolders);
 </script>
 
 <style lang="scss">
   .home {
     padding: 0 8px;
     height: 100%;
-  }
-
-  .gh-star {
-    color: #24292e !important;
-    background-color: #eff3f6;
-    background-image: linear-gradient(180deg, #fafbfc, #eff3f6 90%);
-    border-radius: 0.25em;
-    padding: 2px 5px;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 14px;
-    user-select: none;
-    border: 1px solid rgba(27, 31, 35, 0.2);
-    text-decoration: none;
-    outline: 0;
-    margin-left: 8px;
-
-    svg {
-      width: 12.25px;
-      height: 14px;
-      display: inline-block;
-      vertical-align: text-top;
-      fill: currentColor;
-    }
   }
 </style>

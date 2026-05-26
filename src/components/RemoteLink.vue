@@ -6,27 +6,12 @@
   </a>
 </template>
 
-<script lang="ts">
-  import { defineComponent } from '@vue/composition-api';
+<script setup lang="ts">
+const props = defineProps<{
+  href: string;
+}>();
 
-  const shell = (window as any).require('electron').shell;
-
-  export default defineComponent({
-    name: 'RemoteLink',
-    props: {
-      href: {
-        type: String,
-        required: true,
-      },
-    },
-    setup(props) {
-      function openLink() {
-        shell.openExternal(props.href);
-      }
-
-      return {
-        openLink,
-      };
-    },
-  });
+function openLink(): void {
+  window.electronAPI.openExternal(props.href);
+}
 </script>

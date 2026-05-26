@@ -1,7 +1,7 @@
 import { TreeItem, TreeMap } from '@/folder/types';
 import { getContentFromPath } from '@/folder/utils/files';
 import { LoadedPath } from '@common/types';
-import { ref, Ref, watch } from '@vue/composition-api';
+import { ref, Ref, watch } from 'vue';
 import _ from 'lodash/fp';
 
 export default function useTree(

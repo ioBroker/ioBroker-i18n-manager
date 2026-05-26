@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 
 import * as ipcMessages from '../common/ipcMessages';
 import { ParsedFile } from '../common/types';
@@ -97,6 +97,9 @@ const registerAppEvents = () => {
   ipcMain.on(ipcMessages.saveSettings, onSaveSettings);
   ipcMain.on(ipcMessages.settings, onGetSettings);
   ipcMain.on(ipcMessages.recentFolders, onRecentFolders);
+  ipcMain.on('open-external', (_e: any, url: string) => {
+    void shell.openExternal(url);
+  });
 
   app.on('open-file', onOpenFile);
   app.on('will-finish-launching', () => {

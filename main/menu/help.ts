@@ -1,4 +1,4 @@
-import { shell } from 'electron';
+import { BrowserWindow, shell } from 'electron';
 
 const helpMenu: Electron.MenuItemConstructorOptions = {
   role: 'help',
@@ -10,8 +10,10 @@ const helpMenu: Electron.MenuItemConstructorOptions = {
     {
       label: 'Toggle Developer Tools',
       accelerator: 'CommandOrControl+Shift+I',
-      click: (menuItem: Electron.MenuItem, window) => {
-        window.webContents.toggleDevTools();
+      click: (_menuItem, window) => {
+        if (window instanceof BrowserWindow) {
+          window.webContents.toggleDevTools();
+        }
       },
     },
   ],

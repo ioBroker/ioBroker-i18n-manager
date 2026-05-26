@@ -2,22 +2,20 @@
   <v-dialog
     v-model="visible"
     fullscreen
-    @close="hideSettings"
   >
     <v-form
       v-model="isFormValid"
-      @submit.prevent="handleSubmit"
       class="settings-form"
+      @submit.prevent="handleSubmit"
     >
       <v-card class="settings">
-        <v-card-title primary-title>
+        <v-card-title>
           <v-btn
-            icon
+            icon="mdi-arrow-left"
+            variant="text"
             class="mr-2"
             @click="hideSettings"
-          >
-            <v-icon>mdi-arrow-left</v-icon>
-          </v-btn>
+          />
           Settings
         </v-card-title>
 
@@ -25,19 +23,15 @@
           <v-row>
             <v-col class="px-5 pb-3">
               <v-select
-                  v-model="settings.sortOnSave"
-                  label="Sort words on save"
-                  :items="['sort', 'no sort']"
-                  outlined
-              />
+                v-model="settings.sortOnSave"
+                label="Sort words on save"
+                :items="['sort', 'no sort']"              />
             </v-col>
             <v-col class="px-5 pb-3">
               <v-select
                 v-model="settings.spacesIndentation"
                 label="Spaces indentation"
-                :items="['4', '2', 'tab', 'detect']"
-                outlined
-              />
+                :items="['4', '2', 'tab', 'detect']"              />
             </v-col>
           </v-row>
           <v-row>
@@ -45,10 +39,8 @@
               <v-select
                 v-model="settings.translationEngine"
                 label="Translation Engine"
-                :items="[{ text: 'Google Translate', value: 'google'}, { text: 'DeepL', value: 'deepl'}, { text: 'Amazon Web Services', value: 'aws'}, { text: 'DeepL (only for ioBroker projects)', value: 'deeplIoBroker'}, { text: 'Amazon Web Services (only for ioBroker projects)', value: 'awsIoBroker'}, { text: 'Google Translate (only for ioBroker projects)', value: 'googleIoBroker'}, { text: 'Libre Translation (only for ioBroker projects)', value: 'libreIoBroker' }]"
-                hide-details
-                outlined
-              />
+                :items="translationEngines"
+                hide-details              />
             </v-col>
           </v-row>
           <v-row v-if="settings.translationEngine === 'google'">
@@ -56,9 +48,7 @@
               <v-text-field
                 v-model="settings.googleTranslateApiKey"
                 label="Google Translate™ API Key"
-                hide-details
-                outlined
-              />
+                hide-details              />
             </v-col>
           </v-row>
           <div class="px-2" v-if="settings.translationEngine === 'google'">
@@ -69,9 +59,7 @@
               <v-text-field
                 v-model="settings.deepLTranslateApiKey"
                 label="DeepL translate API Key"
-                hide-details
-                outlined
-              />
+                hide-details              />
             </v-col>
           </v-row>
           <div class="px-2" v-if="settings.translationEngine === 'deepl'">
@@ -82,24 +70,12 @@
               <v-text-field
                 v-model="settings.awsTranslateApiKey"
                 label="AWS Translate API Key"
-                hide-details
-                outlined
-              />
+                hide-details              />
             </v-col>
           </v-row>
           <div class="px-2" v-if="settings.translationEngine === 'aws'">
             <RemoteLink href="https://aws.amazon.com/en/translate/" />
           </div>
-          <!--v-row>
-            <v-col class="px-5 pb-3">
-              <v-text-field
-                v-model="settings.iobrokerTranslateApiKey"
-                label="ioBroker translate API Key"
-                hide-details
-                outlined
-              />
-            </v-col>
-          </v-row-->
         </v-card-text>
 
         <v-spacer />
@@ -107,8 +83,8 @@
         <v-card-actions>
           <v-spacer />
           <v-btn
+            variant="text"
             @click="hideSettings"
-            text
           >Cancel</v-btn>
           <v-btn
             :disabled="!isFormValid"
@@ -123,52 +99,51 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
-import { useNamespace } from '@/store/utils';
-import { CustomSettings } from '@common/types';
-import { defineComponent, watch } from '@vue/composition-api';
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { useGlobalStore } from '@/store/global';
+import { useSettingsStore } from '@/settings/store';
+import { useFolderStore } from '@/folder/store';
 import RemoteLink from '@/components/RemoteLink.vue';
 
-export default defineComponent({
-  name: 'Settings',
-  components: {
-    RemoteLink,
-  },
-  setup() {
-    const globalModule = useNamespace('global');
-    const visible = globalModule.useState<boolean>('isSettingsVisible');
-    const hideSettings = globalModule.useMutation('hideSettings');
+const globalStore = useGlobalStore();
+const settingsStore = useSettingsStore();
+const folderStore = useFolderStore();
 
-    const settingsModule = useNamespace('settings');
-    const settings = settingsModule.useState<CustomSettings>('settings', { immediate: true });
-    const saveSettings = settingsModule.useAction('saveSettings');
+const { settings } = storeToRefs(settingsStore);
 
-    const folderModule = useNamespace('folder');
-    const refreshTranslationKey = folderModule.useAction('refreshTranslationKey');
+const isFormValid = ref(true);
 
-    const isFormValid = false;
+const translationEngines = [
+  { title: 'Google Translate', value: 'google' },
+  { title: 'DeepL', value: 'deepl' },
+  { title: 'Amazon Web Services', value: 'aws' },
+  { title: 'DeepL (only for ioBroker projects)', value: 'deeplIoBroker' },
+  { title: 'Amazon Web Services (only for ioBroker projects)', value: 'awsIoBroker' },
+  { title: 'Google Translate (only for ioBroker projects)', value: 'googleIoBroker' },
+  { title: 'Libre Translation (only for ioBroker projects)', value: 'libreIoBroker' },
+];
 
-    async function handleSubmit() {
-      await saveSettings(settings.value);
-      await refreshTranslationKey();
+// Writable proxy so closing the dialog (ESC / backdrop) hides the settings.
+const visible = computed<boolean>({
+  get: () => globalStore.isSettingsVisible,
+  set: value => {
+    if (!value) {
+      globalStore.hideSettings();
     }
-
-    // Synchronize when the dialog is closed using ESC key
-    watch(visible, () => {
-      if (!visible.value) {
-        hideSettings();
-      }
-    });
-
-    return {
-      visible,
-      settings,
-      hideSettings,
-      handleSubmit,
-      isFormValid,
-    };
   },
 });
+
+function hideSettings(): void {
+  globalStore.hideSettings();
+}
+
+async function handleSubmit(): Promise<void> {
+  settingsStore.saveSettings(settings.value);
+  await folderStore.refreshTranslationKey();
+}
 </script>
 
 <style scoped lang="scss">

@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig, CancelTokenSource, Method } from 'axios';
 import _ from 'lodash/fp';
-import { Commit } from 'vuex';
 
 import {CustomSettings, LoadedGroup, LoadedPath} from '@common/types';
 import { TranslatePayload, TranslationError, TreeItem } from '../types';
@@ -134,7 +133,7 @@ export const translate = async (
         error: TRANSLATE_ERRORS.genericGoogleTranslateError(sourceLanguage, targetLanguage),
       };
     }
-  } catch (e) {
+  } catch (e: any) {
     if (axios.isCancel(e)) {
       throw e;
     }
@@ -182,7 +181,7 @@ export function isIoBroker(folder: LoadedPath[]): boolean {
 }
 
 export function getTranslationItems(
-  commit: Commit,
+  addError: (error: TranslationError) => void,
   folder: LoadedPath[],
   items: TreeItem[],
   payload: TranslatePayload,
@@ -207,7 +206,7 @@ export function getTranslationItems(
     }
 
     if (!source) {
-      commit('addTranslationError', {
+      addError({
         path: formattedPath,
         error: TRANSLATE_ERRORS.noSourceLanguage(payload.sourceLanguage),
       });
@@ -218,7 +217,7 @@ export function getTranslationItems(
     const sourceText = _.get(getLanguagePath(item.path, sourceIndex), folder as any) as string;
 
     if (!sourceText || sourceText.length === 0) {
-      commit('addTranslationError', {
+      addError({
         path: formattedPath,
         error: TRANSLATE_ERRORS.emptySourceField(payload.sourceLanguage),
       });

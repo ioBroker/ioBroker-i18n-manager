@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron';
-import electronIsDev from 'electron-is-dev';
+import { is } from '@electron-toolkit/utils';
 
 import registerAppEvents from './events';
 import loadMenu from './menu';
@@ -18,18 +18,8 @@ if (process.platform === 'darwin') {
   });
 }
 
-const installDevTools = () => {
-  if (electronIsDev) {
-    const { default: installExtension, VUEJS_DEVTOOLS } = require('electron-devtools-installer');
-
-    installExtension([VUEJS_DEVTOOLS])
-      .then((name: any) => console.log('Added Extension: ', name))
-      .catch((err: any) => console.log('An error occurred: ', err));
-  }
-};
-
 const openConsole = (window: BrowserWindow) => {
-  if (electronIsDev) {
+  if (is.dev) {
     window.webContents.openDevTools();
   }
 };
@@ -38,7 +28,6 @@ app.on('ready', () => {
   loadMenu();
   const window = createWindow();
 
-  // installDevTools();
   openConsole(window);
 });
 
