@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels>
+  <v-expansion-panels variant="accordion" class="translate-panels">
     <v-expansion-panel>
       <v-expansion-panel-title style="padding-top: 8px; padding-bottom: 8px">
         <v-btn
@@ -150,6 +150,12 @@ function xOptionSelectedWarningMessage(option: string): string {
 </script>
 
 <style lang="scss">
+  .translate-panels {
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+
   .targets {
     .v-select__selections {
       max-height: 72px;

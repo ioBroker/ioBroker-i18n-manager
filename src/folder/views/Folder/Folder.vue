@@ -30,11 +30,8 @@
         Convert folders
       </v-btn>
     </div>
-    <v-row class="main ma-0 mt-2">
-      <v-col
-        cols="4"
-        class="left-side pa-0 pb-1 mr-4"
-      >
+    <div class="main">
+      <div class="tree-pane">
         <v-card class="left-card">
           <RecycleScroller
             :items="expandedTreeItems"
@@ -55,36 +52,30 @@
             />
           </RecycleScroller>
         </v-card>
-      </v-col>
-      <v-col class="right-side pa-2 pr-0">
-        <v-row class="ma-0">
-          <v-col class="pa-0 mb-4">
-            <div class="translate-container">
-              <Translate
-                :language-list="languageList"
-                :is-translation-enabled="isTranslationEnabled"
-                :selected-item="selectedItem"
-                @showSettings="showSettings"
-                @translate="translate"
-              />
-            </div>
-          </v-col>
-        </v-row>
-        <v-row class="ma-0 content-container">
-          <v-col class="pa-0 pr-2">
-            <Content
-              :selected-item="selectedItem"
-              :folder="folder"
-              :original-folder="originalFolder"
-              :language-list="languageList"
-              :is-translation-enabled="isTranslationEnabled"
-              @update-value="updateFolderValue"
-              @translate="translate"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
+      </div>
+      <div class="content-pane">
+        <div class="translate-wrap">
+          <Translate
+            :language-list="languageList"
+            :is-translation-enabled="isTranslationEnabled"
+            :selected-item="selectedItem"
+            @showSettings="showSettings"
+            @translate="translate"
+          />
+        </div>
+        <div class="content-wrap">
+          <Content
+            :selected-item="selectedItem"
+            :folder="folder"
+            :original-folder="originalFolder"
+            :language-list="languageList"
+            :is-translation-enabled="isTranslationEnabled"
+            @update-value="updateFolderValue"
+            @translate="translate"
+          />
+        </div>
+      </div>
+    </div>
     <v-row class="status-bar">
       <v-col class="pb-0 pt-2">
         <v-card
@@ -297,12 +288,19 @@ const sendModifiedContent = folderStore.sendModifiedContent;
 }
 
 .main {
-  flex: 1;
-  height: calc(100vh - 64px - 46px);
+  display: flex;
+  gap: 8px;
+  height: calc(100vh - 64px - 46px - 8px);
+  margin-top: 8px;
+  padding-right: 8px;
 }
 
-.left-side {
+.tree-pane {
+  flex: 0 0 33%;
+  min-width: 0;
   height: 100%;
+  padding-bottom: 4px;
+  outline: 3px solid red;
 }
 
 .left-card {
@@ -314,31 +312,28 @@ const sendModifiedContent = folderStore.sendModifiedContent;
   flex-direction: column;
 }
 
-.tree-container {
-  overflow: auto;
+.tree-scroller {
   height: 100%;
-
-  .tree-scroller {
-    height: 100%;
-  }
 }
 
-.right-side {
-  padding-top: 0;
+.content-pane {
+  flex: 1 1 auto;
+  min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
+  outline: 3px solid lime;
+}
 
-  .content-container {
-    height: 100%;
-    overflow: auto;
+.translate-wrap {
+  margin-bottom: 16px;
+}
 
-    > div {
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-  }
+.content-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .status-bar {
