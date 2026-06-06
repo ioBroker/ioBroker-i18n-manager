@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed } from 'vue';
 
 import { ClipboardItemAction, TreeItem } from '../types';
 
@@ -57,15 +57,8 @@ const emit = defineEmits<{
 
 const icon = getIcon(props.item);
 
-const selected = ref(false);
+const selected = computed(() => props.selectedItem?.id === props.item?.id);
 const select = (): void => emit('select', props.item);
-
-watch(
-  () => props.selectedItem,
-  item => {
-    selected.value = item?.id === props.item?.id;
-  },
-);
 
 const handleRightClick = (event: MouseEvent): void => emit('right-click', event, props.item);
 

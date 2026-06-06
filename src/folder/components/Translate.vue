@@ -117,6 +117,7 @@ watch(() => settings.value.translationMode, current => {
     const result = confirm(xOptionSelectedWarningMessage('Overwrite'));
     if (!result) {
       settings.value.translationMode = 'this';
+      handleChange();
     }
   }
 });
@@ -126,6 +127,7 @@ watch(() => settings.value.translationOverwrite, current => {
     const result = confirm(xOptionSelectedWarningMessage('All Keys'));
     if (!result) {
       settings.value.translationOverwrite = false;
+      handleChange();
     }
   }
 });

@@ -41,9 +41,7 @@ export const translate = async (
           text
         }
       );
-      response.data.zh = response.data['zh-cn'];
-      response.data['zh-CN'] = response.data['zh-cn'];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings.translationEngine === 'googleIoBroker') {
       if (!isFolderFromIoBroker) {
         return {
@@ -59,9 +57,7 @@ export const translate = async (
           service: 'google',
         }
       );
-      response.data.zh = response.data['zh-cn'];
-      response.data['zh-CN'] = response.data['zh-cn'];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings.translationEngine === 'deeplIoBroker') {
       if (!isFolderFromIoBroker) {
         return {
@@ -77,9 +73,7 @@ export const translate = async (
           service: 'deepl',
         }
       );
-      response.data.zh = response.data['zh-cn'];
-      response.data['zh-CN'] = response.data['zh-cn'];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings.translationEngine === 'awsIoBroker') {
       if (!isFolderFromIoBroker) {
         return {
@@ -95,9 +89,7 @@ export const translate = async (
           service: 'aws',
         }
       );
-      response.data.zh = response.data['zh-cn'];
-      response.data['zh-CN'] = response.data['zh-cn'];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings.translationEngine === 'aws') {
       return {
         path,
@@ -149,6 +141,20 @@ export const translate = async (
 
 const getGoogleTranslateText = (response: any) =>
   _.get('data.translations[0].translatedText', response);
+
+// The iobroker.in service returns Chinese under the 'zh-cn' key. The rest of
+// the app expects 'zh' / 'zh-CN'. Add aliases only when the source key is
+// actually present so we don't introduce undefined fields.
+function normalizeIoBrokerResponse(data: Record<string, string> | undefined | null):
+  Record<string, string> | undefined {
+  if (!data) return data ?? undefined;
+  const zh = data['zh-cn'];
+  if (zh !== undefined) {
+    if (data.zh === undefined) data.zh = zh;
+    if (data['zh-CN'] === undefined) data['zh-CN'] = zh;
+  }
+  return data;
+}
 
 function fetchAPI(url: string, method?: Method, data?: any, config?: AxiosRequestConfig) {
   const requestConfig: AxiosRequestConfig = {

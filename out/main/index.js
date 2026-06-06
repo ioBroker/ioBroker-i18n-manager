@@ -1,6 +1,7 @@
 "use strict";
 const electron = require("electron");
 const utils = require("@electron-toolkit/utils");
+const path$1 = require("node:path");
 const fs = require("fs");
 const util = require("util");
 const nodeWatch = require("node-watch");
@@ -8,7 +9,6 @@ const _ = require("lodash/fp");
 const _$1 = require("lodash");
 const path = require("path");
 const yaml = require("js-yaml");
-const node_path = require("node:path");
 function _interopNamespaceDefault(e) {
   const n = Object.create(null, { [Symbol.toStringTag]: { value: "Module" } });
   if (e) {
@@ -25,6 +25,7 @@ function _interopNamespaceDefault(e) {
   n.default = e;
   return Object.freeze(n);
 }
+const path__namespace$1 = /* @__PURE__ */ _interopNamespaceDefault(path$1);
 const fs__namespace = /* @__PURE__ */ _interopNamespaceDefault(fs);
 const util__namespace = /* @__PURE__ */ _interopNamespaceDefault(util);
 const ___namespace$1 = /* @__PURE__ */ _interopNamespaceDefault(_);
@@ -1004,9 +1005,9 @@ const createWindow = () => {
     minWidth: 1280,
     minHeight: 720,
     show: false,
-    icon: node_path.join(__dirname, "../../icons/icon.png"),
+    icon: path$1.join(__dirname, "../../icons/icon.png"),
     webPreferences: {
-      preload: node_path.join(__dirname, "../preload/index.js"),
+      preload: path$1.join(__dirname, "../preload/index.js"),
       sandbox: false,
       contextIsolation: true,
       nodeIntegration: false
@@ -1015,7 +1016,7 @@ const createWindow = () => {
   if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
     window.loadURL(process.env["ELECTRON_RENDERER_URL"]);
   } else {
-    window.loadFile(node_path.join(__dirname, "../renderer/index.html"));
+    window.loadFile(path$1.join(__dirname, "../renderer/index.html"));
   }
   registerEvents(window);
   return window;
@@ -1168,11 +1169,11 @@ const onSave = async (e, data) => {
     return;
   }
   const result = await saveFolder(folder);
+  sendSaveComplete(window, result);
   if (result.length > 0) {
     electron.dialog.showErrorBox("Failed to save the following files", result.join("\n"));
     return;
   }
-  sendSaveComplete(window, result);
   window.setDocumentEdited(false);
   if (closeWindow) {
     window.close();
@@ -1187,14 +1188,29 @@ const onOpen = (e, data) => {
   openFolderInWindow(data, window);
 };
 const onConvert = (e, files) => {
+  if (!Array.isArray(files) || files.length === 0) return;
   sendClose(e.sender);
-  files.forEach((file) => {
-    const data = fs.readFileSync(file.path, "utf8");
-    fs.writeFileSync(file.path.replace(`${file.language}\\translations.json`, `${file.language}.json`), data);
-    fs.unlinkSync(file.path);
-    fs.rmdirSync(file.path.replace("\\translations.json", ""));
-  });
-  onOpen(e, files[0].path.replace(`${files[0].language}\\translations.json`, ""));
+  const failures = [];
+  let parentDir;
+  for (const file of files) {
+    try {
+      const languageDir = path__namespace$1.dirname(file.path);
+      parentDir = parentDir ?? path__namespace$1.dirname(languageDir);
+      const destination = path__namespace$1.join(parentDir, `${file.language}.json`);
+      const data = fs.readFileSync(file.path, "utf8");
+      fs.writeFileSync(destination, data);
+      fs.unlinkSync(file.path);
+      fs.rmSync(languageDir, { recursive: true, force: true });
+    } catch (err) {
+      failures.push(`${file.path}: ${err?.message ?? err}`);
+    }
+  }
+  if (failures.length > 0) {
+    electron.dialog.showErrorBox("Failed to convert the following files", failures.join("\n"));
+  }
+  if (parentDir) {
+    onOpen(e, parentDir);
+  }
 };
 const onDataChanged = (e, data) => {
   const window = electron.BrowserWindow.fromWebContents(e.sender);
@@ -1233,9 +1249,6 @@ const registerAppEvents = () => {
     void electron.shell.openExternal(url);
   });
   electron.app.on("open-file", onOpenFile);
-  electron.app.on("will-finish-launching", () => {
-    electron.app.on("open-file", onOpenFile);
-  });
 };
 const onPreferencesClick = () => {
   const window = getCurrentWindow();

@@ -60,6 +60,9 @@ export const useFolderStore = defineStore('folder', () => {
 
   // Not part of the reactive state, just kept across the translate run.
   let cancelToken: CancelTokenSource | null = null;
+  // Increments on every openFolder/closeFolder so a slow language-list fetch
+  // from a previous open doesn't overwrite the current folder's languageList.
+  let folderRevision = 0;
 
   const treeItems = computed<TreeItem[]>(() => Object.values(tree.value));
 
@@ -76,6 +79,7 @@ export const useFolderStore = defineStore('folder', () => {
   }
 
   async function closeFolder(): Promise<void> {
+    folderRevision++;
     await router.push('/');
 
     tree.value = {};
@@ -89,6 +93,7 @@ export const useFolderStore = defineStore('folder', () => {
   }
 
   async function openFolder(loaded: LoadedPath[]): Promise<void> {
+    const revision = ++folderRevision;
     folder.value = _.cloneDeep(loaded);
     originalFolder.value = _.cloneDeep(loaded);
     modifiedContent.value = false;
@@ -100,7 +105,7 @@ export const useFolderStore = defineStore('folder', () => {
     createTreeStatus(newTree, folder.value, folder.value);
     tree.value = newTree;
 
-    await createLanguageList();
+    await createLanguageList(revision);
     sendModifiedContent();
   }
 
@@ -124,11 +129,12 @@ export const useFolderStore = defineStore('folder', () => {
     await createLanguageList();
   }
 
-  async function createLanguageList(): Promise<void> {
-    const { googleTranslateApiKey, translationEngine, deepLTranslateApiKey, awsTranslateApiKey } =
-      useSettingsStore().settings;
+  async function createLanguageList(revision: number = ++folderRevision): Promise<void> {
+    const { googleTranslateApiKey, translationEngine } = useSettingsStore().settings;
 
     let supportedLanguages: string[] = [];
+    let enabled = false;
+
     if (googleTranslateApiKey && (translationEngine === 'google' || !translationEngine)) {
       try {
         const supportedLanguagesResponse = await fetch(
@@ -139,24 +145,30 @@ export const useFolderStore = defineStore('folder', () => {
         supportedLanguages = _.get('data.languages', supportedLanguagesBody).map(
           (it: any) => it.language,
         );
-        isTranslationEnabled.value = true;
+        enabled = true;
       } catch (e) {
-        isTranslationEnabled.value = false;
+        enabled = false;
       }
-    } else if (translationEngine === 'deepl' && deepLTranslateApiKey) {
-      isTranslationEnabled.value = true;
-      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk'];
-    } else if (translationEngine === 'aws' && awsTranslateApiKey) {
-      supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk', 'zh-CN'];
-      isTranslationEnabled.value = true;
     } else if (translationEngine === 'deeplIoBroker') {
       supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk'];
-      isTranslationEnabled.value = true;
-    } else if (translationEngine === 'awsIoBroker' || translationEngine === 'googleIoBroker' || translationEngine === 'libreIoBroker') {
+      enabled = true;
+    } else if (
+      translationEngine === 'awsIoBroker' ||
+      translationEngine === 'googleIoBroker' ||
+      translationEngine === 'libreIoBroker'
+    ) {
       supportedLanguages = ['de', 'en', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'ru', 'uk', 'zh-CN'];
-      isTranslationEnabled.value = true;
+      enabled = true;
     }
+    // 'deepl' and 'aws' (direct providers) are not yet implemented in translate.ts;
+    // leave enabled=false so the UI shows "Configure" instead of failing per item.
 
+    // Drop stale results: another openFolder/closeFolder may have happened
+    // while we were awaiting the network fetch above.
+    if (revision !== folderRevision) {
+      return;
+    }
+    isTranslationEnabled.value = enabled;
     languageList.value = buildLanguageList(tree.value, folder.value, supportedLanguages);
   }
 
@@ -192,6 +204,12 @@ export const useFolderStore = defineStore('folder', () => {
   }
 
   async function translate(payload: TranslatePayload): Promise<void> {
+    // Prevent a second translate from racing the first: cancel the in-flight
+    // run before swapping cancelToken so we don't strand the previous loop.
+    if (isTranslating.value && cancelToken) {
+      cancelToken.cancel();
+    }
+
     const items =
       payload.mode === 'this' && selectedItem.value
         ? [selectedItem.value]
@@ -215,7 +233,8 @@ export const useFolderStore = defineStore('folder', () => {
     });
 
     updateProgress();
-    cancelToken = axios.CancelToken.source();
+    const runToken = axios.CancelToken.source();
+    cancelToken = runToken;
     isTranslating.value = true;
 
     let totalTime = 0;
@@ -240,7 +259,7 @@ export const useFolderStore = defineStore('folder', () => {
           item.targetLanguage,
           item.formattedPath,
           useSettingsStore().settings,
-          cancelToken!,
+          runToken,
           isFolderFromIoBroker,
         );
         const end = new Date().getTime();
@@ -258,33 +277,53 @@ export const useFolderStore = defineStore('folder', () => {
 
           updateTreeItemStatus(item.itemId);
         } else if (typeof result === 'object' && (result as Record<string, string>)[item.targetLanguage] !== undefined) {
-          Object.keys(result).forEach(lang => {
+          const bulk = result as Record<string, string>;
+          Object.keys(bulk).forEach(lang => {
             if (lang === item.sourceLanguage) {
               return;
             }
-            const lItem = translationItems.find(it => it.sourceText === item.sourceText && it.targetLanguage === lang);
-            if (lItem) {
-              lItem.done = true;
-              updateValue({
-                index: lItem.index,
-                value: (result as Record<string, string>)[lang],
-                itemId: lItem.itemId,
-              } as ChangeFolderValuePayload);
-              updateTreeItemStatus(lItem.itemId);
+            const translated = bulk[lang];
+            if (translated === undefined) {
+              return;
+            }
+            // Apply the bulk result to EVERY item with the same source text +
+            // target language, not just the first one. Otherwise duplicate
+            // source strings (e.g. "Save" appearing in two keys) would each
+            // trigger their own paid API call.
+            for (const lItem of translationItems) {
+              if (lItem.sourceText === item.sourceText && lItem.targetLanguage === lang) {
+                lItem.done = true;
+                updateValue({
+                  index: lItem.index,
+                  value: translated,
+                  itemId: lItem.itemId,
+                } as ChangeFolderValuePayload);
+                updateTreeItemStatus(lItem.itemId);
+              }
             }
           });
         } else if (result) {
           addTranslationError(result as TranslationError);
         }
       } catch (e) {
-        // Request was cancelled
-        isTranslating.value = false;
-        break;
+        if (axios.isCancel(e)) {
+          isTranslating.value = false;
+          break;
+        }
+        addTranslationError({
+          path: item.formattedPath,
+          error: (e as Error)?.message ?? String(e),
+        });
       }
     }
 
     updateProgress();
     sendModifiedContent();
+
+    // Only clear cancelToken if no newer translate() has replaced it.
+    if (cancelToken === runToken) {
+      cancelToken = null;
+    }
 
     if (translationErrors.value.length === 0) {
       setTimeout(() => {

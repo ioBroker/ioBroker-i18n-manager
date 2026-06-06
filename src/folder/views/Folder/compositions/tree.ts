@@ -1,7 +1,7 @@
 import { TreeItem, TreeMap } from '@/folder/types';
 import { getContentFromPath } from '@/folder/utils/files';
 import { LoadedPath } from '@common/types';
-import { ref, Ref, watch } from 'vue';
+import { onScopeDispose, ref, Ref, watch } from 'vue';
 import _ from 'lodash/fp';
 
 export default function useTree(
@@ -187,13 +187,15 @@ export default function useTree(
 
   const filterTree = _.debounce(500, filterTreeItems);
 
-  window.addEventListener('message', e => {
+  const onWindowMessage = (e: MessageEvent): void => {
     if (e.data === 'missing') {
       treeVisibilityFilter.value = 'missing';
     } else if (e.data === 'duplicated') {
       treeVisibilityFilter.value = 'duplicated';
     }
-  }, false);
+  };
+  window.addEventListener('message', onWindowMessage, false);
+  onScopeDispose(() => window.removeEventListener('message', onWindowMessage));
 
   return {
     treeFilter,

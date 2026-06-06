@@ -1,11 +1,12 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
+import * as path from 'node:path';
 
 import * as ipcMessages from '../common/ipcMessages';
 import { ParsedFile } from '../common/types';
 import * as fileManager from './fileManager';
 import * as settings from './Settings';
 import * as windowManager from './windowManager';
-import { readFileSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
+import { readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs';
 
 const onSave = async (e: any, data: any) => {
   const window = BrowserWindow.fromWebContents(e.sender);
@@ -22,12 +23,14 @@ const onSave = async (e: any, data: any) => {
 
   const result = await fileManager.saveFolder(folder);
 
+  // Always notify the renderer so isSaving clears, even on failure.
+  windowManager.sendSaveComplete(window, result);
+
   if (result.length > 0) {
     dialog.showErrorBox('Failed to save the following files', result.join('\n'));
     return;
   }
 
-  windowManager.sendSaveComplete(window, result);
   window.setDocumentEdited(false);
 
   if (closeWindow) {
@@ -49,15 +52,37 @@ const onConvert = (e: any, files: {
   path: string
   language: string
 }[]) => {
+  if (!Array.isArray(files) || files.length === 0) return;
+
   windowManager.sendClose(e.sender);
-  files.forEach(file => {
-    const data = readFileSync(file.path, 'utf8');
-    writeFileSync(file.path.replace(`${file.language}\\translations.json`, `${file.language}.json`), data);
-    unlinkSync(file.path);
-    rmdirSync(file.path.replace('\\translations.json', ''));
-  });
-  onOpen(e, files[0].path.replace(`${files[0].language}\\translations.json`, ''));
-}
+
+  const failures: string[] = [];
+  let parentDir: string | undefined;
+
+  for (const file of files) {
+    try {
+      // file.path looks like <parent>/<language>/translations.json (any separator).
+      const languageDir = path.dirname(file.path);              // .../<language>
+      parentDir = parentDir ?? path.dirname(languageDir);       // .../<parent>
+      const destination = path.join(parentDir, `${file.language}.json`);
+
+      const data = readFileSync(file.path, 'utf8');
+      writeFileSync(destination, data);
+      unlinkSync(file.path);
+      rmSync(languageDir, { recursive: true, force: true });
+    } catch (err: any) {
+      failures.push(`${file.path}: ${err?.message ?? err}`);
+    }
+  }
+
+  if (failures.length > 0) {
+    dialog.showErrorBox('Failed to convert the following files', failures.join('\n'));
+  }
+
+  if (parentDir) {
+    onOpen(e, parentDir);
+  }
+};
 
 const onDataChanged = (e: any, data: boolean) => {
   const window = BrowserWindow.fromWebContents(e.sender);
@@ -101,10 +126,9 @@ const registerAppEvents = () => {
     void shell.openExternal(url);
   });
 
+  // Register before will-finish-launching so we don't miss the initial macOS
+  // open-file event when the app is launched from a file association.
   app.on('open-file', onOpenFile);
-  app.on('will-finish-launching', () => {
-    app.on('open-file', onOpenFile);
-  });
 };
 
 export default registerAppEvents;

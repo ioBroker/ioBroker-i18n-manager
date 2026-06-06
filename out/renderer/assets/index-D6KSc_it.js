@@ -28346,13 +28346,15 @@ function useTree(tree, treeItems, folder) {
     return result;
   }
   const filterTree = _$1.debounce(500, filterTreeItems);
-  window.addEventListener("message", (e2) => {
+  const onWindowMessage = (e2) => {
     if (e2.data === "missing") {
       treeVisibilityFilter.value = "missing";
     } else if (e2.data === "duplicated") {
       treeVisibilityFilter.value = "duplicated";
     }
-  }, false);
+  };
+  window.addEventListener("message", onWindowMessage, false);
+  onScopeDispose(() => window.removeEventListener("message", onWindowMessage));
   return {
     treeFilter,
     treeVisibilityFilter,
@@ -38294,7 +38296,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent$1({
         itemId: props.selectedItem.id
       });
     }
-    const onChange = _.throttle(updateValue, 500);
+    const onChange = _.debounce(updateValue, 300, { leading: false, trailing: true });
     function translate2(sourceLanguage, targetLanguage) {
       emit2("translate", {
         mode: "this",
@@ -38315,10 +38317,22 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent$1({
       function refreshContent2(folder, originalFolder, selectedItem) {
         if (!selectedItem || selectedItem.type !== "item") {
           content2.value = [];
+          originalContent2.value = [];
           return;
         }
-        content2.value = getContentFromPath(folder, selectedItem.path);
+        const next = getContentFromPath(folder, selectedItem.path);
         originalContent2.value = getContentFromPath(originalFolder, selectedItem.path);
+        const current = content2.value;
+        const sameShape = current.length === next.length && current.every((it2, i2) => it2.language === next[i2].language);
+        if (sameShape) {
+          for (let i2 = 0; i2 < next.length; i2++) {
+            if (current[i2].value !== next[i2].value) {
+              current[i2].value = next[i2].value;
+            }
+          }
+        } else {
+          content2.value = next;
+        }
       }
       return { content: content2, originalContent: originalContent2, refreshContent: refreshContent2 };
     }
@@ -38361,7 +38375,8 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent$1({
                         rows: "1",
                         "auto-grow": "",
                         density: "compact",
-                        onKeyup: ($event) => unref(onChange)($event, item.languageIndex)
+                        onKeyup: ($event) => unref(onChange)($event, item.languageIndex),
+                        onBlur: _cache[0] || (_cache[0] = ($event) => unref(onChange).flush())
                       }, null, 8, ["modelValue", "onUpdate:modelValue", "label", "tabindex", "base-color", "color", "onKeyup"])
                     ]),
                     _: 2
@@ -38377,7 +38392,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent$1({
                           }), {
                             default: withCtx(() => [
                               createVNode(VIcon, null, {
-                                default: withCtx(() => [..._cache[0] || (_cache[0] = [
+                                default: withCtx(() => [..._cache[1] || (_cache[1] = [
                                   createTextVNode("mdi-dots-vertical", -1)
                                 ])]),
                                 _: 1
@@ -41252,6 +41267,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent$1({
         const result = confirm(xOptionSelectedWarningMessage("Overwrite"));
         if (!result) {
           settings2.value.translationMode = "this";
+          handleChange();
         }
       }
     });
@@ -41260,6 +41276,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent$1({
         const result = confirm(xOptionSelectedWarningMessage("All Keys"));
         if (!result) {
           settings2.value.translationOverwrite = false;
+          handleChange();
         }
       }
     });
@@ -41932,13 +41949,13 @@ const _hoisted_2$2 = { key: 0 };
 const _hoisted_3$2 = { class: "d-flex py-2" };
 const _hoisted_4$1 = { class: "py-2" };
 const _hoisted_5$1 = { class: "d-flex" };
-const _hoisted_6 = { class: "d-flex" };
-const _hoisted_7 = { class: "d-flex py-2" };
-const _hoisted_8 = {
+const _hoisted_6$1 = { class: "d-flex" };
+const _hoisted_7$1 = { class: "d-flex py-2" };
+const _hoisted_8$1 = {
   key: 1,
   class: "errors-container"
 };
-const _hoisted_9 = { class: "d-flex py-2" };
+const _hoisted_9$1 = { class: "d-flex py-2" };
 const _sfc_main$6 = /* @__PURE__ */ defineComponent$1({
   __name: "TranslationProgressPanel",
   props: {
@@ -42026,17 +42043,17 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent$1({
                         class: "pa-0"
                       }, null, 8, ["items"])
                     ]),
-                    createBaseVNode("div", _hoisted_6, [
+                    createBaseVNode("div", _hoisted_6$1, [
                       _cache[4] || (_cache[4] = createBaseVNode("span", { class: "mr-2" }, "Language: ", -1)),
                       createTextVNode(" " + toDisplayString(targetLanguage.value), 1)
                     ])
                   ]),
-                  createBaseVNode("div", _hoisted_7, [
+                  createBaseVNode("div", _hoisted_7$1, [
                     _cache[5] || (_cache[5] = createBaseVNode("span", { class: "mr-2" }, "Estimated Time: ", -1)),
                     createTextVNode(" " + toDisplayString(estimatedTime.value), 1)
                   ])
                 ])) : createCommentVNode("", true),
-                __props.translationErrors ? (openBlock(), createElementBlock("div", _hoisted_8, [
+                __props.translationErrors ? (openBlock(), createElementBlock("div", _hoisted_8$1, [
                   (openBlock(true), createElementBlock(Fragment, null, renderList(groupedErrors.value, (error) => {
                     return openBlock(), createBlock(VAlert, {
                       key: error.path.join("."),
@@ -42047,7 +42064,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent$1({
                       prominent: ""
                     }, {
                       default: withCtx(() => [
-                        createBaseVNode("div", _hoisted_9, [
+                        createBaseVNode("div", _hoisted_9$1, [
                           _cache[6] || (_cache[6] = createBaseVNode("span", { class: "mr-2" }, "Error at: ", -1)),
                           createVNode(VBreadcrumbs, {
                             divider: ">",
@@ -42205,14 +42222,8 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent$1({
     const props = __props;
     const emit2 = __emit;
     const icon = getIcon(props.item);
-    const selected = /* @__PURE__ */ ref(false);
+    const selected = computed(() => props.selectedItem?.id === props.item?.id);
     const select = () => emit2("select", props.item);
-    watch(
-      () => props.selectedItem,
-      (item) => {
-        selected.value = item?.id === props.item?.id;
-      }
-    );
     const handleRightClick = (event) => emit2("right-click", event, props.item);
     const onMissingCount = (event) => {
       if (!props.item.level) {
@@ -42294,7 +42305,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent$1({
     };
   }
 });
-const Tree = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-742368cd"]]);
+const Tree = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-3abaaf7d"]]);
 const _sfc_main$4 = /* @__PURE__ */ defineComponent$1({
   __name: "ContextMenu",
   props: {
@@ -42657,12 +42668,16 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent$1({
 });
 const _hoisted_1$1 = { class: "folder" };
 const _hoisted_2$1 = { class: "folder-toolbar" };
-const _hoisted_3$1 = { class: "translate-container" };
-const _hoisted_4 = {
+const _hoisted_3$1 = { class: "main" };
+const _hoisted_4 = { class: "tree-pane" };
+const _hoisted_5 = { class: "content-pane" };
+const _hoisted_6 = { class: "translate-wrap" };
+const _hoisted_7 = { class: "content-wrap" };
+const _hoisted_8 = {
   key: 0,
   class: "status-item animate"
 };
-const _hoisted_5 = {
+const _hoisted_9 = {
   key: 1,
   class: "status-item"
 };
@@ -42701,13 +42716,12 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
     const contextMenuRef = /* @__PURE__ */ ref(null);
     function onConvert() {
       const first = folder.value[0];
-      sendIpc(
-        convert,
-        first?.items.map((item) => ({
-          path: item.filePath,
-          language: item.language
-        }))
-      );
+      const files = first?.items?.map((item) => ({
+        path: item.filePath,
+        language: item.language
+      })) ?? [];
+      if (files.length === 0) return;
+      sendIpc(convert, files);
     }
     function isFolders() {
       const first = folder.value[0];
@@ -42785,87 +42799,57 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
             _: 1
           })) : createCommentVNode("", true)
         ]),
-        createVNode(VRow, { class: "main ma-0 mt-2" }, {
-          default: withCtx(() => [
-            createVNode(VCol, {
-              cols: "4",
-              class: "left-side pa-0 pb-1 mr-4"
-            }, {
+        createBaseVNode("div", _hoisted_3$1, [
+          createBaseVNode("div", _hoisted_4, [
+            createVNode(VCard, { class: "left-card" }, {
               default: withCtx(() => [
-                createVNode(VCard, { class: "left-card" }, {
-                  default: withCtx(() => [
-                    createVNode(_component_RecycleScroller, {
-                      items: unref(expandedTreeItems),
-                      "item-size": 44,
-                      "key-field": "id",
-                      class: "tree-scroller"
-                    }, {
-                      default: withCtx(({ item }) => [
-                        (openBlock(), createBlock(Tree, {
-                          key: item.id,
-                          item,
-                          "selected-item": unref(selectedItem),
-                          expanded: unref(isParentExpanded)(item),
-                          "clipboard-item-id": unref(clipboardItemId),
-                          "clipboard-item-action": unref(clipboardItemAction),
-                          onSelect: selectItem,
-                          onRightClick: handleItemRightClick
-                        }, null, 8, ["item", "selected-item", "expanded", "clipboard-item-id", "clipboard-item-action"]))
-                      ]),
-                      _: 1
-                    }, 8, ["items"])
+                createVNode(_component_RecycleScroller, {
+                  items: unref(expandedTreeItems),
+                  "item-size": 44,
+                  "key-field": "id",
+                  class: "tree-scroller"
+                }, {
+                  default: withCtx(({ item }) => [
+                    (openBlock(), createBlock(Tree, {
+                      key: item.id,
+                      item,
+                      "selected-item": unref(selectedItem),
+                      expanded: unref(isParentExpanded)(item),
+                      "clipboard-item-id": unref(clipboardItemId),
+                      "clipboard-item-action": unref(clipboardItemAction),
+                      onSelect: selectItem,
+                      onRightClick: handleItemRightClick
+                    }, null, 8, ["item", "selected-item", "expanded", "clipboard-item-id", "clipboard-item-action"]))
                   ]),
                   _: 1
-                })
-              ]),
-              _: 1
-            }),
-            createVNode(VCol, { class: "right-side py-0 pl-0 pr-2" }, {
-              default: withCtx(() => [
-                createVNode(VRow, { class: "ma-0" }, {
-                  default: withCtx(() => [
-                    createVNode(VCol, { class: "pa-0 mb-4" }, {
-                      default: withCtx(() => [
-                        createBaseVNode("div", _hoisted_3$1, [
-                          createVNode(_sfc_main$7, {
-                            "language-list": unref(languageList),
-                            "is-translation-enabled": unref(isTranslationEnabled),
-                            "selected-item": unref(selectedItem),
-                            onShowSettings: showSettings2,
-                            onTranslate: unref(translate2)
-                          }, null, 8, ["language-list", "is-translation-enabled", "selected-item", "onTranslate"])
-                        ])
-                      ]),
-                      _: 1
-                    })
-                  ]),
-                  _: 1
-                }),
-                createVNode(VRow, { class: "ma-0 content-container" }, {
-                  default: withCtx(() => [
-                    createVNode(VCol, { class: "pa-0 pr-2" }, {
-                      default: withCtx(() => [
-                        createVNode(_sfc_main$8, {
-                          "selected-item": unref(selectedItem),
-                          folder: unref(folder),
-                          "original-folder": unref(originalFolder),
-                          "language-list": unref(languageList),
-                          "is-translation-enabled": unref(isTranslationEnabled),
-                          onUpdateValue: updateFolderValue,
-                          onTranslate: unref(translate2)
-                        }, null, 8, ["selected-item", "folder", "original-folder", "language-list", "is-translation-enabled", "onTranslate"])
-                      ]),
-                      _: 1
-                    })
-                  ]),
-                  _: 1
-                })
+                }, 8, ["items"])
               ]),
               _: 1
             })
           ]),
-          _: 1
-        }),
+          createBaseVNode("div", _hoisted_5, [
+            createBaseVNode("div", _hoisted_6, [
+              createVNode(_sfc_main$7, {
+                "language-list": unref(languageList),
+                "is-translation-enabled": unref(isTranslationEnabled),
+                "selected-item": unref(selectedItem),
+                onShowSettings: showSettings2,
+                onTranslate: unref(translate2)
+              }, null, 8, ["language-list", "is-translation-enabled", "selected-item", "onTranslate"])
+            ]),
+            createBaseVNode("div", _hoisted_7, [
+              createVNode(_sfc_main$8, {
+                "selected-item": unref(selectedItem),
+                folder: unref(folder),
+                "original-folder": unref(originalFolder),
+                "language-list": unref(languageList),
+                "is-translation-enabled": unref(isTranslationEnabled),
+                onUpdateValue: updateFolderValue,
+                onTranslate: unref(translate2)
+              }, null, 8, ["selected-item", "folder", "original-folder", "language-list", "is-translation-enabled", "onTranslate"])
+            ])
+          ])
+        ]),
         createVNode(VRow, { class: "status-bar" }, {
           default: withCtx(() => [
             createVNode(VCol, { class: "pb-0 pt-2" }, {
@@ -42875,7 +42859,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
                   class: "d-flex align-center"
                 }, {
                   default: withCtx(() => [
-                    unref(isSaving) ? (openBlock(), createElementBlock("div", _hoisted_4, [
+                    unref(isSaving) ? (openBlock(), createElementBlock("div", _hoisted_8, [
                       createVNode(VIcon, null, {
                         default: withCtx(() => [..._cache[4] || (_cache[4] = [
                           createTextVNode("mdi-content-save-outline", -1)
@@ -42883,7 +42867,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
                         _: 1
                       })
                     ])) : createCommentVNode("", true),
-                    !unref(isSaving) && unref(selectedItem) ? (openBlock(), createElementBlock("div", _hoisted_5, [
+                    !unref(isSaving) && unref(selectedItem) ? (openBlock(), createElementBlock("div", _hoisted_9, [
                       (openBlock(true), createElementBlock(Fragment, null, renderList(selectedItemPath(unref(selectedItem)), (part, index) => {
                         return openBlock(), createElementBlock(Fragment, { key: index }, [
                           createBaseVNode("span", null, toDisplayString(part), 1),
@@ -42931,7 +42915,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
     };
   }
 });
-const Folder = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-7767435f"]]);
+const Folder = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-60887a75"]]);
 const routes = [
   {
     path: "/",
@@ -42971,9 +42955,7 @@ const translate = async (text, source, target, path, settings2, cancelToken, isF
           text
         }
       );
-      response.data.zh = response.data["zh-cn"];
-      response.data["zh-CN"] = response.data["zh-cn"];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings2.translationEngine === "googleIoBroker") {
       if (!isFolderFromIoBroker) {
         return {
@@ -42989,9 +42971,7 @@ const translate = async (text, source, target, path, settings2, cancelToken, isF
           service: "google"
         }
       );
-      response.data.zh = response.data["zh-cn"];
-      response.data["zh-CN"] = response.data["zh-cn"];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings2.translationEngine === "deeplIoBroker") {
       if (!isFolderFromIoBroker) {
         return {
@@ -43007,9 +42987,7 @@ const translate = async (text, source, target, path, settings2, cancelToken, isF
           service: "deepl"
         }
       );
-      response.data.zh = response.data["zh-cn"];
-      response.data["zh-CN"] = response.data["zh-cn"];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings2.translationEngine === "awsIoBroker") {
       if (!isFolderFromIoBroker) {
         return {
@@ -43025,9 +43003,7 @@ const translate = async (text, source, target, path, settings2, cancelToken, isF
           service: "aws"
         }
       );
-      response.data.zh = response.data["zh-cn"];
-      response.data["zh-CN"] = response.data["zh-cn"];
-      return response.data;
+      return normalizeIoBrokerResponse(response.data);
     } else if (settings2.translationEngine === "aws") {
       return {
         path,
@@ -43072,6 +43048,15 @@ const translate = async (text, source, target, path, settings2, cancelToken, isF
   }
 };
 const getGoogleTranslateText = (response) => _$1.get("data.translations[0].translatedText", response);
+function normalizeIoBrokerResponse(data) {
+  if (!data) return data ?? void 0;
+  const zh = data["zh-cn"];
+  if (zh !== void 0) {
+    if (data.zh === void 0) data.zh = zh;
+    if (data["zh-CN"] === void 0) data["zh-CN"] = zh;
+  }
+  return data;
+}
 function fetchAPI(url, method, data, config) {
   const requestConfig = {
     ...config,
@@ -43436,6 +43421,7 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
   const clipboardItemAction = /* @__PURE__ */ ref(null);
   const isSaving = /* @__PURE__ */ ref(false);
   let cancelToken = null;
+  let folderRevision = 0;
   const treeItems = computed(() => Object.values(tree.value));
   function setSelectedItem(item) {
     selectedItem.value = item;
@@ -43447,6 +43433,7 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
     sendIpc(dataChanged, modifiedContent.value);
   }
   async function closeFolder2() {
+    folderRevision++;
     await router.push("/");
     tree.value = {};
     folder.value = [];
@@ -43458,6 +43445,7 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
     sendModifiedContent();
   }
   async function openFolder(loaded) {
+    const revision = ++folderRevision;
     folder.value = _$1.cloneDeep(loaded);
     originalFolder.value = _$1.cloneDeep(loaded);
     modifiedContent.value = false;
@@ -43466,7 +43454,7 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
     newTree = sortTree(newTree);
     createTreeStatus(newTree, folder.value, folder.value);
     tree.value = newTree;
-    await createLanguageList$1();
+    await createLanguageList$1(revision);
     sendModifiedContent();
   }
   async function refreshFolder2(loaded) {
@@ -43485,9 +43473,10 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
     }
     await createLanguageList$1();
   }
-  async function createLanguageList$1() {
-    const { googleTranslateApiKey, translationEngine, deepLTranslateApiKey, awsTranslateApiKey } = useSettingsStore().settings;
+  async function createLanguageList$1(revision = ++folderRevision) {
+    const { googleTranslateApiKey, translationEngine } = useSettingsStore().settings;
     let supportedLanguages = [];
+    let enabled = false;
     if (googleTranslateApiKey && (translationEngine === "google" || !translationEngine)) {
       try {
         const supportedLanguagesResponse = await fetch(
@@ -43497,23 +43486,21 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
         supportedLanguages = _$1.get("data.languages", supportedLanguagesBody).map(
           (it2) => it2.language
         );
-        isTranslationEnabled.value = true;
+        enabled = true;
       } catch (e2) {
-        isTranslationEnabled.value = false;
+        enabled = false;
       }
-    } else if (translationEngine === "deepl" && deepLTranslateApiKey) {
-      isTranslationEnabled.value = true;
-      supportedLanguages = ["de", "en", "fr", "es", "it", "nl", "pl", "pt", "ru", "uk"];
-    } else if (translationEngine === "aws" && awsTranslateApiKey) {
-      supportedLanguages = ["de", "en", "fr", "es", "it", "nl", "pl", "pt", "ru", "uk", "zh-CN"];
-      isTranslationEnabled.value = true;
     } else if (translationEngine === "deeplIoBroker") {
       supportedLanguages = ["de", "en", "fr", "es", "it", "nl", "pl", "pt", "ru", "uk"];
-      isTranslationEnabled.value = true;
+      enabled = true;
     } else if (translationEngine === "awsIoBroker" || translationEngine === "googleIoBroker" || translationEngine === "libreIoBroker") {
       supportedLanguages = ["de", "en", "fr", "es", "it", "nl", "pl", "pt", "ru", "uk", "zh-CN"];
-      isTranslationEnabled.value = true;
+      enabled = true;
     }
+    if (revision !== folderRevision) {
+      return;
+    }
+    isTranslationEnabled.value = enabled;
     languageList.value = createLanguageList(tree.value, folder.value, supportedLanguages);
   }
   function updateValue(payload) {
@@ -43541,6 +43528,9 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
     cancelToken?.cancel();
   }
   async function translate$1(payload) {
+    if (isTranslating.value && cancelToken) {
+      cancelToken.cancel();
+    }
     const items = payload.mode === "this" && selectedItem.value ? [selectedItem.value] : Object.values(tree.value).filter((it2) => it2.type === "item");
     translationErrors.value = [];
     const translationItems = getTranslationItems(addTranslationError, folder.value, items, payload);
@@ -43556,7 +43546,8 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
       translationProgress.value = { ...progress };
     });
     updateProgress();
-    cancelToken = axios.CancelToken.source();
+    const runToken = axios.CancelToken.source();
+    cancelToken = runToken;
     isTranslating.value = true;
     let totalTime = 0;
     for (let index = 0; index < translationItems.length; index++) {
@@ -43576,7 +43567,7 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
           item.targetLanguage,
           item.formattedPath,
           useSettingsStore().settings,
-          cancelToken,
+          runToken,
           isFolderFromIoBroker
         );
         const end = (/* @__PURE__ */ new Date()).getTime();
@@ -43591,31 +43582,46 @@ const useFolderStore = /* @__PURE__ */ defineStore("folder", () => {
           });
           updateTreeItemStatus2(item.itemId);
         } else if (typeof result === "object" && result[item.targetLanguage] !== void 0) {
-          Object.keys(result).forEach((lang) => {
+          const bulk = result;
+          Object.keys(bulk).forEach((lang) => {
             if (lang === item.sourceLanguage) {
               return;
             }
-            const lItem = translationItems.find((it2) => it2.sourceText === item.sourceText && it2.targetLanguage === lang);
-            if (lItem) {
-              lItem.done = true;
-              updateValue({
-                index: lItem.index,
-                value: result[lang],
-                itemId: lItem.itemId
-              });
-              updateTreeItemStatus2(lItem.itemId);
+            const translated = bulk[lang];
+            if (translated === void 0) {
+              return;
+            }
+            for (const lItem of translationItems) {
+              if (lItem.sourceText === item.sourceText && lItem.targetLanguage === lang) {
+                lItem.done = true;
+                updateValue({
+                  index: lItem.index,
+                  value: translated,
+                  itemId: lItem.itemId
+                });
+                updateTreeItemStatus2(lItem.itemId);
+              }
             }
           });
         } else if (result) {
           addTranslationError(result);
         }
       } catch (e2) {
-        isTranslating.value = false;
-        break;
+        if (axios.isCancel(e2)) {
+          isTranslating.value = false;
+          break;
+        }
+        addTranslationError({
+          path: item.formattedPath,
+          error: e2?.message ?? String(e2)
+        });
       }
     }
     updateProgress();
     sendModifiedContent();
+    if (cancelToken === runToken) {
+      cancelToken = null;
+    }
     if (translationErrors.value.length === 0) {
       setTimeout(() => {
         isTranslating.value = false;

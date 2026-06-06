@@ -184,13 +184,12 @@ const contextMenuRef = ref<InstanceType<typeof ContextMenu> | null>(null);
 
 function onConvert(): void {
   const first = folder.value[0] as LoadedGroup | undefined;
-  sendIpc(
-    convert,
-    first?.items.map(item => ({
-      path: item.filePath,
-      language: item.language,
-    })),
-  );
+  const files = first?.items?.map(item => ({
+    path: item.filePath,
+    language: item.language,
+  })) ?? [];
+  if (files.length === 0) return;
+  sendIpc(convert, files);
 }
 
 function isFolders(): boolean {

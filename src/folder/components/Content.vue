@@ -19,6 +19,7 @@
             auto-grow
             density="compact"
             @keyup="onChange($event, item.languageIndex)"
+            @blur="onChange.flush()"
           />
         </v-col>
         <v-col cols="1">
@@ -94,7 +95,8 @@ function updateValue(event: any, index: number): void {
   } as ChangeFolderValuePayload);
 }
 
-const onChange = _.throttle(updateValue, 500);
+// debounce: trailing-edge fires the last value (throttle dropped it).
+const onChange = _.debounce(updateValue, 300, { leading: false, trailing: true });
 
 function translate(sourceLanguage: string, targetLanguage: string): void {
   emit('translate', {
@@ -126,11 +128,30 @@ function useContent() {
   ): void {
     if (!selectedItem || selectedItem.type !== 'item') {
       content.value = [];
+      originalContent.value = [];
       return;
     }
 
-    content.value = getContentFromPath(folder, selectedItem.path);
+    const next = getContentFromPath(folder, selectedItem.path);
     originalContent.value = getContentFromPath(originalFolder, selectedItem.path);
+
+    // Mutate existing items in place when the shape matches so v-model
+    // bindings (and the active textarea cursor) survive folder updates
+    // triggered by our own debounced edits or by translation results.
+    const current = content.value;
+    const sameShape =
+      current.length === next.length &&
+      current.every((it, i) => it.language === next[i].language);
+
+    if (sameShape) {
+      for (let i = 0; i < next.length; i++) {
+        if (current[i].value !== next[i].value) {
+          current[i].value = next[i].value;
+        }
+      }
+    } else {
+      content.value = next;
+    }
   }
 
   return { content, originalContent, refreshContent };
