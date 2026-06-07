@@ -10781,7 +10781,31 @@ const useGlobalStore = /* @__PURE__ */ defineStore("global", () => {
   };
   return { isSettingsVisible, theme, showSettings: showSettings2, hideSettings, setTheme, toggleTheme };
 });
-const sendIpc = (message, data) => window.electronAPI.send(message, data);
+function unwrap(value, seen = /* @__PURE__ */ new WeakMap()) {
+  if (value === null || value === void 0) return value;
+  if (typeof value !== "object") return value;
+  const raw = /* @__PURE__ */ isRef(value) ? value.value : /* @__PURE__ */ isReactive(value) || /* @__PURE__ */ isProxy(value) ? /* @__PURE__ */ toRaw(value) : value;
+  if (raw === null || typeof raw !== "object") return raw;
+  const cached = seen.get(raw);
+  if (cached !== void 0) return cached;
+  if (Array.isArray(raw)) {
+    const out2 = [];
+    seen.set(raw, out2);
+    for (const item of raw) out2.push(unwrap(item, seen));
+    return out2;
+  }
+  const proto = Object.getPrototypeOf(raw);
+  if (proto !== Object.prototype && proto !== null) {
+    return raw;
+  }
+  const out = {};
+  seen.set(raw, out);
+  for (const key of Object.keys(raw)) {
+    out[key] = unwrap(raw[key], seen);
+  }
+  return out;
+}
+const sendIpc = (message, data) => window.electronAPI.send(message, unwrap(data));
 const save = "save";
 const saveComplete = "saveComplete";
 const convert = "convert";
