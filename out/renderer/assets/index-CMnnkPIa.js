@@ -10746,15 +10746,40 @@ const d = {
     n2.installComponents && i(o, n2.componentsPrefix);
   }
 };
+const THEME_KEY = "i18n-manager:theme";
+const readStoredTheme = () => {
+  try {
+    const stored = localStorage.getItem(THEME_KEY);
+    if (stored === "light" || stored === "dark") {
+      return stored;
+    }
+  } catch {
+  }
+  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)").matches) {
+    return "dark";
+  }
+  return "light";
+};
 const useGlobalStore = /* @__PURE__ */ defineStore("global", () => {
   const isSettingsVisible = /* @__PURE__ */ ref(false);
+  const theme = /* @__PURE__ */ ref(readStoredTheme());
   const showSettings2 = () => {
     isSettingsVisible.value = true;
   };
   const hideSettings = () => {
     isSettingsVisible.value = false;
   };
-  return { isSettingsVisible, showSettings: showSettings2, hideSettings };
+  const setTheme = (value) => {
+    theme.value = value;
+    try {
+      localStorage.setItem(THEME_KEY, value);
+    } catch {
+    }
+  };
+  const toggleTheme = () => {
+    setTheme(theme.value === "dark" ? "light" : "dark");
+  };
+  return { isSettingsVisible, theme, showSettings: showSettings2, hideSettings, setTheme, toggleTheme };
 });
 const sendIpc = (message, data) => window.electronAPI.send(message, data);
 const save = "save";
@@ -19307,7 +19332,7 @@ function createRouter(options) {
   }
   return router2;
 }
-const version$1 = "4.0.1";
+const version$1 = "4.0.2";
 const packageJson = {
   version: version$1
 };
@@ -19320,35 +19345,6 @@ const useHomeStore = /* @__PURE__ */ defineStore("home", () => {
   }
   return { recentFolders: recentFolders2, currentVersion, latestVersion, receiveRecentFolders };
 });
-function propsFactory(props, source) {
-  return (defaults2) => {
-    return Object.keys(props).reduce((obj, prop) => {
-      const isObjectDefinition = typeof props[prop] === "object" && props[prop] != null && !Array.isArray(props[prop]);
-      const definition = isObjectDefinition ? props[prop] : {
-        type: props[prop]
-      };
-      if (defaults2 && prop in defaults2) {
-        obj[prop] = {
-          ...definition,
-          default: defaults2[prop]
-        };
-      } else {
-        obj[prop] = definition;
-      }
-      if (source && !obj[prop].source) {
-        obj[prop].source = source;
-      }
-      return obj;
-    }, {});
-  };
-}
-const makeComponentProps = propsFactory({
-  class: [String, Array, Object],
-  style: {
-    type: [String, Array, Object],
-    default: null
-  }
-}, "component");
 function consoleWarn(message) {
 }
 function deprecate(original, replacement) {
@@ -19723,113 +19719,6 @@ function camelizeProps(props) {
 function onlyDefinedProps(props) {
   const booleanAttributes = ["checked", "disabled"];
   return Object.fromEntries(Object.entries(props).filter(([key, v]) => booleanAttributes.includes(key) ? !!v : v !== void 0));
-}
-function getCurrentInstance(name, message) {
-  const vm = getCurrentInstance$1();
-  if (!vm) {
-    throw new Error(`[Vuetify] ${name} ${"must be called from inside a setup function"}`);
-  }
-  return vm;
-}
-function getCurrentInstanceName(name = "composables") {
-  const vm = getCurrentInstance(name).type;
-  return toKebabCase(vm?.aliasName || vm?.name);
-}
-function injectSelf(key, vm = getCurrentInstance("injectSelf")) {
-  const {
-    provides
-  } = vm;
-  if (provides && key in provides) {
-    return provides[key];
-  }
-  return void 0;
-}
-const DefaultsSymbol = /* @__PURE__ */ Symbol.for("vuetify:defaults");
-function createDefaults(options) {
-  return /* @__PURE__ */ ref(options);
-}
-function injectDefaults() {
-  const defaults2 = inject$1(DefaultsSymbol);
-  if (!defaults2) throw new Error("[Vuetify] Could not find defaults instance");
-  return defaults2;
-}
-function provideDefaults(defaults2, options) {
-  const injectedDefaults = injectDefaults();
-  const providedDefaults = /* @__PURE__ */ ref(defaults2);
-  const newDefaults = computed(() => {
-    const disabled = unref(options?.disabled);
-    if (disabled) return injectedDefaults.value;
-    const scoped = unref(options?.scoped);
-    const reset = unref(options?.reset);
-    const root = unref(options?.root);
-    if (providedDefaults.value == null && !(scoped || reset || root)) return injectedDefaults.value;
-    let properties = mergeDeep(providedDefaults.value, {
-      prev: injectedDefaults.value
-    });
-    if (scoped) return properties;
-    if (reset || root) {
-      const len = Number(reset || Infinity);
-      for (let i2 = 0; i2 <= len; i2++) {
-        if (!properties || !("prev" in properties)) {
-          break;
-        }
-        properties = properties.prev;
-      }
-      if (properties && typeof root === "string" && root in properties) {
-        properties = mergeDeep(mergeDeep(properties, {
-          prev: properties
-        }), properties[root]);
-      }
-      return properties;
-    }
-    return properties.prev ? mergeDeep(properties.prev, properties, void 0, (_2, v) => v !== void 0) : properties;
-  });
-  provide(DefaultsSymbol, newDefaults);
-  return newDefaults;
-}
-function propIsDefined(vnode, prop) {
-  return vnode.props && (typeof vnode.props[prop] !== "undefined" || typeof vnode.props[toKebabCase(prop)] !== "undefined");
-}
-function internalUseDefaults(props = {}, name, defaults2 = injectDefaults()) {
-  const vm = getCurrentInstance("useDefaults");
-  name = name ?? vm.type.name ?? vm.type.__name;
-  if (!name) {
-    throw new Error("[Vuetify] Could not determine component name");
-  }
-  const componentDefaults = computed(() => defaults2.value?.[props._as ?? name]);
-  const _props = new Proxy(props, {
-    get(target, prop) {
-      const propValue = Reflect.get(target, prop);
-      if (prop === "class" || prop === "style") {
-        return [componentDefaults.value?.[prop], propValue].filter((v) => v != null);
-      }
-      if (propIsDefined(vm.vnode, prop)) return propValue;
-      const _componentDefault = componentDefaults.value?.[prop];
-      if (_componentDefault !== void 0) return _componentDefault;
-      const _globalDefault = defaults2.value?.global?.[prop];
-      if (_globalDefault !== void 0) return _globalDefault;
-      return propValue;
-    }
-  });
-  const _subcomponentDefaults = /* @__PURE__ */ shallowRef();
-  watchEffect(() => {
-    if (componentDefaults.value) {
-      const subComponents = Object.entries(componentDefaults.value).filter(([key]) => key.startsWith(key[0].toUpperCase()));
-      _subcomponentDefaults.value = subComponents.length ? Object.fromEntries(subComponents) : void 0;
-    } else {
-      _subcomponentDefaults.value = void 0;
-    }
-  });
-  function provideSubDefaults() {
-    const injected = injectSelf(DefaultsSymbol, vm);
-    provide(DefaultsSymbol, computed(() => {
-      return _subcomponentDefaults.value ? mergeDeep(injected?.value ?? {}, _subcomponentDefaults.value) : injected?.value;
-    }));
-  }
-  return {
-    props: _props,
-    provideSubDefaults
-  };
 }
 const block = ["top", "bottom"];
 const inline = ["start", "end", "left", "right"];
@@ -20326,6 +20215,142 @@ function hasLightForeground(color) {
   const whiteContrast = Math.abs(APCAcontrast(parseColor(16777215), parseColor(color)));
   return whiteContrast > Math.min(blackContrast, 50);
 }
+function propsFactory(props, source) {
+  return (defaults2) => {
+    return Object.keys(props).reduce((obj, prop) => {
+      const isObjectDefinition = typeof props[prop] === "object" && props[prop] != null && !Array.isArray(props[prop]);
+      const definition = isObjectDefinition ? props[prop] : {
+        type: props[prop]
+      };
+      if (defaults2 && prop in defaults2) {
+        obj[prop] = {
+          ...definition,
+          default: defaults2[prop]
+        };
+      } else {
+        obj[prop] = definition;
+      }
+      if (source && !obj[prop].source) {
+        obj[prop].source = source;
+      }
+      return obj;
+    }, {});
+  };
+}
+const makeComponentProps = propsFactory({
+  class: [String, Array, Object],
+  style: {
+    type: [String, Array, Object],
+    default: null
+  }
+}, "component");
+function getCurrentInstance(name, message) {
+  const vm = getCurrentInstance$1();
+  if (!vm) {
+    throw new Error(`[Vuetify] ${name} ${"must be called from inside a setup function"}`);
+  }
+  return vm;
+}
+function getCurrentInstanceName(name = "composables") {
+  const vm = getCurrentInstance(name).type;
+  return toKebabCase(vm?.aliasName || vm?.name);
+}
+function injectSelf(key, vm = getCurrentInstance("injectSelf")) {
+  const {
+    provides
+  } = vm;
+  if (provides && key in provides) {
+    return provides[key];
+  }
+  return void 0;
+}
+const DefaultsSymbol = /* @__PURE__ */ Symbol.for("vuetify:defaults");
+function createDefaults(options) {
+  return /* @__PURE__ */ ref(options);
+}
+function injectDefaults() {
+  const defaults2 = inject$1(DefaultsSymbol);
+  if (!defaults2) throw new Error("[Vuetify] Could not find defaults instance");
+  return defaults2;
+}
+function provideDefaults(defaults2, options) {
+  const injectedDefaults = injectDefaults();
+  const providedDefaults = /* @__PURE__ */ ref(defaults2);
+  const newDefaults = computed(() => {
+    const disabled = unref(options?.disabled);
+    if (disabled) return injectedDefaults.value;
+    const scoped = unref(options?.scoped);
+    const reset = unref(options?.reset);
+    const root = unref(options?.root);
+    if (providedDefaults.value == null && !(scoped || reset || root)) return injectedDefaults.value;
+    let properties = mergeDeep(providedDefaults.value, {
+      prev: injectedDefaults.value
+    });
+    if (scoped) return properties;
+    if (reset || root) {
+      const len = Number(reset || Infinity);
+      for (let i2 = 0; i2 <= len; i2++) {
+        if (!properties || !("prev" in properties)) {
+          break;
+        }
+        properties = properties.prev;
+      }
+      if (properties && typeof root === "string" && root in properties) {
+        properties = mergeDeep(mergeDeep(properties, {
+          prev: properties
+        }), properties[root]);
+      }
+      return properties;
+    }
+    return properties.prev ? mergeDeep(properties.prev, properties, void 0, (_2, v) => v !== void 0) : properties;
+  });
+  provide(DefaultsSymbol, newDefaults);
+  return newDefaults;
+}
+function propIsDefined(vnode, prop) {
+  return vnode.props && (typeof vnode.props[prop] !== "undefined" || typeof vnode.props[toKebabCase(prop)] !== "undefined");
+}
+function internalUseDefaults(props = {}, name, defaults2 = injectDefaults()) {
+  const vm = getCurrentInstance("useDefaults");
+  name = name ?? vm.type.name ?? vm.type.__name;
+  if (!name) {
+    throw new Error("[Vuetify] Could not determine component name");
+  }
+  const componentDefaults = computed(() => defaults2.value?.[props._as ?? name]);
+  const _props = new Proxy(props, {
+    get(target, prop) {
+      const propValue = Reflect.get(target, prop);
+      if (prop === "class" || prop === "style") {
+        return [componentDefaults.value?.[prop], propValue].filter((v) => v != null);
+      }
+      if (propIsDefined(vm.vnode, prop)) return propValue;
+      const _componentDefault = componentDefaults.value?.[prop];
+      if (_componentDefault !== void 0) return _componentDefault;
+      const _globalDefault = defaults2.value?.global?.[prop];
+      if (_globalDefault !== void 0) return _globalDefault;
+      return propValue;
+    }
+  });
+  const _subcomponentDefaults = /* @__PURE__ */ shallowRef();
+  watchEffect(() => {
+    if (componentDefaults.value) {
+      const subComponents = Object.entries(componentDefaults.value).filter(([key]) => key.startsWith(key[0].toUpperCase()));
+      _subcomponentDefaults.value = subComponents.length ? Object.fromEntries(subComponents) : void 0;
+    } else {
+      _subcomponentDefaults.value = void 0;
+    }
+  });
+  function provideSubDefaults() {
+    const injected = injectSelf(DefaultsSymbol, vm);
+    provide(DefaultsSymbol, computed(() => {
+      return _subcomponentDefaults.value ? mergeDeep(injected?.value ?? {}, _subcomponentDefaults.value) : injected?.value;
+    }));
+  }
+  return {
+    props: _props,
+    provideSubDefaults
+  };
+}
 function defineComponent(options) {
   options._setup = options._setup ?? options.setup;
   if (!options.name) {
@@ -20526,269 +20551,89 @@ function throttle(fn, delay, options = {
   wrap.immediate = fn;
   return wrap;
 }
+const makeBorderProps = propsFactory({
+  border: [Boolean, Number, String]
+}, "border");
+function useBorder(props, name = getCurrentInstanceName()) {
+  const borderClasses = computed(() => {
+    const border = props.border;
+    if (border === true || border === "") {
+      return `${name}--border`;
+    } else if (typeof border === "string" || border === 0) {
+      return String(border).split(" ").map((v) => `border-${v}`);
+    }
+    return [];
+  });
+  return {
+    borderClasses
+  };
+}
+const allowedDensities = [null, "default", "comfortable", "compact"];
+const makeDensityProps = propsFactory({
+  density: {
+    type: String,
+    default: "default",
+    validator: (v) => allowedDensities.includes(v)
+  }
+}, "density");
+function useDensity(props, name = getCurrentInstanceName()) {
+  const densityClasses = /* @__PURE__ */ toRef(() => {
+    return `${name}--density-${props.density}`;
+  });
+  return {
+    densityClasses
+  };
+}
+const makeElevationProps = propsFactory({
+  elevation: {
+    type: [Number, String],
+    // no limit to allow both 0-6 (MD3) and legacy 0-24 (MD2)
+    validator: (value) => parseInt(value) >= 0
+  }
+}, "elevation");
+function useElevation(props) {
+  const elevationClasses = /* @__PURE__ */ toRef(() => {
+    const elevation = /* @__PURE__ */ isRef(props) ? props.value : props.elevation;
+    if (elevation == null) return [];
+    return [`elevation-${parseInt(elevation)}`];
+  });
+  return {
+    elevationClasses
+  };
+}
+const makeRoundedProps = propsFactory({
+  rounded: {
+    type: [Boolean, Number, String],
+    default: void 0
+  },
+  tile: Boolean
+}, "rounded");
+function useRounded(props, name = getCurrentInstanceName()) {
+  const roundedClasses = computed(() => {
+    const rounded = /* @__PURE__ */ isRef(props) ? props.value : props.rounded;
+    const tile = /* @__PURE__ */ isRef(props) ? false : props.tile;
+    const classes = [];
+    if (tile || rounded === false) {
+      classes.push("rounded-0");
+    } else if (rounded === true || rounded === "") {
+      classes.push(`${name}--rounded`);
+    } else if (typeof rounded === "string" || rounded === 0) {
+      for (const value of String(rounded).split(" ")) {
+        classes.push(`rounded-${value}`);
+      }
+    }
+    return classes;
+  });
+  return {
+    roundedClasses
+  };
+}
 const makeTagProps = propsFactory({
   tag: {
     type: [String, Object, Function],
     default: "div"
   }
 }, "tag");
-const makeVCardActionsProps = propsFactory({
-  ...makeComponentProps(),
-  ...makeTagProps()
-}, "VCardActions");
-const VCardActions = genericComponent()({
-  name: "VCardActions",
-  props: makeVCardActionsProps(),
-  setup(props, {
-    slots
-  }) {
-    provideDefaults({
-      VBtn: {
-        slim: true,
-        variant: "text"
-      }
-    });
-    useRender(() => createVNode(props.tag, {
-      "class": normalizeClass(["v-card-actions", props.class]),
-      "style": normalizeStyle(props.style)
-    }, slots));
-    return {};
-  }
-});
-const makeVCardSubtitleProps = propsFactory({
-  opacity: [Number, String],
-  ...makeComponentProps(),
-  ...makeTagProps()
-}, "VCardSubtitle");
-const VCardSubtitle = genericComponent()({
-  name: "VCardSubtitle",
-  props: makeVCardSubtitleProps(),
-  setup(props, {
-    slots
-  }) {
-    useRender(() => createVNode(props.tag, {
-      "class": normalizeClass(["v-card-subtitle", props.class]),
-      "style": normalizeStyle([{
-        "--v-card-subtitle-opacity": props.opacity
-      }, props.style])
-    }, slots));
-    return {};
-  }
-});
-const VCardTitle = createSimpleFunctional("v-card-title");
-function useColor(colors) {
-  return destructComputed(() => {
-    const {
-      class: colorClasses,
-      style: colorStyles
-    } = computeColor(colors);
-    return {
-      colorClasses,
-      colorStyles
-    };
-  });
-}
-function useTextColor(color) {
-  const {
-    colorClasses: textColorClasses,
-    colorStyles: textColorStyles
-  } = useColor(() => ({
-    text: toValue(color)
-  }));
-  return {
-    textColorClasses,
-    textColorStyles
-  };
-}
-function useBackgroundColor(color) {
-  const {
-    colorClasses: backgroundColorClasses,
-    colorStyles: backgroundColorStyles
-  } = useColor(() => ({
-    background: toValue(color)
-  }));
-  return {
-    backgroundColorClasses,
-    backgroundColorStyles
-  };
-}
-function normalizeColors(colors) {
-  return {
-    text: typeof colors.text === "string" ? colors.text.replace(/^text-/, "") : colors.text,
-    background: typeof colors.background === "string" ? colors.background.replace(/^bg-/, "") : colors.background
-  };
-}
-function computeColor(colors) {
-  const _colors = normalizeColors(toValue(colors));
-  const classes = [];
-  const styles = {};
-  if (_colors.background) {
-    if (isCssColor(_colors.background)) {
-      styles.backgroundColor = _colors.background;
-      if (!_colors.text && isParsableColor(_colors.background)) {
-        const backgroundColor = parseColor(_colors.background);
-        if (backgroundColor.a == null || backgroundColor.a === 1) {
-          classes.push(hasLightForeground(backgroundColor) ? "v-theme-on-dark" : "v-theme-on-light");
-        }
-      }
-    } else {
-      classes.push(`bg-${_colors.background}`);
-    }
-  }
-  if (_colors.text) {
-    if (isCssColor(_colors.text)) {
-      styles.color = _colors.text;
-      styles.caretColor = _colors.text;
-    } else {
-      classes.push(`text-${_colors.text}`);
-    }
-  }
-  return {
-    class: classes,
-    style: styles
-  };
-}
-const IconValue = [String, Function, Object, Array];
-const IconSymbol = /* @__PURE__ */ Symbol.for("vuetify:icons");
-const makeIconProps = propsFactory({
-  icon: {
-    type: IconValue
-  },
-  // Could not remove this and use makeTagProps, types complained because it is not required
-  tag: {
-    type: [String, Object, Function],
-    required: true
-  }
-}, "icon");
-const VComponentIcon = genericComponent()({
-  name: "VComponentIcon",
-  props: makeIconProps(),
-  setup(props, {
-    slots
-  }) {
-    return () => {
-      const Icon = props.icon;
-      return createVNode(props.tag, null, {
-        default: () => [props.icon ? createVNode(Icon, null, null) : slots.default?.()]
-      });
-    };
-  }
-});
-const VSvgIcon = defineComponent({
-  name: "VSvgIcon",
-  inheritAttrs: false,
-  props: makeIconProps(),
-  setup(props, {
-    attrs
-  }) {
-    return () => {
-      return createVNode(props.tag, mergeProps(attrs, {
-        "style": null
-      }), {
-        default: () => [createBaseVNode("svg", {
-          "class": "v-icon__svg",
-          "xmlns": "http://www.w3.org/2000/svg",
-          "viewBox": "0 0 24 24",
-          "role": "img",
-          "aria-hidden": "true"
-        }, [Array.isArray(props.icon) ? props.icon.map((path) => Array.isArray(path) ? createBaseVNode("path", {
-          "d": path[0],
-          "fill-opacity": path[1]
-        }, null) : createBaseVNode("path", {
-          "d": path
-        }, null)) : createBaseVNode("path", {
-          "d": props.icon
-        }, null)])]
-      });
-    };
-  }
-});
-defineComponent({
-  name: "VLigatureIcon",
-  props: makeIconProps(),
-  setup(props) {
-    return () => {
-      return createVNode(props.tag, null, {
-        default: () => [props.icon]
-      });
-    };
-  }
-});
-const VClassIcon = defineComponent({
-  name: "VClassIcon",
-  props: makeIconProps(),
-  setup(props) {
-    return () => {
-      return createVNode(props.tag, {
-        "class": normalizeClass(props.icon)
-      }, null);
-    };
-  }
-});
-const useIcon = (props) => {
-  const icons = inject$1(IconSymbol);
-  if (!icons) throw new Error("Missing Vuetify Icons provide!");
-  const iconData = computed(() => {
-    const iconAlias = toValue(props);
-    if (!iconAlias) return {
-      component: VComponentIcon
-    };
-    let icon = iconAlias;
-    if (typeof icon === "string") {
-      icon = icon.trim();
-      if (icon.startsWith("$")) {
-        icon = icons.aliases?.[icon.slice(1)];
-      }
-    }
-    if (Array.isArray(icon)) {
-      return {
-        component: VSvgIcon,
-        icon
-      };
-    } else if (typeof icon !== "string") {
-      return {
-        component: VComponentIcon,
-        icon
-      };
-    }
-    const iconSetName = Object.keys(icons.sets).find((setName) => typeof icon === "string" && icon.startsWith(`${setName}:`));
-    const iconName = iconSetName ? icon.slice(iconSetName.length + 1) : icon;
-    const iconSet = icons.sets[iconSetName ?? icons.defaultSet];
-    return {
-      component: iconSet.component,
-      icon: iconName
-    };
-  });
-  return {
-    iconData
-  };
-};
-const predefinedSizes = ["x-small", "small", "default", "large", "x-large"];
-const makeSizeProps = propsFactory({
-  size: {
-    type: [String, Number],
-    default: "default"
-  }
-}, "size");
-function useSize(props, name = getCurrentInstanceName()) {
-  return destructComputed(() => {
-    const size = props.size;
-    let sizeClasses;
-    let sizeStyles;
-    if (includes(predefinedSizes, size)) {
-      sizeClasses = `${name}--size-${size}`;
-    } else if (size) {
-      sizeStyles = {
-        width: convertToUnit(size),
-        height: convertToUnit(size)
-      };
-    }
-    return {
-      sizeClasses,
-      sizeStyles
-    };
-  });
-}
 const ThemeSymbol = /* @__PURE__ */ Symbol.for("vuetify:theme");
 const makeThemeProps = propsFactory({
   theme: String
@@ -20997,8 +20842,8 @@ function createTheme(options) {
   const computedThemes = computed(() => {
     const acc = {};
     for (const [name2, original] of Object.entries(themes.value)) {
-      const defaultTheme = original.dark || name2 === "dark" ? themes.value.dark : themes.value.light;
-      const merged = mergeDeep(defaultTheme, original);
+      const defaultTheme2 = original.dark || name2 === "dark" ? themes.value.dark : themes.value.light;
+      const merged = mergeDeep(defaultTheme2, original);
       const colors = {
         ...merged.colors,
         ...genVariations(merged.colors, parsedOptions.variations)
@@ -21173,6 +21018,660 @@ function useTheme() {
   if (!theme) throw new Error("Could not find Vuetify theme injection");
   return theme;
 }
+function useColor(colors) {
+  return destructComputed(() => {
+    const {
+      class: colorClasses,
+      style: colorStyles
+    } = computeColor(colors);
+    return {
+      colorClasses,
+      colorStyles
+    };
+  });
+}
+function useTextColor(color) {
+  const {
+    colorClasses: textColorClasses,
+    colorStyles: textColorStyles
+  } = useColor(() => ({
+    text: toValue(color)
+  }));
+  return {
+    textColorClasses,
+    textColorStyles
+  };
+}
+function useBackgroundColor(color) {
+  const {
+    colorClasses: backgroundColorClasses,
+    colorStyles: backgroundColorStyles
+  } = useColor(() => ({
+    background: toValue(color)
+  }));
+  return {
+    backgroundColorClasses,
+    backgroundColorStyles
+  };
+}
+function normalizeColors(colors) {
+  return {
+    text: typeof colors.text === "string" ? colors.text.replace(/^text-/, "") : colors.text,
+    background: typeof colors.background === "string" ? colors.background.replace(/^bg-/, "") : colors.background
+  };
+}
+function computeColor(colors) {
+  const _colors = normalizeColors(toValue(colors));
+  const classes = [];
+  const styles = {};
+  if (_colors.background) {
+    if (isCssColor(_colors.background)) {
+      styles.backgroundColor = _colors.background;
+      if (!_colors.text && isParsableColor(_colors.background)) {
+        const backgroundColor = parseColor(_colors.background);
+        if (backgroundColor.a == null || backgroundColor.a === 1) {
+          classes.push(hasLightForeground(backgroundColor) ? "v-theme-on-dark" : "v-theme-on-light");
+        }
+      }
+    } else {
+      classes.push(`bg-${_colors.background}`);
+    }
+  }
+  if (_colors.text) {
+    if (isCssColor(_colors.text)) {
+      styles.color = _colors.text;
+      styles.caretColor = _colors.text;
+    } else {
+      classes.push(`text-${_colors.text}`);
+    }
+  }
+  return {
+    class: classes,
+    style: styles
+  };
+}
+const allowedVariants$3 = ["elevated", "flat", "tonal", "outlined", "text", "plain"];
+function genOverlays(isClickable, name) {
+  return createBaseVNode(Fragment, null, [isClickable && createBaseVNode("span", {
+    "key": "overlay",
+    "class": normalizeClass(`${name}__overlay`)
+  }, null), createBaseVNode("span", {
+    "key": "underlay",
+    "class": normalizeClass(`${name}__underlay`)
+  }, null)]);
+}
+const makeVariantProps = propsFactory({
+  color: String,
+  variant: {
+    type: String,
+    default: "elevated",
+    validator: (v) => allowedVariants$3.includes(v)
+  }
+}, "variant");
+function useVariant(props, name = getCurrentInstanceName()) {
+  const variantClasses = /* @__PURE__ */ toRef(() => {
+    const {
+      variant
+    } = toValue(props);
+    return `${name}--variant-${variant}`;
+  });
+  const {
+    colorClasses,
+    colorStyles
+  } = useColor(() => {
+    const {
+      variant,
+      color
+    } = toValue(props);
+    return {
+      [["elevated", "flat"].includes(variant) ? "background" : "text"]: color
+    };
+  });
+  return {
+    colorClasses,
+    colorStyles,
+    variantClasses
+  };
+}
+const makeVBtnGroupProps = propsFactory({
+  baseColor: String,
+  divided: Boolean,
+  direction: {
+    type: String,
+    default: "horizontal"
+  },
+  ...makeBorderProps(),
+  ...makeComponentProps(),
+  ...makeDensityProps(),
+  ...makeElevationProps(),
+  ...makeRoundedProps(),
+  ...makeTagProps(),
+  ...makeThemeProps(),
+  ...makeVariantProps()
+}, "VBtnGroup");
+const VBtnGroup = genericComponent()({
+  name: "VBtnGroup",
+  props: makeVBtnGroupProps(),
+  setup(props, {
+    slots
+  }) {
+    const {
+      themeClasses
+    } = provideTheme(props);
+    const {
+      densityClasses
+    } = useDensity(props);
+    const {
+      borderClasses
+    } = useBorder(props);
+    const {
+      elevationClasses
+    } = useElevation(props);
+    const {
+      roundedClasses
+    } = useRounded(props);
+    provideDefaults({
+      VBtn: {
+        height: /* @__PURE__ */ toRef(() => props.direction === "horizontal" ? "auto" : null),
+        baseColor: /* @__PURE__ */ toRef(() => props.baseColor),
+        color: /* @__PURE__ */ toRef(() => props.color),
+        density: /* @__PURE__ */ toRef(() => props.density),
+        flat: true,
+        variant: /* @__PURE__ */ toRef(() => props.variant)
+      }
+    });
+    useRender(() => {
+      return createVNode(props.tag, {
+        "class": normalizeClass(["v-btn-group", `v-btn-group--${props.direction}`, {
+          "v-btn-group--divided": props.divided
+        }, themeClasses.value, borderClasses.value, densityClasses.value, elevationClasses.value, roundedClasses.value, props.class]),
+        "style": normalizeStyle(props.style)
+      }, slots);
+    });
+  }
+});
+function useToggleScope(source, fn) {
+  let scope;
+  function start() {
+    scope = effectScope();
+    scope.run(() => fn.length ? fn(() => {
+      scope?.stop();
+      start();
+    }) : fn());
+  }
+  watch(source, (active) => {
+    if (active && !scope) {
+      start();
+    } else if (!active) {
+      scope?.stop();
+      scope = void 0;
+    }
+  }, {
+    immediate: true
+  });
+  onScopeDispose(() => {
+    scope?.stop();
+  });
+}
+function useProxiedModel(props, prop, defaultValue, transformIn = (v) => v, transformOut = (v) => v) {
+  const vm = getCurrentInstance("useProxiedModel");
+  const internal = /* @__PURE__ */ ref(props[prop] !== void 0 ? props[prop] : defaultValue);
+  const kebabProp = toKebabCase(prop);
+  const checkKebab = kebabProp !== prop;
+  const isControlled = checkKebab ? computed(() => {
+    void props[prop];
+    return !!((vm.vnode.props?.hasOwnProperty(prop) || vm.vnode.props?.hasOwnProperty(kebabProp)) && (vm.vnode.props?.hasOwnProperty(`onUpdate:${prop}`) || vm.vnode.props?.hasOwnProperty(`onUpdate:${kebabProp}`)));
+  }) : computed(() => {
+    void props[prop];
+    return !!(vm.vnode.props?.hasOwnProperty(prop) && vm.vnode.props?.hasOwnProperty(`onUpdate:${prop}`));
+  });
+  useToggleScope(() => !isControlled.value, () => {
+    watch(() => props[prop], (val) => {
+      internal.value = val;
+    });
+  });
+  const model = computed({
+    get() {
+      const externalValue = props[prop];
+      return transformIn(isControlled.value ? externalValue : internal.value);
+    },
+    set(internalValue) {
+      const newValue = transformOut(internalValue);
+      const value = /* @__PURE__ */ toRaw(isControlled.value ? props[prop] : internal.value);
+      if (value === newValue || transformIn(value) === internalValue) {
+        return;
+      }
+      internal.value = newValue;
+      vm?.emit(`update:${prop}`, newValue);
+    }
+  });
+  Object.defineProperty(model, "externalValue", {
+    get: () => isControlled.value ? props[prop] : internal.value
+  });
+  return model;
+}
+const makeGroupProps = propsFactory({
+  modelValue: {
+    type: null,
+    default: void 0
+  },
+  multiple: Boolean,
+  mandatory: [Boolean, String],
+  max: Number,
+  selectedClass: String,
+  disabled: Boolean
+}, "group");
+const makeGroupItemProps = propsFactory({
+  value: null,
+  disabled: Boolean,
+  selectedClass: String
+}, "group-item");
+function useGroupItem(props, injectKey, required = true) {
+  const vm = getCurrentInstance("useGroupItem");
+  if (!vm) {
+    throw new Error("[Vuetify] useGroupItem composable must be used inside a component setup function");
+  }
+  const id = useId();
+  provide(/* @__PURE__ */ Symbol.for(`${injectKey.description}:id`), id);
+  const group = inject$1(injectKey, null);
+  if (!group) {
+    if (!required) return group;
+    throw new Error(`[Vuetify] Could not find useGroup injection with symbol ${injectKey.description}`);
+  }
+  const value = /* @__PURE__ */ toRef(() => props.value);
+  const disabled = computed(() => !!(group.disabled.value || props.disabled));
+  function register() {
+    group?.register({
+      id,
+      value,
+      disabled
+    }, vm);
+  }
+  function unregister() {
+    group?.unregister(id);
+  }
+  register();
+  onBeforeUnmount(() => unregister());
+  const isSelected = computed(() => {
+    return group.isSelected(id);
+  });
+  const isFirst = computed(() => {
+    return group.items.value[0].id === id;
+  });
+  const isLast = computed(() => {
+    return group.items.value[group.items.value.length - 1].id === id;
+  });
+  const selectedClass = computed(() => isSelected.value && [group.selectedClass.value, props.selectedClass]);
+  watch(isSelected, (value2) => {
+    vm.emit("group:selected", {
+      value: value2
+    });
+  }, {
+    flush: "sync"
+  });
+  return {
+    id,
+    isSelected,
+    isFirst,
+    isLast,
+    toggle: () => group.select(id, !isSelected.value),
+    select: (value2) => group.select(id, value2),
+    selectedClass,
+    value,
+    disabled,
+    group,
+    register,
+    unregister
+  };
+}
+function useGroup(props, injectKey) {
+  let isUnmounted = false;
+  const items = /* @__PURE__ */ reactive([]);
+  const selected = useProxiedModel(props, "modelValue", [], (v) => {
+    if (v === void 0) return [];
+    return getIds(items, v === null ? [null] : wrapInArray(v));
+  }, (v) => {
+    const arr = getValues(items, v);
+    return props.multiple ? arr : arr[0];
+  });
+  const groupVm = getCurrentInstance("useGroup");
+  function register(item, vm) {
+    const unwrapped = item;
+    const key = /* @__PURE__ */ Symbol.for(`${injectKey.description}:id`);
+    const children = findChildrenWithProvide(key, groupVm?.vnode);
+    const index = children.indexOf(vm);
+    if (unref(unwrapped.value) === void 0) {
+      unwrapped.value = index;
+      unwrapped.useIndexAsValue = true;
+    }
+    if (index > -1) {
+      items.splice(index, 0, unwrapped);
+    } else {
+      items.push(unwrapped);
+    }
+  }
+  function unregister(id) {
+    if (isUnmounted) return;
+    forceMandatoryValue();
+    const index = items.findIndex((item) => item.id === id);
+    items.splice(index, 1);
+  }
+  function forceMandatoryValue() {
+    const item = items.find((item2) => !item2.disabled);
+    if (item && props.mandatory === "force" && !selected.value.length) {
+      selected.value = [item.id];
+    }
+  }
+  onMounted(() => {
+    forceMandatoryValue();
+  });
+  onBeforeUnmount(() => {
+    isUnmounted = true;
+  });
+  onUpdated(() => {
+    for (let i2 = 0; i2 < items.length; i2++) {
+      if (items[i2].useIndexAsValue) {
+        items[i2].value = i2;
+      }
+    }
+  });
+  function select(id, value) {
+    const item = items.find((item2) => item2.id === id);
+    if (value && item?.disabled) return;
+    if (props.multiple) {
+      const internalValue = selected.value.slice();
+      const index = internalValue.findIndex((v) => v === id);
+      const isSelected = ~index;
+      value = value ?? !isSelected;
+      if (isSelected && props.mandatory && internalValue.length <= 1) return;
+      if (!isSelected && props.max != null && internalValue.length + 1 > props.max) return;
+      if (index < 0 && value) internalValue.push(id);
+      else if (index >= 0 && !value) internalValue.splice(index, 1);
+      selected.value = internalValue;
+    } else {
+      const isSelected = selected.value.includes(id);
+      if (props.mandatory && isSelected) return;
+      if (!isSelected && !value) return;
+      selected.value = value ?? !isSelected ? [id] : [];
+    }
+  }
+  function step(offset) {
+    if (props.multiple) ;
+    if (!selected.value.length) {
+      const item = items.find((item2) => !item2.disabled);
+      item && (selected.value = [item.id]);
+    } else {
+      const currentId = selected.value[0];
+      const currentIndex = items.findIndex((i2) => i2.id === currentId);
+      let newIndex = (currentIndex + offset) % items.length;
+      let newItem = items[newIndex];
+      while (newItem.disabled && newIndex !== currentIndex) {
+        newIndex = (newIndex + offset) % items.length;
+        newItem = items[newIndex];
+      }
+      if (newItem.disabled) return;
+      selected.value = [items[newIndex].id];
+    }
+  }
+  const state = {
+    register,
+    unregister,
+    selected,
+    select,
+    disabled: /* @__PURE__ */ toRef(() => props.disabled),
+    prev: () => step(items.length - 1),
+    next: () => step(1),
+    isSelected: (id) => selected.value.includes(id),
+    selectedClass: /* @__PURE__ */ toRef(() => props.selectedClass),
+    items: /* @__PURE__ */ toRef(() => items),
+    getItemIndex: (value) => getItemIndex(items, value)
+  };
+  provide(injectKey, state);
+  return state;
+}
+function getItemIndex(items, value) {
+  const ids = getIds(items, [value]);
+  if (!ids.length) return -1;
+  return items.findIndex((item) => item.id === ids[0]);
+}
+function getIds(items, modelValue) {
+  const ids = [];
+  modelValue.forEach((value) => {
+    const item = items.find((item2) => deepEqual(value, item2.value));
+    const itemByIndex = items[value];
+    if (item?.value !== void 0) {
+      ids.push(item.id);
+    } else if (itemByIndex?.useIndexAsValue) {
+      ids.push(itemByIndex.id);
+    }
+  });
+  return ids;
+}
+function getValues(items, ids) {
+  const values = [];
+  ids.forEach((id) => {
+    const itemIndex = items.findIndex((item) => item.id === id);
+    if (~itemIndex) {
+      const item = items[itemIndex];
+      values.push(item.value !== void 0 ? item.value : itemIndex);
+    }
+  });
+  return values;
+}
+const VBtnToggleSymbol = /* @__PURE__ */ Symbol.for("vuetify:v-btn-toggle");
+const makeVBtnToggleProps = propsFactory({
+  ...makeVBtnGroupProps(),
+  ...makeGroupProps()
+}, "VBtnToggle");
+genericComponent()({
+  name: "VBtnToggle",
+  props: makeVBtnToggleProps(),
+  emits: {
+    "update:modelValue": (value) => true
+  },
+  setup(props, {
+    slots
+  }) {
+    const {
+      isSelected,
+      next,
+      prev,
+      select,
+      selected
+    } = useGroup(props, VBtnToggleSymbol);
+    useRender(() => {
+      const btnGroupProps = VBtnGroup.filterProps(props);
+      return createVNode(VBtnGroup, mergeProps({
+        "class": ["v-btn-toggle", props.class]
+      }, btnGroupProps, {
+        "style": props.style
+      }), {
+        default: () => [slots.default?.({
+          isSelected,
+          next,
+          prev,
+          select,
+          selected
+        })]
+      });
+    });
+    return {
+      next,
+      prev,
+      select
+    };
+  }
+});
+const makeVDefaultsProviderProps = propsFactory({
+  defaults: Object,
+  disabled: Boolean,
+  reset: [Number, String],
+  root: [Boolean, String],
+  scoped: Boolean
+}, "VDefaultsProvider");
+const VDefaultsProvider = genericComponent(false)({
+  name: "VDefaultsProvider",
+  props: makeVDefaultsProviderProps(),
+  setup(props, {
+    slots
+  }) {
+    const {
+      defaults: defaults2,
+      disabled,
+      reset,
+      root,
+      scoped
+    } = /* @__PURE__ */ toRefs(props);
+    provideDefaults(defaults2, {
+      reset,
+      root,
+      scoped,
+      disabled
+    });
+    return () => slots.default?.();
+  }
+});
+const IconValue = [String, Function, Object, Array];
+const IconSymbol = /* @__PURE__ */ Symbol.for("vuetify:icons");
+const makeIconProps = propsFactory({
+  icon: {
+    type: IconValue
+  },
+  // Could not remove this and use makeTagProps, types complained because it is not required
+  tag: {
+    type: [String, Object, Function],
+    required: true
+  }
+}, "icon");
+const VComponentIcon = genericComponent()({
+  name: "VComponentIcon",
+  props: makeIconProps(),
+  setup(props, {
+    slots
+  }) {
+    return () => {
+      const Icon = props.icon;
+      return createVNode(props.tag, null, {
+        default: () => [props.icon ? createVNode(Icon, null, null) : slots.default?.()]
+      });
+    };
+  }
+});
+const VSvgIcon = defineComponent({
+  name: "VSvgIcon",
+  inheritAttrs: false,
+  props: makeIconProps(),
+  setup(props, {
+    attrs
+  }) {
+    return () => {
+      return createVNode(props.tag, mergeProps(attrs, {
+        "style": null
+      }), {
+        default: () => [createBaseVNode("svg", {
+          "class": "v-icon__svg",
+          "xmlns": "http://www.w3.org/2000/svg",
+          "viewBox": "0 0 24 24",
+          "role": "img",
+          "aria-hidden": "true"
+        }, [Array.isArray(props.icon) ? props.icon.map((path) => Array.isArray(path) ? createBaseVNode("path", {
+          "d": path[0],
+          "fill-opacity": path[1]
+        }, null) : createBaseVNode("path", {
+          "d": path
+        }, null)) : createBaseVNode("path", {
+          "d": props.icon
+        }, null)])]
+      });
+    };
+  }
+});
+defineComponent({
+  name: "VLigatureIcon",
+  props: makeIconProps(),
+  setup(props) {
+    return () => {
+      return createVNode(props.tag, null, {
+        default: () => [props.icon]
+      });
+    };
+  }
+});
+const VClassIcon = defineComponent({
+  name: "VClassIcon",
+  props: makeIconProps(),
+  setup(props) {
+    return () => {
+      return createVNode(props.tag, {
+        "class": normalizeClass(props.icon)
+      }, null);
+    };
+  }
+});
+const useIcon = (props) => {
+  const icons = inject$1(IconSymbol);
+  if (!icons) throw new Error("Missing Vuetify Icons provide!");
+  const iconData = computed(() => {
+    const iconAlias = toValue(props);
+    if (!iconAlias) return {
+      component: VComponentIcon
+    };
+    let icon = iconAlias;
+    if (typeof icon === "string") {
+      icon = icon.trim();
+      if (icon.startsWith("$")) {
+        icon = icons.aliases?.[icon.slice(1)];
+      }
+    }
+    if (Array.isArray(icon)) {
+      return {
+        component: VSvgIcon,
+        icon
+      };
+    } else if (typeof icon !== "string") {
+      return {
+        component: VComponentIcon,
+        icon
+      };
+    }
+    const iconSetName = Object.keys(icons.sets).find((setName) => typeof icon === "string" && icon.startsWith(`${setName}:`));
+    const iconName = iconSetName ? icon.slice(iconSetName.length + 1) : icon;
+    const iconSet = icons.sets[iconSetName ?? icons.defaultSet];
+    return {
+      component: iconSet.component,
+      icon: iconName
+    };
+  });
+  return {
+    iconData
+  };
+};
+const predefinedSizes = ["x-small", "small", "default", "large", "x-large"];
+const makeSizeProps = propsFactory({
+  size: {
+    type: [String, Number],
+    default: "default"
+  }
+}, "size");
+function useSize(props, name = getCurrentInstanceName()) {
+  return destructComputed(() => {
+    const size = props.size;
+    let sizeClasses;
+    let sizeStyles;
+    if (includes(predefinedSizes, size)) {
+      sizeClasses = `${name}--size-${size}`;
+    } else if (size) {
+      sizeStyles = {
+        width: convertToUnit(size),
+        height: convertToUnit(size)
+      };
+    }
+    return {
+      sizeClasses,
+      sizeStyles
+    };
+  });
+}
 const makeVIconProps = propsFactory({
   color: String,
   disabled: Boolean,
@@ -21240,6 +21739,217 @@ const VIcon = genericComponent()({
     return {};
   }
 });
+function useIntersectionObserver(callback, options) {
+  const intersectionRef = /* @__PURE__ */ ref();
+  const isIntersecting = /* @__PURE__ */ shallowRef(false);
+  if (SUPPORTS_INTERSECTION) {
+    const observer = new IntersectionObserver((entries) => {
+      isIntersecting.value = !!entries.find((entry) => entry.isIntersecting);
+    }, options);
+    onScopeDispose(() => {
+      observer.disconnect();
+    });
+    watch(intersectionRef, (newValue, oldValue) => {
+      if (oldValue) {
+        observer.unobserve(oldValue);
+        isIntersecting.value = false;
+      }
+      if (newValue) observer.observe(newValue);
+    }, {
+      flush: "post"
+    });
+  }
+  return {
+    intersectionRef,
+    isIntersecting
+  };
+}
+function useResizeObserver(callback, box = "content") {
+  const resizeRef = templateRef();
+  const contentRect = /* @__PURE__ */ ref();
+  if (IN_BROWSER) {
+    const observer = new ResizeObserver((entries) => {
+      callback?.(entries, observer);
+      if (!entries.length) return;
+      if (box === "content") {
+        contentRect.value = entries[0].contentRect;
+      } else {
+        contentRect.value = entries[0].target.getBoundingClientRect();
+      }
+    });
+    onBeforeUnmount(() => {
+      observer.disconnect();
+    });
+    watch(() => resizeRef.el, (newValue, oldValue) => {
+      if (oldValue) {
+        observer.unobserve(oldValue);
+        contentRect.value = void 0;
+      }
+      if (newValue) observer.observe(newValue);
+    }, {
+      flush: "post"
+    });
+  }
+  return {
+    resizeRef,
+    contentRect: /* @__PURE__ */ readonly(contentRect)
+  };
+}
+const makeRevealProps = propsFactory({
+  reveal: {
+    type: [Boolean, Object],
+    default: false
+  }
+}, "reveal");
+function useReveal(props) {
+  const defaultDuration = 900;
+  const duration = /* @__PURE__ */ toRef(() => typeof props.reveal === "object" ? Math.max(0, Number(props.reveal.duration ?? defaultDuration)) : defaultDuration);
+  const state = /* @__PURE__ */ shallowRef(props.reveal ? "initial" : "disabled");
+  onMounted(async () => {
+    if (props.reveal) {
+      state.value = "initial";
+      await new Promise((resolve2) => requestAnimationFrame(resolve2));
+      state.value = "pending";
+      await new Promise((resolve2) => setTimeout(resolve2, duration.value));
+      state.value = "done";
+    }
+  });
+  return {
+    duration,
+    state
+  };
+}
+const makeVProgressCircularProps = propsFactory({
+  bgColor: String,
+  color: String,
+  indeterminate: [Boolean, String],
+  rounded: Boolean,
+  modelValue: {
+    type: [Number, String],
+    default: 0
+  },
+  rotate: {
+    type: [Number, String],
+    default: 0
+  },
+  width: {
+    type: [Number, String],
+    default: 4
+  },
+  ...makeComponentProps(),
+  ...makeRevealProps(),
+  ...makeSizeProps(),
+  ...makeTagProps({
+    tag: "div"
+  }),
+  ...makeThemeProps()
+}, "VProgressCircular");
+const VProgressCircular = genericComponent()({
+  name: "VProgressCircular",
+  props: makeVProgressCircularProps(),
+  setup(props, {
+    slots
+  }) {
+    const MAGIC_RADIUS_CONSTANT = 20;
+    const CIRCUMFERENCE = 2 * Math.PI * MAGIC_RADIUS_CONSTANT;
+    const root = /* @__PURE__ */ ref();
+    const {
+      themeClasses
+    } = provideTheme(props);
+    const {
+      sizeClasses,
+      sizeStyles
+    } = useSize(props);
+    const {
+      textColorClasses,
+      textColorStyles
+    } = useTextColor(() => props.color);
+    const {
+      textColorClasses: underlayColorClasses,
+      textColorStyles: underlayColorStyles
+    } = useTextColor(() => props.bgColor);
+    const {
+      intersectionRef,
+      isIntersecting
+    } = useIntersectionObserver();
+    const {
+      resizeRef,
+      contentRect
+    } = useResizeObserver();
+    const {
+      state: revealState,
+      duration: revealDuration
+    } = useReveal(props);
+    const normalizedValue = /* @__PURE__ */ toRef(() => revealState.value === "initial" ? 0 : clamp(parseFloat(props.modelValue), 0, 100));
+    const width = /* @__PURE__ */ toRef(() => Number(props.width));
+    const size = /* @__PURE__ */ toRef(() => {
+      return sizeStyles.value ? Number(props.size) : contentRect.value ? contentRect.value.width : Math.max(width.value, 32);
+    });
+    const diameter = /* @__PURE__ */ toRef(() => MAGIC_RADIUS_CONSTANT / (1 - width.value / size.value) * 2);
+    const strokeWidth = /* @__PURE__ */ toRef(() => width.value / size.value * diameter.value);
+    const strokeDashOffset = /* @__PURE__ */ toRef(() => {
+      const baseLength = (100 - normalizedValue.value) / 100 * CIRCUMFERENCE;
+      return props.rounded && normalizedValue.value > 0 && normalizedValue.value < 100 ? convertToUnit(Math.min(CIRCUMFERENCE - 0.01, baseLength + strokeWidth.value)) : convertToUnit(baseLength);
+    });
+    const startAngle = computed(() => {
+      const baseAngle = Number(props.rotate);
+      return props.rounded ? baseAngle + strokeWidth.value / 2 / CIRCUMFERENCE * 360 : baseAngle;
+    });
+    watchEffect(() => {
+      intersectionRef.value = root.value;
+      resizeRef.value = root.value;
+    });
+    useRender(() => createVNode(props.tag, {
+      "ref": root,
+      "class": normalizeClass(["v-progress-circular", {
+        "v-progress-circular--indeterminate": !!props.indeterminate,
+        "v-progress-circular--visible": isIntersecting.value,
+        "v-progress-circular--disable-shrink": props.indeterminate && (props.indeterminate === "disable-shrink" || PREFERS_REDUCED_MOTION()),
+        "v-progress-circular--revealing": ["initial", "pending"].includes(revealState.value)
+      }, themeClasses.value, sizeClasses.value, textColorClasses.value, props.class]),
+      "style": normalizeStyle([sizeStyles.value, textColorStyles.value, {
+        "--progress-reveal-duration": `${revealDuration.value}ms`
+      }, props.style]),
+      "role": "progressbar",
+      "aria-valuemin": "0",
+      "aria-valuemax": "100",
+      "aria-valuenow": props.indeterminate ? void 0 : normalizedValue.value
+    }, {
+      default: () => [createBaseVNode("svg", {
+        "style": {
+          transform: `rotate(calc(-90deg + ${startAngle.value}deg))`
+        },
+        "xmlns": "http://www.w3.org/2000/svg",
+        "viewBox": `0 0 ${diameter.value} ${diameter.value}`
+      }, [createBaseVNode("circle", {
+        "class": normalizeClass(["v-progress-circular__underlay", underlayColorClasses.value]),
+        "style": normalizeStyle(underlayColorStyles.value),
+        "fill": "transparent",
+        "cx": "50%",
+        "cy": "50%",
+        "r": MAGIC_RADIUS_CONSTANT,
+        "stroke-width": strokeWidth.value,
+        "stroke-dasharray": CIRCUMFERENCE,
+        "stroke-dashoffset": 0
+      }, null), createBaseVNode("circle", {
+        "class": "v-progress-circular__overlay",
+        "fill": "transparent",
+        "cx": "50%",
+        "cy": "50%",
+        "r": MAGIC_RADIUS_CONSTANT,
+        "stroke-width": strokeWidth.value,
+        "stroke-dasharray": CIRCUMFERENCE,
+        "stroke-dashoffset": strokeDashOffset.value,
+        "stroke-linecap": props.rounded ? "round" : void 0
+      }, null)]), slots.default && createBaseVNode("div", {
+        "class": "v-progress-circular__content"
+      }, [slots.default({
+        value: normalizedValue.value
+      })])]
+    }));
+    return {};
+  }
+});
 const makeDimensionProps = propsFactory({
   height: [Number, String],
   maxHeight: [Number, String],
@@ -21268,66 +21978,6 @@ function useDimension(props) {
   return {
     dimensionStyles
   };
-}
-function useToggleScope(source, fn) {
-  let scope;
-  function start() {
-    scope = effectScope();
-    scope.run(() => fn.length ? fn(() => {
-      scope?.stop();
-      start();
-    }) : fn());
-  }
-  watch(source, (active) => {
-    if (active && !scope) {
-      start();
-    } else if (!active) {
-      scope?.stop();
-      scope = void 0;
-    }
-  }, {
-    immediate: true
-  });
-  onScopeDispose(() => {
-    scope?.stop();
-  });
-}
-function useProxiedModel(props, prop, defaultValue, transformIn = (v) => v, transformOut = (v) => v) {
-  const vm = getCurrentInstance("useProxiedModel");
-  const internal = /* @__PURE__ */ ref(props[prop] !== void 0 ? props[prop] : defaultValue);
-  const kebabProp = toKebabCase(prop);
-  const checkKebab = kebabProp !== prop;
-  const isControlled = checkKebab ? computed(() => {
-    void props[prop];
-    return !!((vm.vnode.props?.hasOwnProperty(prop) || vm.vnode.props?.hasOwnProperty(kebabProp)) && (vm.vnode.props?.hasOwnProperty(`onUpdate:${prop}`) || vm.vnode.props?.hasOwnProperty(`onUpdate:${kebabProp}`)));
-  }) : computed(() => {
-    void props[prop];
-    return !!(vm.vnode.props?.hasOwnProperty(prop) && vm.vnode.props?.hasOwnProperty(`onUpdate:${prop}`));
-  });
-  useToggleScope(() => !isControlled.value, () => {
-    watch(() => props[prop], (val) => {
-      internal.value = val;
-    });
-  });
-  const model = computed({
-    get() {
-      const externalValue = props[prop];
-      return transformIn(isControlled.value ? externalValue : internal.value);
-    },
-    set(internalValue) {
-      const newValue = transformOut(internalValue);
-      const value = /* @__PURE__ */ toRaw(isControlled.value ? props[prop] : internal.value);
-      if (value === newValue || transformIn(value) === internalValue) {
-        return;
-      }
-      internal.value = newValue;
-      vm?.emit(`update:${prop}`, newValue);
-    }
-  });
-  Object.defineProperty(model, "externalValue", {
-    get: () => isControlled.value ? props[prop] : internal.value
-  });
-  return model;
 }
 const en = {
   badge: "Badge",
@@ -21740,955 +22390,6 @@ function useLocation(props, opposite = false, offset) {
     locationStyles
   };
 }
-const makeRoundedProps = propsFactory({
-  rounded: {
-    type: [Boolean, Number, String],
-    default: void 0
-  },
-  tile: Boolean
-}, "rounded");
-function useRounded(props, name = getCurrentInstanceName()) {
-  const roundedClasses = computed(() => {
-    const rounded = /* @__PURE__ */ isRef(props) ? props.value : props.rounded;
-    const tile = /* @__PURE__ */ isRef(props) ? false : props.tile;
-    const classes = [];
-    if (tile || rounded === false) {
-      classes.push("rounded-0");
-    } else if (rounded === true || rounded === "") {
-      classes.push(`${name}--rounded`);
-    } else if (typeof rounded === "string" || rounded === 0) {
-      for (const value of String(rounded).split(" ")) {
-        classes.push(`rounded-${value}`);
-      }
-    }
-    return classes;
-  });
-  return {
-    roundedClasses
-  };
-}
-const makeTransitionProps$1 = propsFactory({
-  transition: {
-    type: null,
-    default: "fade-transition",
-    validator: (val) => val !== true
-  }
-}, "transition");
-const MaybeTransition = (props, {
-  slots
-}) => {
-  const {
-    transition,
-    disabled,
-    group,
-    ...rest
-  } = props;
-  const {
-    component = group ? TransitionGroup : Transition,
-    ...customProps
-  } = isObject(transition) ? transition : {};
-  let transitionProps;
-  if (isObject(transition)) {
-    transitionProps = mergeProps(customProps, onlyDefinedProps({
-      disabled,
-      group
-    }), rest);
-  } else {
-    transitionProps = mergeProps({
-      name: disabled || !transition ? "" : transition
-    }, rest);
-  }
-  return h(component, transitionProps, slots);
-};
-const makeVBadgeProps = propsFactory({
-  bordered: Boolean,
-  color: String,
-  content: [Number, String],
-  dot: Boolean,
-  dotSize: [Number, String],
-  floating: Boolean,
-  icon: IconValue,
-  inline: Boolean,
-  label: {
-    type: String,
-    default: "$vuetify.badge"
-  },
-  max: [Number, String],
-  modelValue: {
-    type: Boolean,
-    default: true
-  },
-  offsetX: [Number, String],
-  offsetY: [Number, String],
-  textColor: String,
-  ...makeComponentProps(),
-  ...makeLocationProps({
-    location: "top end"
-  }),
-  ...makeRoundedProps(),
-  ...makeTagProps(),
-  ...makeThemeProps(),
-  ...makeTransitionProps$1({
-    transition: "scale-rotate-transition"
-  }),
-  ...makeDimensionProps()
-}, "VBadge");
-const VBadge = genericComponent()({
-  name: "VBadge",
-  inheritAttrs: false,
-  props: makeVBadgeProps(),
-  setup(props, ctx) {
-    const {
-      backgroundColorClasses,
-      backgroundColorStyles
-    } = useBackgroundColor(() => props.color);
-    const {
-      roundedClasses
-    } = useRounded(props);
-    const {
-      t
-    } = useLocale();
-    const {
-      textColorClasses,
-      textColorStyles
-    } = useTextColor(() => props.textColor);
-    const {
-      themeClasses
-    } = useTheme();
-    const {
-      locationStyles
-    } = useLocation(props, true, (side) => {
-      const base = props.floating ? props.dot ? 2 : 4 : props.dot ? Number(props.dotSize ?? 8) : 12;
-      return base + (["top", "bottom"].includes(side) ? Number(props.offsetY ?? 0) : ["left", "right"].includes(side) ? Number(props.offsetX ?? 0) : 0);
-    });
-    const {
-      dimensionStyles
-    } = useDimension(props);
-    useRender(() => {
-      const value = Number(props.content);
-      const content = !props.max || isNaN(value) ? props.content : value <= Number(props.max) ? value : `${props.max}+`;
-      const [badgeAttrs, attrs] = pickWithRest(ctx.attrs, ["aria-atomic", "aria-label", "aria-live", "role", "title"]);
-      return createVNode(props.tag, mergeProps({
-        "class": ["v-badge", {
-          "v-badge--bordered": props.bordered,
-          "v-badge--dot": props.dot,
-          "v-badge--floating": props.floating,
-          "v-badge--inline": props.inline
-        }, props.class]
-      }, attrs, {
-        "style": props.style
-      }), {
-        default: () => [createBaseVNode("div", {
-          "class": "v-badge__wrapper"
-        }, [ctx.slots.default?.(), createVNode(MaybeTransition, {
-          "transition": props.transition
-        }, {
-          default: () => [withDirectives(createBaseVNode("span", mergeProps({
-            "class": ["v-badge__badge", themeClasses.value, backgroundColorClasses.value, roundedClasses.value, textColorClasses.value],
-            "style": [backgroundColorStyles.value, textColorStyles.value, dimensionStyles.value, props.inline ? {} : locationStyles.value, props.dot && props.dotSize ? {
-              width: convertToUnit(props.dotSize),
-              height: convertToUnit(props.dotSize)
-            } : {}],
-            "aria-atomic": "true",
-            "aria-label": t(props.label, value),
-            "aria-live": "polite",
-            "role": "status"
-          }, badgeAttrs), [props.dot ? void 0 : ctx.slots.badge ? ctx.slots.badge?.() : props.icon ? createVNode(VIcon, {
-            "icon": props.icon
-          }, null) : content]), [[vShow, props.modelValue]])]
-        })])]
-      });
-    });
-    return {};
-  }
-});
-const makeVDefaultsProviderProps = propsFactory({
-  defaults: Object,
-  disabled: Boolean,
-  reset: [Number, String],
-  root: [Boolean, String],
-  scoped: Boolean
-}, "VDefaultsProvider");
-const VDefaultsProvider = genericComponent(false)({
-  name: "VDefaultsProvider",
-  props: makeVDefaultsProviderProps(),
-  setup(props, {
-    slots
-  }) {
-    const {
-      defaults: defaults2,
-      disabled,
-      reset,
-      root,
-      scoped
-    } = /* @__PURE__ */ toRefs(props);
-    provideDefaults(defaults2, {
-      reset,
-      root,
-      scoped,
-      disabled
-    });
-    return () => slots.default?.();
-  }
-});
-function useAspectStyles(props) {
-  return {
-    aspectStyles: computed(() => {
-      const ratio = Number(props.aspectRatio);
-      return ratio ? {
-        paddingBottom: String(1 / ratio * 100) + "%"
-      } : void 0;
-    })
-  };
-}
-const makeVResponsiveProps = propsFactory({
-  aspectRatio: [String, Number],
-  contentClass: null,
-  inline: Boolean,
-  ...makeComponentProps(),
-  ...makeDimensionProps()
-}, "VResponsive");
-const VResponsive = genericComponent()({
-  name: "VResponsive",
-  props: makeVResponsiveProps(),
-  setup(props, {
-    slots
-  }) {
-    const {
-      aspectStyles
-    } = useAspectStyles(props);
-    const {
-      dimensionStyles
-    } = useDimension(props);
-    useRender(() => createBaseVNode("div", {
-      "class": normalizeClass(["v-responsive", {
-        "v-responsive--inline": props.inline
-      }, props.class]),
-      "style": normalizeStyle([dimensionStyles.value, props.style])
-    }, [createBaseVNode("div", {
-      "class": "v-responsive__sizer",
-      "style": normalizeStyle(aspectStyles.value)
-    }, null), slots.additional?.(), slots.default && createBaseVNode("div", {
-      "class": normalizeClass(["v-responsive__content", props.contentClass])
-    }, [slots.default()])]));
-    return {};
-  }
-});
-function mounted$1(el, binding) {
-  if (!SUPPORTS_INTERSECTION) return;
-  const modifiers = binding.modifiers || {};
-  const value = binding.value;
-  const {
-    handler,
-    options
-  } = typeof value === "object" ? value : {
-    handler: value,
-    options: {}
-  };
-  const observer = new IntersectionObserver((entries = [], observer2) => {
-    const _observe = el._observe?.[binding.instance.$.uid];
-    if (!_observe) return;
-    const isIntersecting = entries.some((entry) => entry.isIntersecting);
-    if (handler && (!modifiers.quiet || _observe.init) && (!modifiers.once || isIntersecting || _observe.init)) {
-      handler(isIntersecting, entries, observer2);
-    }
-    if (isIntersecting && modifiers.once) unmounted$1(el, binding);
-    else _observe.init = true;
-  }, options);
-  el._observe = Object(el._observe);
-  el._observe[binding.instance.$.uid] = {
-    init: false,
-    observer
-  };
-  observer.observe(el);
-}
-function unmounted$1(el, binding) {
-  const observe = el._observe?.[binding.instance.$.uid];
-  if (!observe) return;
-  observe.observer.unobserve(el);
-  delete el._observe[binding.instance.$.uid];
-}
-const Intersect = {
-  mounted: mounted$1,
-  unmounted: unmounted$1,
-  updated: (el, binding) => {
-    if (el._observe?.[binding.instance.$.uid]) {
-      unmounted$1(el, binding);
-      mounted$1(el, binding);
-    }
-  }
-};
-const makeVImgProps = propsFactory({
-  absolute: Boolean,
-  alt: String,
-  cover: Boolean,
-  color: String,
-  draggable: {
-    type: [Boolean, String],
-    default: void 0
-  },
-  eager: Boolean,
-  gradient: String,
-  imageClass: null,
-  lazySrc: String,
-  options: {
-    type: Object,
-    // For more information on types, navigate to:
-    // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
-    default: () => ({
-      root: void 0,
-      rootMargin: void 0,
-      threshold: void 0
-    })
-  },
-  sizes: String,
-  src: {
-    type: [String, Object],
-    default: ""
-  },
-  crossorigin: String,
-  referrerpolicy: String,
-  srcset: String,
-  position: String,
-  ...makeVResponsiveProps(),
-  ...makeComponentProps(),
-  ...makeRoundedProps(),
-  ...makeTransitionProps$1()
-}, "VImg");
-const VImg = genericComponent()({
-  name: "VImg",
-  directives: {
-    vIntersect: Intersect
-  },
-  inheritAttrs: false,
-  props: makeVImgProps(),
-  emits: {
-    loadstart: (value) => true,
-    load: (value) => true,
-    error: (value) => true
-  },
-  setup(props, {
-    attrs,
-    emit: emit2,
-    slots
-  }) {
-    const {
-      backgroundColorClasses,
-      backgroundColorStyles
-    } = useBackgroundColor(() => props.color);
-    const {
-      roundedClasses
-    } = useRounded(props);
-    const vm = getCurrentInstance("VImg");
-    const currentSrc = /* @__PURE__ */ shallowRef("");
-    const image = /* @__PURE__ */ ref();
-    const state = /* @__PURE__ */ shallowRef(props.eager ? "loading" : "idle");
-    const naturalWidth = /* @__PURE__ */ shallowRef();
-    const naturalHeight = /* @__PURE__ */ shallowRef();
-    const normalisedSrc = computed(() => {
-      return props.src && typeof props.src === "object" ? {
-        src: props.src.src,
-        srcset: props.srcset || props.src.srcset,
-        lazySrc: props.lazySrc || props.src.lazySrc,
-        aspect: Number(props.aspectRatio || props.src.aspect || 0)
-      } : {
-        src: props.src,
-        srcset: props.srcset,
-        lazySrc: props.lazySrc,
-        aspect: Number(props.aspectRatio || 0)
-      };
-    });
-    const aspectRatio = computed(() => {
-      return normalisedSrc.value.aspect || naturalWidth.value / naturalHeight.value || 0;
-    });
-    watch(() => props.src, () => {
-      init(state.value !== "idle");
-    });
-    watch(aspectRatio, (val, oldVal) => {
-      if (!val && oldVal && image.value) {
-        pollForSize(image.value);
-      }
-    });
-    onBeforeMount(() => init());
-    function init(isIntersecting) {
-      if (props.eager && isIntersecting) return;
-      if (SUPPORTS_INTERSECTION && !isIntersecting && !props.eager) return;
-      state.value = "loading";
-      if (normalisedSrc.value.lazySrc) {
-        const lazyImg = new Image();
-        lazyImg.src = normalisedSrc.value.lazySrc;
-        pollForSize(lazyImg, null);
-      }
-      if (!normalisedSrc.value.src) return;
-      nextTick(() => {
-        emit2("loadstart", image.value?.currentSrc || normalisedSrc.value.src);
-        setTimeout(() => {
-          if (vm.isUnmounted) return;
-          if (image.value?.complete) {
-            if (!image.value.naturalWidth) {
-              onError();
-            }
-            if (state.value === "error") return;
-            if (!aspectRatio.value) pollForSize(image.value, null);
-            if (state.value === "loading") onLoad();
-          } else {
-            if (!aspectRatio.value) pollForSize(image.value);
-            getSrc();
-          }
-        });
-      });
-    }
-    function onLoad() {
-      if (vm.isUnmounted) return;
-      getSrc();
-      pollForSize(image.value);
-      state.value = "loaded";
-      emit2("load", image.value?.currentSrc || normalisedSrc.value.src);
-    }
-    function onError() {
-      if (vm.isUnmounted) return;
-      state.value = "error";
-      emit2("error", image.value?.currentSrc || normalisedSrc.value.src);
-    }
-    function getSrc() {
-      const img = image.value;
-      if (img) currentSrc.value = img.currentSrc || img.src;
-    }
-    let timer = -1;
-    onBeforeUnmount(() => {
-      clearTimeout(timer);
-    });
-    function pollForSize(img, timeout = 100) {
-      const poll = () => {
-        clearTimeout(timer);
-        if (vm.isUnmounted) return;
-        const {
-          naturalHeight: imgHeight,
-          naturalWidth: imgWidth
-        } = img;
-        if (imgHeight || imgWidth) {
-          naturalWidth.value = imgWidth;
-          naturalHeight.value = imgHeight;
-        } else if (!img.complete && state.value === "loading" && timeout != null) {
-          timer = window.setTimeout(poll, timeout);
-        } else if (img.currentSrc.endsWith(".svg") || img.currentSrc.startsWith("data:image/svg+xml")) {
-          naturalWidth.value = 1;
-          naturalHeight.value = 1;
-        }
-      };
-      poll();
-    }
-    const containClasses = /* @__PURE__ */ toRef(() => ({
-      "v-img__img--cover": props.cover,
-      "v-img__img--contain": !props.cover
-    }));
-    const __image = () => {
-      if (!normalisedSrc.value.src || state.value === "idle") return null;
-      const img = createBaseVNode("img", {
-        "class": normalizeClass(["v-img__img", containClasses.value, props.imageClass]),
-        "style": {
-          objectPosition: props.position
-        },
-        "crossorigin": props.crossorigin,
-        "src": normalisedSrc.value.src,
-        "srcset": normalisedSrc.value.srcset,
-        "alt": props.alt,
-        "referrerpolicy": props.referrerpolicy,
-        "draggable": props.draggable,
-        "sizes": props.sizes,
-        "ref": image,
-        "onLoad": onLoad,
-        "onError": onError
-      }, null);
-      const sources = slots.sources?.();
-      return createVNode(MaybeTransition, {
-        "transition": props.transition,
-        "appear": true
-      }, {
-        default: () => [withDirectives(sources ? createBaseVNode("picture", {
-          "class": "v-img__picture"
-        }, [sources, img]) : img, [[vShow, state.value === "loaded"]])]
-      });
-    };
-    const __preloadImage = () => createVNode(MaybeTransition, {
-      "transition": props.transition
-    }, {
-      default: () => [normalisedSrc.value.lazySrc && state.value !== "loaded" && createBaseVNode("img", {
-        "class": normalizeClass(["v-img__img", "v-img__img--preload", containClasses.value]),
-        "style": {
-          objectPosition: props.position
-        },
-        "crossorigin": props.crossorigin,
-        "src": normalisedSrc.value.lazySrc,
-        "alt": props.alt,
-        "referrerpolicy": props.referrerpolicy,
-        "draggable": props.draggable
-      }, null)]
-    });
-    const __placeholder = () => {
-      if (!slots.placeholder) return null;
-      return createVNode(MaybeTransition, {
-        "transition": props.transition,
-        "appear": true
-      }, {
-        default: () => [(state.value === "loading" || state.value === "error" && !slots.error) && createBaseVNode("div", {
-          "class": "v-img__placeholder"
-        }, [slots.placeholder()])]
-      });
-    };
-    const __error = () => {
-      if (!slots.error) return null;
-      return createVNode(MaybeTransition, {
-        "transition": props.transition,
-        "appear": true
-      }, {
-        default: () => [state.value === "error" && createBaseVNode("div", {
-          "class": "v-img__error"
-        }, [slots.error()])]
-      });
-    };
-    const __gradient = () => {
-      if (!props.gradient) return null;
-      return createBaseVNode("div", {
-        "class": "v-img__gradient",
-        "style": {
-          backgroundImage: `linear-gradient(${props.gradient})`
-        }
-      }, null);
-    };
-    const isBooted = /* @__PURE__ */ shallowRef(false);
-    {
-      const stop = watch(aspectRatio, (val) => {
-        if (val) {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              isBooted.value = true;
-            });
-          });
-          stop();
-        }
-      });
-    }
-    useRender(() => {
-      const responsiveProps = VResponsive.filterProps(props);
-      const [rootAttrs, imageAttrs] = filterInputAttrs(attrs);
-      return withDirectives(createVNode(VResponsive, mergeProps({
-        "class": ["v-img", {
-          "v-img--absolute": props.absolute,
-          "v-img--booting": !isBooted.value,
-          "v-img--fit-content": props.width === "fit-content"
-        }, backgroundColorClasses.value, roundedClasses.value, props.class],
-        "style": [{
-          width: convertToUnit(props.width === "auto" ? naturalWidth.value : props.width)
-        }, backgroundColorStyles.value, props.style]
-      }, responsiveProps, rootAttrs, {
-        "aspectRatio": aspectRatio.value,
-        "aria-label": props.alt,
-        "role": props.alt ? "img" : void 0
-      }), {
-        additional: () => createBaseVNode(Fragment, null, [createVNode(__image, imageAttrs, null), createVNode(__preloadImage, null, null), createVNode(__gradient, null, null), createVNode(__placeholder, null, null), createVNode(__error, null, null)]),
-        default: slots.default
-      }), [[Intersect, {
-        handler: init,
-        options: props.options
-      }, null, {
-        once: true
-      }]]);
-    });
-    return {
-      currentSrc,
-      image,
-      state,
-      naturalWidth,
-      naturalHeight
-    };
-  }
-});
-const makeBorderProps = propsFactory({
-  border: [Boolean, Number, String]
-}, "border");
-function useBorder(props, name = getCurrentInstanceName()) {
-  const borderClasses = computed(() => {
-    const border = props.border;
-    if (border === true || border === "") {
-      return `${name}--border`;
-    } else if (typeof border === "string" || border === 0) {
-      return String(border).split(" ").map((v) => `border-${v}`);
-    }
-    return [];
-  });
-  return {
-    borderClasses
-  };
-}
-const allowedDensities = [null, "default", "comfortable", "compact"];
-const makeDensityProps = propsFactory({
-  density: {
-    type: String,
-    default: "default",
-    validator: (v) => allowedDensities.includes(v)
-  }
-}, "density");
-function useDensity(props, name = getCurrentInstanceName()) {
-  const densityClasses = /* @__PURE__ */ toRef(() => {
-    return `${name}--density-${props.density}`;
-  });
-  return {
-    densityClasses
-  };
-}
-const allowedVariants$3 = ["elevated", "flat", "tonal", "outlined", "text", "plain"];
-function genOverlays(isClickable, name) {
-  return createBaseVNode(Fragment, null, [isClickable && createBaseVNode("span", {
-    "key": "overlay",
-    "class": normalizeClass(`${name}__overlay`)
-  }, null), createBaseVNode("span", {
-    "key": "underlay",
-    "class": normalizeClass(`${name}__underlay`)
-  }, null)]);
-}
-const makeVariantProps = propsFactory({
-  color: String,
-  variant: {
-    type: String,
-    default: "elevated",
-    validator: (v) => allowedVariants$3.includes(v)
-  }
-}, "variant");
-function useVariant(props, name = getCurrentInstanceName()) {
-  const variantClasses = /* @__PURE__ */ toRef(() => {
-    const {
-      variant
-    } = toValue(props);
-    return `${name}--variant-${variant}`;
-  });
-  const {
-    colorClasses,
-    colorStyles
-  } = useColor(() => {
-    const {
-      variant,
-      color
-    } = toValue(props);
-    return {
-      [["elevated", "flat"].includes(variant) ? "background" : "text"]: color
-    };
-  });
-  return {
-    colorClasses,
-    colorStyles,
-    variantClasses
-  };
-}
-const makeVAvatarProps = propsFactory({
-  badge: {
-    type: [Boolean, Object],
-    default: false
-  },
-  start: Boolean,
-  end: Boolean,
-  icon: IconValue,
-  image: String,
-  text: String,
-  ...makeBorderProps(),
-  ...makeComponentProps(),
-  ...makeDensityProps(),
-  ...makeRoundedProps(),
-  ...makeSizeProps(),
-  ...makeTagProps(),
-  ...makeThemeProps(),
-  ...makeVariantProps({
-    variant: "flat"
-  })
-}, "VAvatar");
-const VAvatar = genericComponent()({
-  name: "VAvatar",
-  props: makeVAvatarProps(),
-  setup(props, {
-    slots
-  }) {
-    const {
-      themeClasses
-    } = provideTheme(props);
-    const {
-      borderClasses
-    } = useBorder(props);
-    const {
-      colorClasses,
-      colorStyles,
-      variantClasses
-    } = useVariant(props);
-    const {
-      densityClasses
-    } = useDensity(props);
-    const {
-      roundedClasses
-    } = useRounded(props);
-    const {
-      sizeClasses,
-      sizeStyles
-    } = useSize(props);
-    const badgeDotSize = computed(() => {
-      switch (props.size) {
-        case "x-small":
-          return 8;
-        case "small":
-          return 10;
-        case "large":
-          return 14;
-        case "x-large":
-          return 16;
-        default:
-          return 12;
-      }
-    });
-    const badgeOffset = computed(() => {
-      const {
-        floating
-      } = isObject(props.badge) ? props.badge : {};
-      return (floating ? badgeDotSize.value / 2 : 0) - 1.5;
-    });
-    const badgeProps = computed(() => {
-      return {
-        bordered: true,
-        dot: !slots.badge,
-        dotSize: badgeDotSize.value,
-        offsetX: badgeOffset.value,
-        offsetY: badgeOffset.value,
-        color: typeof props.badge === "string" ? props.badge : "primary",
-        ...isObject(props.badge) ? props.badge : {}
-      };
-    });
-    useRender(() => {
-      const avatar = createVNode(props.tag, {
-        "class": normalizeClass(["v-avatar", {
-          "v-avatar--start": props.start,
-          "v-avatar--end": props.end
-        }, themeClasses.value, borderClasses.value, colorClasses.value, densityClasses.value, roundedClasses.value, sizeClasses.value, variantClasses.value, props.class]),
-        "style": normalizeStyle([colorStyles.value, sizeStyles.value, props.style])
-      }, {
-        default: () => [!slots.default ? props.image ? createVNode(VImg, {
-          "key": "image",
-          "src": props.image,
-          "alt": "",
-          "cover": true
-        }, null) : props.icon ? createVNode(VIcon, {
-          "key": "icon",
-          "icon": props.icon
-        }, null) : props.text : createVNode(VDefaultsProvider, {
-          "key": "content-defaults",
-          "defaults": {
-            VImg: {
-              cover: true,
-              src: props.image
-            },
-            VIcon: {
-              icon: props.icon
-            }
-          }
-        }, {
-          default: () => [slots.default()]
-        }), genOverlays(false, "v-avatar")]
-      });
-      return props.badge ? createVNode(VBadge, badgeProps.value, {
-        default: () => avatar,
-        badge: slots.badge
-      }) : avatar;
-    });
-    return {};
-  }
-});
-const makeCardItemProps = propsFactory({
-  appendAvatar: String,
-  appendIcon: IconValue,
-  prependAvatar: String,
-  prependIcon: IconValue,
-  subtitle: {
-    type: [String, Number, Boolean],
-    default: void 0
-  },
-  title: {
-    type: [String, Number, Boolean],
-    default: void 0
-  },
-  ...makeComponentProps(),
-  ...makeDensityProps(),
-  ...makeTagProps()
-}, "VCardItem");
-const VCardItem = genericComponent()({
-  name: "VCardItem",
-  props: makeCardItemProps(),
-  setup(props, {
-    slots
-  }) {
-    useRender(() => {
-      const hasPrependMedia = !!(props.prependAvatar || props.prependIcon);
-      const hasPrepend = !!(hasPrependMedia || slots.prepend);
-      const hasAppendMedia = !!(props.appendAvatar || props.appendIcon);
-      const hasAppend = !!(hasAppendMedia || slots.append);
-      const hasTitle = !!(props.title != null || slots.title);
-      const hasSubtitle = !!(props.subtitle != null || slots.subtitle);
-      return createVNode(props.tag, {
-        "class": normalizeClass(["v-card-item", props.class]),
-        "style": normalizeStyle(props.style)
-      }, {
-        default: () => [hasPrepend && createBaseVNode("div", {
-          "key": "prepend",
-          "class": "v-card-item__prepend"
-        }, [!slots.prepend ? createBaseVNode(Fragment, null, [props.prependAvatar && createVNode(VAvatar, {
-          "key": "prepend-avatar",
-          "density": props.density,
-          "image": props.prependAvatar
-        }, null), props.prependIcon && createVNode(VIcon, {
-          "key": "prepend-icon",
-          "density": props.density,
-          "icon": props.prependIcon
-        }, null)]) : createVNode(VDefaultsProvider, {
-          "key": "prepend-defaults",
-          "disabled": !hasPrependMedia,
-          "defaults": {
-            VAvatar: {
-              density: props.density,
-              image: props.prependAvatar
-            },
-            VIcon: {
-              density: props.density,
-              icon: props.prependIcon
-            }
-          }
-        }, slots.prepend)]), createBaseVNode("div", {
-          "class": "v-card-item__content"
-        }, [hasTitle && createVNode(VCardTitle, {
-          "key": "title"
-        }, {
-          default: () => [slots.title?.() ?? toDisplayString(props.title)]
-        }), hasSubtitle && createVNode(VCardSubtitle, {
-          "key": "subtitle"
-        }, {
-          default: () => [slots.subtitle?.() ?? toDisplayString(props.subtitle)]
-        }), slots.default?.()]), hasAppend && createBaseVNode("div", {
-          "key": "append",
-          "class": "v-card-item__append"
-        }, [!slots.append ? createBaseVNode(Fragment, null, [props.appendIcon && createVNode(VIcon, {
-          "key": "append-icon",
-          "density": props.density,
-          "icon": props.appendIcon
-        }, null), props.appendAvatar && createVNode(VAvatar, {
-          "key": "append-avatar",
-          "density": props.density,
-          "image": props.appendAvatar
-        }, null)]) : createVNode(VDefaultsProvider, {
-          "key": "append-defaults",
-          "disabled": !hasAppendMedia,
-          "defaults": {
-            VAvatar: {
-              density: props.density,
-              image: props.appendAvatar
-            },
-            VIcon: {
-              density: props.density,
-              icon: props.appendIcon
-            }
-          }
-        }, slots.append)])]
-      });
-    });
-    return {};
-  }
-});
-const makeVCardTextProps = propsFactory({
-  opacity: [Number, String],
-  ...makeComponentProps(),
-  ...makeTagProps()
-}, "VCardText");
-const VCardText = genericComponent()({
-  name: "VCardText",
-  props: makeVCardTextProps(),
-  setup(props, {
-    slots
-  }) {
-    useRender(() => createVNode(props.tag, {
-      "class": normalizeClass(["v-card-text", props.class]),
-      "style": normalizeStyle([{
-        "--v-card-text-opacity": props.opacity
-      }, props.style])
-    }, slots));
-    return {};
-  }
-});
-const makeElevationProps = propsFactory({
-  elevation: {
-    type: [Number, String],
-    // no limit to allow both 0-6 (MD3) and legacy 0-24 (MD2)
-    validator: (value) => parseInt(value) >= 0
-  }
-}, "elevation");
-function useElevation(props) {
-  const elevationClasses = /* @__PURE__ */ toRef(() => {
-    const elevation = /* @__PURE__ */ isRef(props) ? props.value : props.elevation;
-    if (elevation == null) return [];
-    return [`elevation-${parseInt(elevation)}`];
-  });
-  return {
-    elevationClasses
-  };
-}
-function useIntersectionObserver(callback, options) {
-  const intersectionRef = /* @__PURE__ */ ref();
-  const isIntersecting = /* @__PURE__ */ shallowRef(false);
-  if (SUPPORTS_INTERSECTION) {
-    const observer = new IntersectionObserver((entries) => {
-      isIntersecting.value = !!entries.find((entry) => entry.isIntersecting);
-    }, options);
-    onScopeDispose(() => {
-      observer.disconnect();
-    });
-    watch(intersectionRef, (newValue, oldValue) => {
-      if (oldValue) {
-        observer.unobserve(oldValue);
-        isIntersecting.value = false;
-      }
-      if (newValue) observer.observe(newValue);
-    }, {
-      flush: "post"
-    });
-  }
-  return {
-    intersectionRef,
-    isIntersecting
-  };
-}
-function useResizeObserver(callback, box = "content") {
-  const resizeRef = templateRef();
-  const contentRect = /* @__PURE__ */ ref();
-  if (IN_BROWSER) {
-    const observer = new ResizeObserver((entries) => {
-      callback?.(entries, observer);
-      if (!entries.length) return;
-      if (box === "content") {
-        contentRect.value = entries[0].contentRect;
-      } else {
-        contentRect.value = entries[0].target.getBoundingClientRect();
-      }
-    });
-    onBeforeUnmount(() => {
-      observer.disconnect();
-    });
-    watch(() => resizeRef.el, (newValue, oldValue) => {
-      if (oldValue) {
-        observer.unobserve(oldValue);
-        contentRect.value = void 0;
-      }
-      if (newValue) observer.observe(newValue);
-    }, {
-      flush: "post"
-    });
-  }
-  return {
-    resizeRef,
-    contentRect: /* @__PURE__ */ readonly(contentRect)
-  };
-}
 const makeChunksProps = propsFactory({
   chunkCount: {
     type: [Number, String],
@@ -23085,6 +22786,17 @@ function useBackButton(router2, cb) {
     setTimeout(() => popped = false);
   }
 }
+function useSelectLink(link, select) {
+  watch(() => link.isActive?.value, (isActive) => {
+    if (link.isLink.value && isActive != null && select) {
+      nextTick(() => {
+        select(isActive);
+      });
+    }
+  }, {
+    immediate: true
+  });
+}
 const stopSymbol = /* @__PURE__ */ Symbol("rippleStop");
 const DELAY_RIPPLE = 80;
 function transform(el, value) {
@@ -23342,10 +23054,10 @@ function removeListeners(el) {
   el.removeEventListener("blur", focusRippleHide);
   el.removeEventListener("dragstart", rippleHide);
 }
-function mounted(el, binding) {
+function mounted$1(el, binding) {
   updateRipple(el, binding, false);
 }
-function unmounted(el) {
+function unmounted$1(el) {
   removeListeners(el);
   delete el._ripple;
 }
@@ -23357,10 +23069,1015 @@ function updated(el, binding) {
   updateRipple(el, binding, wasEnabled);
 }
 const Ripple = {
-  mounted,
-  unmounted,
+  mounted: mounted$1,
+  unmounted: unmounted$1,
   updated
 };
+const makeVBtnProps = propsFactory({
+  active: {
+    type: Boolean,
+    default: void 0
+  },
+  activeColor: String,
+  baseColor: String,
+  symbol: {
+    type: null,
+    default: VBtnToggleSymbol
+  },
+  flat: Boolean,
+  icon: [Boolean, String, Function, Object],
+  prependIcon: IconValue,
+  appendIcon: IconValue,
+  block: Boolean,
+  readonly: Boolean,
+  slim: Boolean,
+  stacked: Boolean,
+  spaced: String,
+  ripple: {
+    type: [Boolean, Object],
+    default: true
+  },
+  text: {
+    type: [String, Number, Boolean],
+    default: void 0
+  },
+  ...makeBorderProps(),
+  ...makeComponentProps(),
+  ...makeDensityProps(),
+  ...makeDimensionProps(),
+  ...makeElevationProps(),
+  ...makeGroupItemProps(),
+  ...makeLoaderProps(),
+  ...makeLocationProps(),
+  ...makePositionProps(),
+  ...makeRoundedProps(),
+  ...makeRouterProps(),
+  ...makeSizeProps(),
+  ...makeTagProps({
+    tag: "button"
+  }),
+  ...makeThemeProps(),
+  ...makeVariantProps({
+    variant: "elevated"
+  })
+}, "VBtn");
+const VBtn = genericComponent()({
+  name: "VBtn",
+  props: makeVBtnProps(),
+  emits: {
+    "group:selected": (val) => true
+  },
+  setup(props, {
+    attrs,
+    slots
+  }) {
+    const {
+      themeClasses
+    } = provideTheme(props);
+    const {
+      borderClasses
+    } = useBorder(props);
+    const {
+      densityClasses
+    } = useDensity(props);
+    const {
+      dimensionStyles
+    } = useDimension(props);
+    const {
+      elevationClasses
+    } = useElevation(props);
+    const {
+      loaderClasses
+    } = useLoader(props);
+    const {
+      locationStyles
+    } = useLocation(props);
+    const {
+      positionClasses
+    } = usePosition(props);
+    const {
+      roundedClasses
+    } = useRounded(props);
+    const {
+      sizeClasses,
+      sizeStyles
+    } = useSize(props);
+    const group = useGroupItem(props, props.symbol, false);
+    const link = useLink(props, attrs);
+    const isActive = computed(() => {
+      if (props.active !== void 0) {
+        return props.active;
+      }
+      if (link.isRouterLink.value) {
+        return link.isActive?.value;
+      }
+      return group?.isSelected.value;
+    });
+    const color = /* @__PURE__ */ toRef(() => isActive.value ? props.activeColor ?? props.color : props.color);
+    const variantProps = computed(() => {
+      const showColor = group?.isSelected.value && (!link.isLink.value || link.isActive?.value) || !group || link.isActive?.value;
+      return {
+        color: showColor ? color.value ?? props.baseColor : props.baseColor,
+        variant: props.variant
+      };
+    });
+    const {
+      colorClasses,
+      colorStyles,
+      variantClasses
+    } = useVariant(variantProps);
+    const isDisabled = computed(() => group?.disabled.value || props.disabled);
+    const isElevated = /* @__PURE__ */ toRef(() => {
+      return props.variant === "elevated" && !(props.disabled || props.flat || props.border);
+    });
+    const valueAttr = computed(() => {
+      if (props.value === void 0 || typeof props.value === "symbol") return void 0;
+      return Object(props.value) === props.value ? JSON.stringify(props.value, null, 0) : props.value;
+    });
+    function onClick(e2) {
+      if (isDisabled.value || link.isLink.value && (e2.metaKey || e2.ctrlKey || e2.shiftKey || e2.button !== 0 || attrs.target === "_blank")) return;
+      if (link.isRouterLink.value) {
+        link.navigate.value?.(e2);
+      } else {
+        group?.toggle();
+      }
+    }
+    useSelectLink(link, group?.select);
+    useRender(() => {
+      const Tag = link.isLink.value ? "a" : props.tag;
+      const hasPrepend = !!(props.prependIcon || slots.prepend);
+      const hasAppend = !!(props.appendIcon || slots.append);
+      const hasIcon = !!(props.icon && props.icon !== true);
+      return withDirectives(createVNode(Tag, mergeProps(link.linkProps, {
+        "type": Tag === "a" ? void 0 : "button",
+        "class": ["v-btn", group?.selectedClass.value, {
+          "v-btn--active": isActive.value,
+          "v-btn--block": props.block,
+          "v-btn--disabled": isDisabled.value,
+          "v-btn--elevated": isElevated.value,
+          "v-btn--flat": props.flat,
+          "v-btn--icon": !!props.icon,
+          "v-btn--loading": props.loading,
+          "v-btn--readonly": props.readonly,
+          "v-btn--slim": props.slim,
+          "v-btn--stacked": props.stacked
+        }, props.spaced ? ["v-btn--spaced", `v-btn--spaced-${props.spaced}`] : [], themeClasses.value, borderClasses.value, colorClasses.value, densityClasses.value, elevationClasses.value, loaderClasses.value, positionClasses.value, roundedClasses.value, sizeClasses.value, variantClasses.value, props.class],
+        "style": [colorStyles.value, dimensionStyles.value, locationStyles.value, sizeStyles.value, props.style],
+        "aria-busy": props.loading ? true : void 0,
+        "disabled": isDisabled.value && Tag !== "a" || void 0,
+        "tabindex": props.loading || props.readonly ? -1 : void 0,
+        "onClick": onClick,
+        "value": valueAttr.value
+      }), {
+        default: () => [genOverlays(true, "v-btn"), !props.icon && hasPrepend && createBaseVNode("span", {
+          "key": "prepend",
+          "class": "v-btn__prepend"
+        }, [!slots.prepend ? createVNode(VIcon, {
+          "key": "prepend-icon",
+          "icon": props.prependIcon
+        }, null) : createVNode(VDefaultsProvider, {
+          "key": "prepend-defaults",
+          "disabled": !props.prependIcon,
+          "defaults": {
+            VIcon: {
+              icon: props.prependIcon
+            }
+          }
+        }, slots.prepend)]), createBaseVNode("span", {
+          "class": "v-btn__content",
+          "data-no-activator": ""
+        }, [!slots.default && hasIcon ? createVNode(VIcon, {
+          "key": "content-icon",
+          "icon": props.icon
+        }, null) : createVNode(VDefaultsProvider, {
+          "key": "content-defaults",
+          "disabled": !hasIcon,
+          "defaults": {
+            VIcon: {
+              icon: props.icon
+            }
+          }
+        }, {
+          default: () => [slots.default?.() ?? toDisplayString(props.text)]
+        })]), !props.icon && hasAppend && createBaseVNode("span", {
+          "key": "append",
+          "class": "v-btn__append"
+        }, [!slots.append ? createVNode(VIcon, {
+          "key": "append-icon",
+          "icon": props.appendIcon
+        }, null) : createVNode(VDefaultsProvider, {
+          "key": "append-defaults",
+          "disabled": !props.appendIcon,
+          "defaults": {
+            VIcon: {
+              icon: props.appendIcon
+            }
+          }
+        }, slots.append)]), !!props.loading && createBaseVNode("span", {
+          "key": "loader",
+          "class": "v-btn__loader"
+        }, [slots.loader?.() ?? createVNode(VProgressCircular, {
+          "color": typeof props.loading === "boolean" ? void 0 : props.loading,
+          "indeterminate": true,
+          "width": "2"
+        }, null)])]
+      }), [[Ripple, !isDisabled.value && props.ripple, "", {
+        center: !!props.icon
+      }]]);
+    });
+    return {
+      group
+    };
+  }
+});
+const makeVCardActionsProps = propsFactory({
+  ...makeComponentProps(),
+  ...makeTagProps()
+}, "VCardActions");
+const VCardActions = genericComponent()({
+  name: "VCardActions",
+  props: makeVCardActionsProps(),
+  setup(props, {
+    slots
+  }) {
+    provideDefaults({
+      VBtn: {
+        slim: true,
+        variant: "text"
+      }
+    });
+    useRender(() => createVNode(props.tag, {
+      "class": normalizeClass(["v-card-actions", props.class]),
+      "style": normalizeStyle(props.style)
+    }, slots));
+    return {};
+  }
+});
+const makeVCardSubtitleProps = propsFactory({
+  opacity: [Number, String],
+  ...makeComponentProps(),
+  ...makeTagProps()
+}, "VCardSubtitle");
+const VCardSubtitle = genericComponent()({
+  name: "VCardSubtitle",
+  props: makeVCardSubtitleProps(),
+  setup(props, {
+    slots
+  }) {
+    useRender(() => createVNode(props.tag, {
+      "class": normalizeClass(["v-card-subtitle", props.class]),
+      "style": normalizeStyle([{
+        "--v-card-subtitle-opacity": props.opacity
+      }, props.style])
+    }, slots));
+    return {};
+  }
+});
+const VCardTitle = createSimpleFunctional("v-card-title");
+const makeTransitionProps$1 = propsFactory({
+  transition: {
+    type: null,
+    default: "fade-transition",
+    validator: (val) => val !== true
+  }
+}, "transition");
+const MaybeTransition = (props, {
+  slots
+}) => {
+  const {
+    transition,
+    disabled,
+    group,
+    ...rest
+  } = props;
+  const {
+    component = group ? TransitionGroup : Transition,
+    ...customProps
+  } = isObject(transition) ? transition : {};
+  let transitionProps;
+  if (isObject(transition)) {
+    transitionProps = mergeProps(customProps, onlyDefinedProps({
+      disabled,
+      group
+    }), rest);
+  } else {
+    transitionProps = mergeProps({
+      name: disabled || !transition ? "" : transition
+    }, rest);
+  }
+  return h(component, transitionProps, slots);
+};
+const makeVBadgeProps = propsFactory({
+  bordered: Boolean,
+  color: String,
+  content: [Number, String],
+  dot: Boolean,
+  dotSize: [Number, String],
+  floating: Boolean,
+  icon: IconValue,
+  inline: Boolean,
+  label: {
+    type: String,
+    default: "$vuetify.badge"
+  },
+  max: [Number, String],
+  modelValue: {
+    type: Boolean,
+    default: true
+  },
+  offsetX: [Number, String],
+  offsetY: [Number, String],
+  textColor: String,
+  ...makeComponentProps(),
+  ...makeLocationProps({
+    location: "top end"
+  }),
+  ...makeRoundedProps(),
+  ...makeTagProps(),
+  ...makeThemeProps(),
+  ...makeTransitionProps$1({
+    transition: "scale-rotate-transition"
+  }),
+  ...makeDimensionProps()
+}, "VBadge");
+const VBadge = genericComponent()({
+  name: "VBadge",
+  inheritAttrs: false,
+  props: makeVBadgeProps(),
+  setup(props, ctx) {
+    const {
+      backgroundColorClasses,
+      backgroundColorStyles
+    } = useBackgroundColor(() => props.color);
+    const {
+      roundedClasses
+    } = useRounded(props);
+    const {
+      t
+    } = useLocale();
+    const {
+      textColorClasses,
+      textColorStyles
+    } = useTextColor(() => props.textColor);
+    const {
+      themeClasses
+    } = useTheme();
+    const {
+      locationStyles
+    } = useLocation(props, true, (side) => {
+      const base = props.floating ? props.dot ? 2 : 4 : props.dot ? Number(props.dotSize ?? 8) : 12;
+      return base + (["top", "bottom"].includes(side) ? Number(props.offsetY ?? 0) : ["left", "right"].includes(side) ? Number(props.offsetX ?? 0) : 0);
+    });
+    const {
+      dimensionStyles
+    } = useDimension(props);
+    useRender(() => {
+      const value = Number(props.content);
+      const content = !props.max || isNaN(value) ? props.content : value <= Number(props.max) ? value : `${props.max}+`;
+      const [badgeAttrs, attrs] = pickWithRest(ctx.attrs, ["aria-atomic", "aria-label", "aria-live", "role", "title"]);
+      return createVNode(props.tag, mergeProps({
+        "class": ["v-badge", {
+          "v-badge--bordered": props.bordered,
+          "v-badge--dot": props.dot,
+          "v-badge--floating": props.floating,
+          "v-badge--inline": props.inline
+        }, props.class]
+      }, attrs, {
+        "style": props.style
+      }), {
+        default: () => [createBaseVNode("div", {
+          "class": "v-badge__wrapper"
+        }, [ctx.slots.default?.(), createVNode(MaybeTransition, {
+          "transition": props.transition
+        }, {
+          default: () => [withDirectives(createBaseVNode("span", mergeProps({
+            "class": ["v-badge__badge", themeClasses.value, backgroundColorClasses.value, roundedClasses.value, textColorClasses.value],
+            "style": [backgroundColorStyles.value, textColorStyles.value, dimensionStyles.value, props.inline ? {} : locationStyles.value, props.dot && props.dotSize ? {
+              width: convertToUnit(props.dotSize),
+              height: convertToUnit(props.dotSize)
+            } : {}],
+            "aria-atomic": "true",
+            "aria-label": t(props.label, value),
+            "aria-live": "polite",
+            "role": "status"
+          }, badgeAttrs), [props.dot ? void 0 : ctx.slots.badge ? ctx.slots.badge?.() : props.icon ? createVNode(VIcon, {
+            "icon": props.icon
+          }, null) : content]), [[vShow, props.modelValue]])]
+        })])]
+      });
+    });
+    return {};
+  }
+});
+function useAspectStyles(props) {
+  return {
+    aspectStyles: computed(() => {
+      const ratio = Number(props.aspectRatio);
+      return ratio ? {
+        paddingBottom: String(1 / ratio * 100) + "%"
+      } : void 0;
+    })
+  };
+}
+const makeVResponsiveProps = propsFactory({
+  aspectRatio: [String, Number],
+  contentClass: null,
+  inline: Boolean,
+  ...makeComponentProps(),
+  ...makeDimensionProps()
+}, "VResponsive");
+const VResponsive = genericComponent()({
+  name: "VResponsive",
+  props: makeVResponsiveProps(),
+  setup(props, {
+    slots
+  }) {
+    const {
+      aspectStyles
+    } = useAspectStyles(props);
+    const {
+      dimensionStyles
+    } = useDimension(props);
+    useRender(() => createBaseVNode("div", {
+      "class": normalizeClass(["v-responsive", {
+        "v-responsive--inline": props.inline
+      }, props.class]),
+      "style": normalizeStyle([dimensionStyles.value, props.style])
+    }, [createBaseVNode("div", {
+      "class": "v-responsive__sizer",
+      "style": normalizeStyle(aspectStyles.value)
+    }, null), slots.additional?.(), slots.default && createBaseVNode("div", {
+      "class": normalizeClass(["v-responsive__content", props.contentClass])
+    }, [slots.default()])]));
+    return {};
+  }
+});
+function mounted(el, binding) {
+  if (!SUPPORTS_INTERSECTION) return;
+  const modifiers = binding.modifiers || {};
+  const value = binding.value;
+  const {
+    handler,
+    options
+  } = typeof value === "object" ? value : {
+    handler: value,
+    options: {}
+  };
+  const observer = new IntersectionObserver((entries = [], observer2) => {
+    const _observe = el._observe?.[binding.instance.$.uid];
+    if (!_observe) return;
+    const isIntersecting = entries.some((entry) => entry.isIntersecting);
+    if (handler && (!modifiers.quiet || _observe.init) && (!modifiers.once || isIntersecting || _observe.init)) {
+      handler(isIntersecting, entries, observer2);
+    }
+    if (isIntersecting && modifiers.once) unmounted(el, binding);
+    else _observe.init = true;
+  }, options);
+  el._observe = Object(el._observe);
+  el._observe[binding.instance.$.uid] = {
+    init: false,
+    observer
+  };
+  observer.observe(el);
+}
+function unmounted(el, binding) {
+  const observe = el._observe?.[binding.instance.$.uid];
+  if (!observe) return;
+  observe.observer.unobserve(el);
+  delete el._observe[binding.instance.$.uid];
+}
+const Intersect = {
+  mounted,
+  unmounted,
+  updated: (el, binding) => {
+    if (el._observe?.[binding.instance.$.uid]) {
+      unmounted(el, binding);
+      mounted(el, binding);
+    }
+  }
+};
+const makeVImgProps = propsFactory({
+  absolute: Boolean,
+  alt: String,
+  cover: Boolean,
+  color: String,
+  draggable: {
+    type: [Boolean, String],
+    default: void 0
+  },
+  eager: Boolean,
+  gradient: String,
+  imageClass: null,
+  lazySrc: String,
+  options: {
+    type: Object,
+    // For more information on types, navigate to:
+    // https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+    default: () => ({
+      root: void 0,
+      rootMargin: void 0,
+      threshold: void 0
+    })
+  },
+  sizes: String,
+  src: {
+    type: [String, Object],
+    default: ""
+  },
+  crossorigin: String,
+  referrerpolicy: String,
+  srcset: String,
+  position: String,
+  ...makeVResponsiveProps(),
+  ...makeComponentProps(),
+  ...makeRoundedProps(),
+  ...makeTransitionProps$1()
+}, "VImg");
+const VImg = genericComponent()({
+  name: "VImg",
+  directives: {
+    vIntersect: Intersect
+  },
+  inheritAttrs: false,
+  props: makeVImgProps(),
+  emits: {
+    loadstart: (value) => true,
+    load: (value) => true,
+    error: (value) => true
+  },
+  setup(props, {
+    attrs,
+    emit: emit2,
+    slots
+  }) {
+    const {
+      backgroundColorClasses,
+      backgroundColorStyles
+    } = useBackgroundColor(() => props.color);
+    const {
+      roundedClasses
+    } = useRounded(props);
+    const vm = getCurrentInstance("VImg");
+    const currentSrc = /* @__PURE__ */ shallowRef("");
+    const image = /* @__PURE__ */ ref();
+    const state = /* @__PURE__ */ shallowRef(props.eager ? "loading" : "idle");
+    const naturalWidth = /* @__PURE__ */ shallowRef();
+    const naturalHeight = /* @__PURE__ */ shallowRef();
+    const normalisedSrc = computed(() => {
+      return props.src && typeof props.src === "object" ? {
+        src: props.src.src,
+        srcset: props.srcset || props.src.srcset,
+        lazySrc: props.lazySrc || props.src.lazySrc,
+        aspect: Number(props.aspectRatio || props.src.aspect || 0)
+      } : {
+        src: props.src,
+        srcset: props.srcset,
+        lazySrc: props.lazySrc,
+        aspect: Number(props.aspectRatio || 0)
+      };
+    });
+    const aspectRatio = computed(() => {
+      return normalisedSrc.value.aspect || naturalWidth.value / naturalHeight.value || 0;
+    });
+    watch(() => props.src, () => {
+      init(state.value !== "idle");
+    });
+    watch(aspectRatio, (val, oldVal) => {
+      if (!val && oldVal && image.value) {
+        pollForSize(image.value);
+      }
+    });
+    onBeforeMount(() => init());
+    function init(isIntersecting) {
+      if (props.eager && isIntersecting) return;
+      if (SUPPORTS_INTERSECTION && !isIntersecting && !props.eager) return;
+      state.value = "loading";
+      if (normalisedSrc.value.lazySrc) {
+        const lazyImg = new Image();
+        lazyImg.src = normalisedSrc.value.lazySrc;
+        pollForSize(lazyImg, null);
+      }
+      if (!normalisedSrc.value.src) return;
+      nextTick(() => {
+        emit2("loadstart", image.value?.currentSrc || normalisedSrc.value.src);
+        setTimeout(() => {
+          if (vm.isUnmounted) return;
+          if (image.value?.complete) {
+            if (!image.value.naturalWidth) {
+              onError();
+            }
+            if (state.value === "error") return;
+            if (!aspectRatio.value) pollForSize(image.value, null);
+            if (state.value === "loading") onLoad();
+          } else {
+            if (!aspectRatio.value) pollForSize(image.value);
+            getSrc();
+          }
+        });
+      });
+    }
+    function onLoad() {
+      if (vm.isUnmounted) return;
+      getSrc();
+      pollForSize(image.value);
+      state.value = "loaded";
+      emit2("load", image.value?.currentSrc || normalisedSrc.value.src);
+    }
+    function onError() {
+      if (vm.isUnmounted) return;
+      state.value = "error";
+      emit2("error", image.value?.currentSrc || normalisedSrc.value.src);
+    }
+    function getSrc() {
+      const img = image.value;
+      if (img) currentSrc.value = img.currentSrc || img.src;
+    }
+    let timer = -1;
+    onBeforeUnmount(() => {
+      clearTimeout(timer);
+    });
+    function pollForSize(img, timeout = 100) {
+      const poll = () => {
+        clearTimeout(timer);
+        if (vm.isUnmounted) return;
+        const {
+          naturalHeight: imgHeight,
+          naturalWidth: imgWidth
+        } = img;
+        if (imgHeight || imgWidth) {
+          naturalWidth.value = imgWidth;
+          naturalHeight.value = imgHeight;
+        } else if (!img.complete && state.value === "loading" && timeout != null) {
+          timer = window.setTimeout(poll, timeout);
+        } else if (img.currentSrc.endsWith(".svg") || img.currentSrc.startsWith("data:image/svg+xml")) {
+          naturalWidth.value = 1;
+          naturalHeight.value = 1;
+        }
+      };
+      poll();
+    }
+    const containClasses = /* @__PURE__ */ toRef(() => ({
+      "v-img__img--cover": props.cover,
+      "v-img__img--contain": !props.cover
+    }));
+    const __image = () => {
+      if (!normalisedSrc.value.src || state.value === "idle") return null;
+      const img = createBaseVNode("img", {
+        "class": normalizeClass(["v-img__img", containClasses.value, props.imageClass]),
+        "style": {
+          objectPosition: props.position
+        },
+        "crossorigin": props.crossorigin,
+        "src": normalisedSrc.value.src,
+        "srcset": normalisedSrc.value.srcset,
+        "alt": props.alt,
+        "referrerpolicy": props.referrerpolicy,
+        "draggable": props.draggable,
+        "sizes": props.sizes,
+        "ref": image,
+        "onLoad": onLoad,
+        "onError": onError
+      }, null);
+      const sources = slots.sources?.();
+      return createVNode(MaybeTransition, {
+        "transition": props.transition,
+        "appear": true
+      }, {
+        default: () => [withDirectives(sources ? createBaseVNode("picture", {
+          "class": "v-img__picture"
+        }, [sources, img]) : img, [[vShow, state.value === "loaded"]])]
+      });
+    };
+    const __preloadImage = () => createVNode(MaybeTransition, {
+      "transition": props.transition
+    }, {
+      default: () => [normalisedSrc.value.lazySrc && state.value !== "loaded" && createBaseVNode("img", {
+        "class": normalizeClass(["v-img__img", "v-img__img--preload", containClasses.value]),
+        "style": {
+          objectPosition: props.position
+        },
+        "crossorigin": props.crossorigin,
+        "src": normalisedSrc.value.lazySrc,
+        "alt": props.alt,
+        "referrerpolicy": props.referrerpolicy,
+        "draggable": props.draggable
+      }, null)]
+    });
+    const __placeholder = () => {
+      if (!slots.placeholder) return null;
+      return createVNode(MaybeTransition, {
+        "transition": props.transition,
+        "appear": true
+      }, {
+        default: () => [(state.value === "loading" || state.value === "error" && !slots.error) && createBaseVNode("div", {
+          "class": "v-img__placeholder"
+        }, [slots.placeholder()])]
+      });
+    };
+    const __error = () => {
+      if (!slots.error) return null;
+      return createVNode(MaybeTransition, {
+        "transition": props.transition,
+        "appear": true
+      }, {
+        default: () => [state.value === "error" && createBaseVNode("div", {
+          "class": "v-img__error"
+        }, [slots.error()])]
+      });
+    };
+    const __gradient = () => {
+      if (!props.gradient) return null;
+      return createBaseVNode("div", {
+        "class": "v-img__gradient",
+        "style": {
+          backgroundImage: `linear-gradient(${props.gradient})`
+        }
+      }, null);
+    };
+    const isBooted = /* @__PURE__ */ shallowRef(false);
+    {
+      const stop = watch(aspectRatio, (val) => {
+        if (val) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              isBooted.value = true;
+            });
+          });
+          stop();
+        }
+      });
+    }
+    useRender(() => {
+      const responsiveProps = VResponsive.filterProps(props);
+      const [rootAttrs, imageAttrs] = filterInputAttrs(attrs);
+      return withDirectives(createVNode(VResponsive, mergeProps({
+        "class": ["v-img", {
+          "v-img--absolute": props.absolute,
+          "v-img--booting": !isBooted.value,
+          "v-img--fit-content": props.width === "fit-content"
+        }, backgroundColorClasses.value, roundedClasses.value, props.class],
+        "style": [{
+          width: convertToUnit(props.width === "auto" ? naturalWidth.value : props.width)
+        }, backgroundColorStyles.value, props.style]
+      }, responsiveProps, rootAttrs, {
+        "aspectRatio": aspectRatio.value,
+        "aria-label": props.alt,
+        "role": props.alt ? "img" : void 0
+      }), {
+        additional: () => createBaseVNode(Fragment, null, [createVNode(__image, imageAttrs, null), createVNode(__preloadImage, null, null), createVNode(__gradient, null, null), createVNode(__placeholder, null, null), createVNode(__error, null, null)]),
+        default: slots.default
+      }), [[Intersect, {
+        handler: init,
+        options: props.options
+      }, null, {
+        once: true
+      }]]);
+    });
+    return {
+      currentSrc,
+      image,
+      state,
+      naturalWidth,
+      naturalHeight
+    };
+  }
+});
+const makeVAvatarProps = propsFactory({
+  badge: {
+    type: [Boolean, Object],
+    default: false
+  },
+  start: Boolean,
+  end: Boolean,
+  icon: IconValue,
+  image: String,
+  text: String,
+  ...makeBorderProps(),
+  ...makeComponentProps(),
+  ...makeDensityProps(),
+  ...makeRoundedProps(),
+  ...makeSizeProps(),
+  ...makeTagProps(),
+  ...makeThemeProps(),
+  ...makeVariantProps({
+    variant: "flat"
+  })
+}, "VAvatar");
+const VAvatar = genericComponent()({
+  name: "VAvatar",
+  props: makeVAvatarProps(),
+  setup(props, {
+    slots
+  }) {
+    const {
+      themeClasses
+    } = provideTheme(props);
+    const {
+      borderClasses
+    } = useBorder(props);
+    const {
+      colorClasses,
+      colorStyles,
+      variantClasses
+    } = useVariant(props);
+    const {
+      densityClasses
+    } = useDensity(props);
+    const {
+      roundedClasses
+    } = useRounded(props);
+    const {
+      sizeClasses,
+      sizeStyles
+    } = useSize(props);
+    const badgeDotSize = computed(() => {
+      switch (props.size) {
+        case "x-small":
+          return 8;
+        case "small":
+          return 10;
+        case "large":
+          return 14;
+        case "x-large":
+          return 16;
+        default:
+          return 12;
+      }
+    });
+    const badgeOffset = computed(() => {
+      const {
+        floating
+      } = isObject(props.badge) ? props.badge : {};
+      return (floating ? badgeDotSize.value / 2 : 0) - 1.5;
+    });
+    const badgeProps = computed(() => {
+      return {
+        bordered: true,
+        dot: !slots.badge,
+        dotSize: badgeDotSize.value,
+        offsetX: badgeOffset.value,
+        offsetY: badgeOffset.value,
+        color: typeof props.badge === "string" ? props.badge : "primary",
+        ...isObject(props.badge) ? props.badge : {}
+      };
+    });
+    useRender(() => {
+      const avatar = createVNode(props.tag, {
+        "class": normalizeClass(["v-avatar", {
+          "v-avatar--start": props.start,
+          "v-avatar--end": props.end
+        }, themeClasses.value, borderClasses.value, colorClasses.value, densityClasses.value, roundedClasses.value, sizeClasses.value, variantClasses.value, props.class]),
+        "style": normalizeStyle([colorStyles.value, sizeStyles.value, props.style])
+      }, {
+        default: () => [!slots.default ? props.image ? createVNode(VImg, {
+          "key": "image",
+          "src": props.image,
+          "alt": "",
+          "cover": true
+        }, null) : props.icon ? createVNode(VIcon, {
+          "key": "icon",
+          "icon": props.icon
+        }, null) : props.text : createVNode(VDefaultsProvider, {
+          "key": "content-defaults",
+          "defaults": {
+            VImg: {
+              cover: true,
+              src: props.image
+            },
+            VIcon: {
+              icon: props.icon
+            }
+          }
+        }, {
+          default: () => [slots.default()]
+        }), genOverlays(false, "v-avatar")]
+      });
+      return props.badge ? createVNode(VBadge, badgeProps.value, {
+        default: () => avatar,
+        badge: slots.badge
+      }) : avatar;
+    });
+    return {};
+  }
+});
+const makeCardItemProps = propsFactory({
+  appendAvatar: String,
+  appendIcon: IconValue,
+  prependAvatar: String,
+  prependIcon: IconValue,
+  subtitle: {
+    type: [String, Number, Boolean],
+    default: void 0
+  },
+  title: {
+    type: [String, Number, Boolean],
+    default: void 0
+  },
+  ...makeComponentProps(),
+  ...makeDensityProps(),
+  ...makeTagProps()
+}, "VCardItem");
+const VCardItem = genericComponent()({
+  name: "VCardItem",
+  props: makeCardItemProps(),
+  setup(props, {
+    slots
+  }) {
+    useRender(() => {
+      const hasPrependMedia = !!(props.prependAvatar || props.prependIcon);
+      const hasPrepend = !!(hasPrependMedia || slots.prepend);
+      const hasAppendMedia = !!(props.appendAvatar || props.appendIcon);
+      const hasAppend = !!(hasAppendMedia || slots.append);
+      const hasTitle = !!(props.title != null || slots.title);
+      const hasSubtitle = !!(props.subtitle != null || slots.subtitle);
+      return createVNode(props.tag, {
+        "class": normalizeClass(["v-card-item", props.class]),
+        "style": normalizeStyle(props.style)
+      }, {
+        default: () => [hasPrepend && createBaseVNode("div", {
+          "key": "prepend",
+          "class": "v-card-item__prepend"
+        }, [!slots.prepend ? createBaseVNode(Fragment, null, [props.prependAvatar && createVNode(VAvatar, {
+          "key": "prepend-avatar",
+          "density": props.density,
+          "image": props.prependAvatar
+        }, null), props.prependIcon && createVNode(VIcon, {
+          "key": "prepend-icon",
+          "density": props.density,
+          "icon": props.prependIcon
+        }, null)]) : createVNode(VDefaultsProvider, {
+          "key": "prepend-defaults",
+          "disabled": !hasPrependMedia,
+          "defaults": {
+            VAvatar: {
+              density: props.density,
+              image: props.prependAvatar
+            },
+            VIcon: {
+              density: props.density,
+              icon: props.prependIcon
+            }
+          }
+        }, slots.prepend)]), createBaseVNode("div", {
+          "class": "v-card-item__content"
+        }, [hasTitle && createVNode(VCardTitle, {
+          "key": "title"
+        }, {
+          default: () => [slots.title?.() ?? toDisplayString(props.title)]
+        }), hasSubtitle && createVNode(VCardSubtitle, {
+          "key": "subtitle"
+        }, {
+          default: () => [slots.subtitle?.() ?? toDisplayString(props.subtitle)]
+        }), slots.default?.()]), hasAppend && createBaseVNode("div", {
+          "key": "append",
+          "class": "v-card-item__append"
+        }, [!slots.append ? createBaseVNode(Fragment, null, [props.appendIcon && createVNode(VIcon, {
+          "key": "append-icon",
+          "density": props.density,
+          "icon": props.appendIcon
+        }, null), props.appendAvatar && createVNode(VAvatar, {
+          "key": "append-avatar",
+          "density": props.density,
+          "image": props.appendAvatar
+        }, null)]) : createVNode(VDefaultsProvider, {
+          "key": "append-defaults",
+          "disabled": !hasAppendMedia,
+          "defaults": {
+            VAvatar: {
+              density: props.density,
+              image: props.appendAvatar
+            },
+            VIcon: {
+              density: props.density,
+              icon: props.appendIcon
+            }
+          }
+        }, slots.append)])]
+      });
+    });
+    return {};
+  }
+});
+const makeVCardTextProps = propsFactory({
+  opacity: [Number, String],
+  ...makeComponentProps(),
+  ...makeTagProps()
+}, "VCardText");
+const VCardText = genericComponent()({
+  name: "VCardText",
+  props: makeVCardTextProps(),
+  setup(props, {
+    slots
+  }) {
+    useRender(() => createVNode(props.tag, {
+      "class": normalizeClass(["v-card-text", props.class]),
+      "style": normalizeStyle([{
+        "--v-card-text-opacity": props.opacity
+      }, props.style])
+    }, slots));
+    return {};
+  }
+});
 const makeVCardProps = propsFactory({
   appendAvatar: String,
   appendIcon: IconValue,
@@ -24155,214 +24872,6 @@ function clampTarget(container, value, rtl, horizontal) {
     max = scrollHeight + -containerHeight;
   }
   return clamp(value, min, max);
-}
-const makeGroupProps = propsFactory({
-  modelValue: {
-    type: null,
-    default: void 0
-  },
-  multiple: Boolean,
-  mandatory: [Boolean, String],
-  max: Number,
-  selectedClass: String,
-  disabled: Boolean
-}, "group");
-const makeGroupItemProps = propsFactory({
-  value: null,
-  disabled: Boolean,
-  selectedClass: String
-}, "group-item");
-function useGroupItem(props, injectKey, required = true) {
-  const vm = getCurrentInstance("useGroupItem");
-  if (!vm) {
-    throw new Error("[Vuetify] useGroupItem composable must be used inside a component setup function");
-  }
-  const id = useId();
-  provide(/* @__PURE__ */ Symbol.for(`${injectKey.description}:id`), id);
-  const group = inject$1(injectKey, null);
-  if (!group) {
-    if (!required) return group;
-    throw new Error(`[Vuetify] Could not find useGroup injection with symbol ${injectKey.description}`);
-  }
-  const value = /* @__PURE__ */ toRef(() => props.value);
-  const disabled = computed(() => !!(group.disabled.value || props.disabled));
-  function register() {
-    group?.register({
-      id,
-      value,
-      disabled
-    }, vm);
-  }
-  function unregister() {
-    group?.unregister(id);
-  }
-  register();
-  onBeforeUnmount(() => unregister());
-  const isSelected = computed(() => {
-    return group.isSelected(id);
-  });
-  const isFirst = computed(() => {
-    return group.items.value[0].id === id;
-  });
-  const isLast = computed(() => {
-    return group.items.value[group.items.value.length - 1].id === id;
-  });
-  const selectedClass = computed(() => isSelected.value && [group.selectedClass.value, props.selectedClass]);
-  watch(isSelected, (value2) => {
-    vm.emit("group:selected", {
-      value: value2
-    });
-  }, {
-    flush: "sync"
-  });
-  return {
-    id,
-    isSelected,
-    isFirst,
-    isLast,
-    toggle: () => group.select(id, !isSelected.value),
-    select: (value2) => group.select(id, value2),
-    selectedClass,
-    value,
-    disabled,
-    group,
-    register,
-    unregister
-  };
-}
-function useGroup(props, injectKey) {
-  let isUnmounted = false;
-  const items = /* @__PURE__ */ reactive([]);
-  const selected = useProxiedModel(props, "modelValue", [], (v) => {
-    if (v === void 0) return [];
-    return getIds(items, v === null ? [null] : wrapInArray(v));
-  }, (v) => {
-    const arr = getValues(items, v);
-    return props.multiple ? arr : arr[0];
-  });
-  const groupVm = getCurrentInstance("useGroup");
-  function register(item, vm) {
-    const unwrapped = item;
-    const key = /* @__PURE__ */ Symbol.for(`${injectKey.description}:id`);
-    const children = findChildrenWithProvide(key, groupVm?.vnode);
-    const index = children.indexOf(vm);
-    if (unref(unwrapped.value) === void 0) {
-      unwrapped.value = index;
-      unwrapped.useIndexAsValue = true;
-    }
-    if (index > -1) {
-      items.splice(index, 0, unwrapped);
-    } else {
-      items.push(unwrapped);
-    }
-  }
-  function unregister(id) {
-    if (isUnmounted) return;
-    forceMandatoryValue();
-    const index = items.findIndex((item) => item.id === id);
-    items.splice(index, 1);
-  }
-  function forceMandatoryValue() {
-    const item = items.find((item2) => !item2.disabled);
-    if (item && props.mandatory === "force" && !selected.value.length) {
-      selected.value = [item.id];
-    }
-  }
-  onMounted(() => {
-    forceMandatoryValue();
-  });
-  onBeforeUnmount(() => {
-    isUnmounted = true;
-  });
-  onUpdated(() => {
-    for (let i2 = 0; i2 < items.length; i2++) {
-      if (items[i2].useIndexAsValue) {
-        items[i2].value = i2;
-      }
-    }
-  });
-  function select(id, value) {
-    const item = items.find((item2) => item2.id === id);
-    if (value && item?.disabled) return;
-    if (props.multiple) {
-      const internalValue = selected.value.slice();
-      const index = internalValue.findIndex((v) => v === id);
-      const isSelected = ~index;
-      value = value ?? !isSelected;
-      if (isSelected && props.mandatory && internalValue.length <= 1) return;
-      if (!isSelected && props.max != null && internalValue.length + 1 > props.max) return;
-      if (index < 0 && value) internalValue.push(id);
-      else if (index >= 0 && !value) internalValue.splice(index, 1);
-      selected.value = internalValue;
-    } else {
-      const isSelected = selected.value.includes(id);
-      if (props.mandatory && isSelected) return;
-      if (!isSelected && !value) return;
-      selected.value = value ?? !isSelected ? [id] : [];
-    }
-  }
-  function step(offset) {
-    if (props.multiple) ;
-    if (!selected.value.length) {
-      const item = items.find((item2) => !item2.disabled);
-      item && (selected.value = [item.id]);
-    } else {
-      const currentId = selected.value[0];
-      const currentIndex = items.findIndex((i2) => i2.id === currentId);
-      let newIndex = (currentIndex + offset) % items.length;
-      let newItem = items[newIndex];
-      while (newItem.disabled && newIndex !== currentIndex) {
-        newIndex = (newIndex + offset) % items.length;
-        newItem = items[newIndex];
-      }
-      if (newItem.disabled) return;
-      selected.value = [items[newIndex].id];
-    }
-  }
-  const state = {
-    register,
-    unregister,
-    selected,
-    select,
-    disabled: /* @__PURE__ */ toRef(() => props.disabled),
-    prev: () => step(items.length - 1),
-    next: () => step(1),
-    isSelected: (id) => selected.value.includes(id),
-    selectedClass: /* @__PURE__ */ toRef(() => props.selectedClass),
-    items: /* @__PURE__ */ toRef(() => items),
-    getItemIndex: (value) => getItemIndex(items, value)
-  };
-  provide(injectKey, state);
-  return state;
-}
-function getItemIndex(items, value) {
-  const ids = getIds(items, [value]);
-  if (!ids.length) return -1;
-  return items.findIndex((item) => item.id === ids[0]);
-}
-function getIds(items, modelValue) {
-  const ids = [];
-  modelValue.forEach((value) => {
-    const item = items.find((item2) => deepEqual(value, item2.value));
-    const itemByIndex = items[value];
-    if (item?.value !== void 0) {
-      ids.push(item.id);
-    } else if (itemByIndex?.useIndexAsValue) {
-      ids.push(itemByIndex.id);
-    }
-  });
-  return ids;
-}
-function getValues(items, ids) {
-  const values = [];
-  ids.forEach((id) => {
-    const itemIndex = items.findIndex((item) => item.id === id);
-    if (~itemIndex) {
-      const item = items[itemIndex];
-      values.push(item.value !== void 0 ? item.value : itemIndex);
-    }
-  });
-  return values;
 }
 function calculateUpdatedTarget({
   selectedElement,
@@ -27376,17 +27885,23 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent$1({
   setup(__props) {
     const homeStore = useHomeStore();
     const { recentFolders: recentFolders$1, currentVersion } = storeToRefs(homeStore);
+    const globalStore = useGlobalStore();
+    const { theme } = storeToRefs(globalStore);
+    const toggleTheme = () => globalStore.toggleTheme();
     function openFolder(folder) {
       sendIpc(open, folder.fullPath);
     }
     sendIpc(recentFolders);
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1$5, [
-        createVNode(VRow, { style: { "height": "100%" } }, {
+        createVNode(VRow, {
+          "no-gutters": "",
+          class: "home-row"
+        }, {
           default: withCtx(() => [
             createVNode(VCol, {
               cols: "7",
-              style: { "height": "100%" }
+              class: "home-col pr-2"
             }, {
               default: withCtx(() => [
                 createVNode(VCard, { style: { "height": "100%" } }, {
@@ -27416,7 +27931,7 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent$1({
               ]),
               _: 1
             }),
-            createVNode(VCol, null, {
+            createVNode(VCol, { class: "home-col pl-2" }, {
               default: withCtx(() => [
                 createVNode(VCard, { class: "info-card" }, {
                   default: withCtx(() => [
@@ -27431,6 +27946,14 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent$1({
                           ])]),
                           _: 1
                         })
+                      ]),
+                      append: withCtx(() => [
+                        createVNode(VBtn, {
+                          icon: unref(theme) === "dark" ? "mdi-weather-sunny" : "mdi-weather-night",
+                          variant: "text",
+                          title: unref(theme) === "dark" ? "Switch to light mode" : "Switch to dark mode",
+                          onClick: toggleTheme
+                        }, null, 8, ["icon", "title"])
                       ]),
                       default: withCtx(() => [
                         createVNode(VCardTitle, null, {
@@ -33866,490 +34389,6 @@ function requireLodash() {
 }
 var lodashExports = requireLodash();
 const _ = /* @__PURE__ */ getDefaultExportFromCjs(lodashExports);
-const makeVBtnGroupProps = propsFactory({
-  baseColor: String,
-  divided: Boolean,
-  direction: {
-    type: String,
-    default: "horizontal"
-  },
-  ...makeBorderProps(),
-  ...makeComponentProps(),
-  ...makeDensityProps(),
-  ...makeElevationProps(),
-  ...makeRoundedProps(),
-  ...makeTagProps(),
-  ...makeThemeProps(),
-  ...makeVariantProps()
-}, "VBtnGroup");
-const VBtnGroup = genericComponent()({
-  name: "VBtnGroup",
-  props: makeVBtnGroupProps(),
-  setup(props, {
-    slots
-  }) {
-    const {
-      themeClasses
-    } = provideTheme(props);
-    const {
-      densityClasses
-    } = useDensity(props);
-    const {
-      borderClasses
-    } = useBorder(props);
-    const {
-      elevationClasses
-    } = useElevation(props);
-    const {
-      roundedClasses
-    } = useRounded(props);
-    provideDefaults({
-      VBtn: {
-        height: /* @__PURE__ */ toRef(() => props.direction === "horizontal" ? "auto" : null),
-        baseColor: /* @__PURE__ */ toRef(() => props.baseColor),
-        color: /* @__PURE__ */ toRef(() => props.color),
-        density: /* @__PURE__ */ toRef(() => props.density),
-        flat: true,
-        variant: /* @__PURE__ */ toRef(() => props.variant)
-      }
-    });
-    useRender(() => {
-      return createVNode(props.tag, {
-        "class": normalizeClass(["v-btn-group", `v-btn-group--${props.direction}`, {
-          "v-btn-group--divided": props.divided
-        }, themeClasses.value, borderClasses.value, densityClasses.value, elevationClasses.value, roundedClasses.value, props.class]),
-        "style": normalizeStyle(props.style)
-      }, slots);
-    });
-  }
-});
-const VBtnToggleSymbol = /* @__PURE__ */ Symbol.for("vuetify:v-btn-toggle");
-const makeVBtnToggleProps = propsFactory({
-  ...makeVBtnGroupProps(),
-  ...makeGroupProps()
-}, "VBtnToggle");
-genericComponent()({
-  name: "VBtnToggle",
-  props: makeVBtnToggleProps(),
-  emits: {
-    "update:modelValue": (value) => true
-  },
-  setup(props, {
-    slots
-  }) {
-    const {
-      isSelected,
-      next,
-      prev,
-      select,
-      selected
-    } = useGroup(props, VBtnToggleSymbol);
-    useRender(() => {
-      const btnGroupProps = VBtnGroup.filterProps(props);
-      return createVNode(VBtnGroup, mergeProps({
-        "class": ["v-btn-toggle", props.class]
-      }, btnGroupProps, {
-        "style": props.style
-      }), {
-        default: () => [slots.default?.({
-          isSelected,
-          next,
-          prev,
-          select,
-          selected
-        })]
-      });
-    });
-    return {
-      next,
-      prev,
-      select
-    };
-  }
-});
-const makeRevealProps = propsFactory({
-  reveal: {
-    type: [Boolean, Object],
-    default: false
-  }
-}, "reveal");
-function useReveal(props) {
-  const defaultDuration = 900;
-  const duration = /* @__PURE__ */ toRef(() => typeof props.reveal === "object" ? Math.max(0, Number(props.reveal.duration ?? defaultDuration)) : defaultDuration);
-  const state = /* @__PURE__ */ shallowRef(props.reveal ? "initial" : "disabled");
-  onMounted(async () => {
-    if (props.reveal) {
-      state.value = "initial";
-      await new Promise((resolve2) => requestAnimationFrame(resolve2));
-      state.value = "pending";
-      await new Promise((resolve2) => setTimeout(resolve2, duration.value));
-      state.value = "done";
-    }
-  });
-  return {
-    duration,
-    state
-  };
-}
-const makeVProgressCircularProps = propsFactory({
-  bgColor: String,
-  color: String,
-  indeterminate: [Boolean, String],
-  rounded: Boolean,
-  modelValue: {
-    type: [Number, String],
-    default: 0
-  },
-  rotate: {
-    type: [Number, String],
-    default: 0
-  },
-  width: {
-    type: [Number, String],
-    default: 4
-  },
-  ...makeComponentProps(),
-  ...makeRevealProps(),
-  ...makeSizeProps(),
-  ...makeTagProps({
-    tag: "div"
-  }),
-  ...makeThemeProps()
-}, "VProgressCircular");
-const VProgressCircular = genericComponent()({
-  name: "VProgressCircular",
-  props: makeVProgressCircularProps(),
-  setup(props, {
-    slots
-  }) {
-    const MAGIC_RADIUS_CONSTANT = 20;
-    const CIRCUMFERENCE = 2 * Math.PI * MAGIC_RADIUS_CONSTANT;
-    const root = /* @__PURE__ */ ref();
-    const {
-      themeClasses
-    } = provideTheme(props);
-    const {
-      sizeClasses,
-      sizeStyles
-    } = useSize(props);
-    const {
-      textColorClasses,
-      textColorStyles
-    } = useTextColor(() => props.color);
-    const {
-      textColorClasses: underlayColorClasses,
-      textColorStyles: underlayColorStyles
-    } = useTextColor(() => props.bgColor);
-    const {
-      intersectionRef,
-      isIntersecting
-    } = useIntersectionObserver();
-    const {
-      resizeRef,
-      contentRect
-    } = useResizeObserver();
-    const {
-      state: revealState,
-      duration: revealDuration
-    } = useReveal(props);
-    const normalizedValue = /* @__PURE__ */ toRef(() => revealState.value === "initial" ? 0 : clamp(parseFloat(props.modelValue), 0, 100));
-    const width = /* @__PURE__ */ toRef(() => Number(props.width));
-    const size = /* @__PURE__ */ toRef(() => {
-      return sizeStyles.value ? Number(props.size) : contentRect.value ? contentRect.value.width : Math.max(width.value, 32);
-    });
-    const diameter = /* @__PURE__ */ toRef(() => MAGIC_RADIUS_CONSTANT / (1 - width.value / size.value) * 2);
-    const strokeWidth = /* @__PURE__ */ toRef(() => width.value / size.value * diameter.value);
-    const strokeDashOffset = /* @__PURE__ */ toRef(() => {
-      const baseLength = (100 - normalizedValue.value) / 100 * CIRCUMFERENCE;
-      return props.rounded && normalizedValue.value > 0 && normalizedValue.value < 100 ? convertToUnit(Math.min(CIRCUMFERENCE - 0.01, baseLength + strokeWidth.value)) : convertToUnit(baseLength);
-    });
-    const startAngle = computed(() => {
-      const baseAngle = Number(props.rotate);
-      return props.rounded ? baseAngle + strokeWidth.value / 2 / CIRCUMFERENCE * 360 : baseAngle;
-    });
-    watchEffect(() => {
-      intersectionRef.value = root.value;
-      resizeRef.value = root.value;
-    });
-    useRender(() => createVNode(props.tag, {
-      "ref": root,
-      "class": normalizeClass(["v-progress-circular", {
-        "v-progress-circular--indeterminate": !!props.indeterminate,
-        "v-progress-circular--visible": isIntersecting.value,
-        "v-progress-circular--disable-shrink": props.indeterminate && (props.indeterminate === "disable-shrink" || PREFERS_REDUCED_MOTION()),
-        "v-progress-circular--revealing": ["initial", "pending"].includes(revealState.value)
-      }, themeClasses.value, sizeClasses.value, textColorClasses.value, props.class]),
-      "style": normalizeStyle([sizeStyles.value, textColorStyles.value, {
-        "--progress-reveal-duration": `${revealDuration.value}ms`
-      }, props.style]),
-      "role": "progressbar",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100",
-      "aria-valuenow": props.indeterminate ? void 0 : normalizedValue.value
-    }, {
-      default: () => [createBaseVNode("svg", {
-        "style": {
-          transform: `rotate(calc(-90deg + ${startAngle.value}deg))`
-        },
-        "xmlns": "http://www.w3.org/2000/svg",
-        "viewBox": `0 0 ${diameter.value} ${diameter.value}`
-      }, [createBaseVNode("circle", {
-        "class": normalizeClass(["v-progress-circular__underlay", underlayColorClasses.value]),
-        "style": normalizeStyle(underlayColorStyles.value),
-        "fill": "transparent",
-        "cx": "50%",
-        "cy": "50%",
-        "r": MAGIC_RADIUS_CONSTANT,
-        "stroke-width": strokeWidth.value,
-        "stroke-dasharray": CIRCUMFERENCE,
-        "stroke-dashoffset": 0
-      }, null), createBaseVNode("circle", {
-        "class": "v-progress-circular__overlay",
-        "fill": "transparent",
-        "cx": "50%",
-        "cy": "50%",
-        "r": MAGIC_RADIUS_CONSTANT,
-        "stroke-width": strokeWidth.value,
-        "stroke-dasharray": CIRCUMFERENCE,
-        "stroke-dashoffset": strokeDashOffset.value,
-        "stroke-linecap": props.rounded ? "round" : void 0
-      }, null)]), slots.default && createBaseVNode("div", {
-        "class": "v-progress-circular__content"
-      }, [slots.default({
-        value: normalizedValue.value
-      })])]
-    }));
-    return {};
-  }
-});
-function useSelectLink(link, select) {
-  watch(() => link.isActive?.value, (isActive) => {
-    if (link.isLink.value && isActive != null && select) {
-      nextTick(() => {
-        select(isActive);
-      });
-    }
-  }, {
-    immediate: true
-  });
-}
-const makeVBtnProps = propsFactory({
-  active: {
-    type: Boolean,
-    default: void 0
-  },
-  activeColor: String,
-  baseColor: String,
-  symbol: {
-    type: null,
-    default: VBtnToggleSymbol
-  },
-  flat: Boolean,
-  icon: [Boolean, String, Function, Object],
-  prependIcon: IconValue,
-  appendIcon: IconValue,
-  block: Boolean,
-  readonly: Boolean,
-  slim: Boolean,
-  stacked: Boolean,
-  spaced: String,
-  ripple: {
-    type: [Boolean, Object],
-    default: true
-  },
-  text: {
-    type: [String, Number, Boolean],
-    default: void 0
-  },
-  ...makeBorderProps(),
-  ...makeComponentProps(),
-  ...makeDensityProps(),
-  ...makeDimensionProps(),
-  ...makeElevationProps(),
-  ...makeGroupItemProps(),
-  ...makeLoaderProps(),
-  ...makeLocationProps(),
-  ...makePositionProps(),
-  ...makeRoundedProps(),
-  ...makeRouterProps(),
-  ...makeSizeProps(),
-  ...makeTagProps({
-    tag: "button"
-  }),
-  ...makeThemeProps(),
-  ...makeVariantProps({
-    variant: "elevated"
-  })
-}, "VBtn");
-const VBtn = genericComponent()({
-  name: "VBtn",
-  props: makeVBtnProps(),
-  emits: {
-    "group:selected": (val) => true
-  },
-  setup(props, {
-    attrs,
-    slots
-  }) {
-    const {
-      themeClasses
-    } = provideTheme(props);
-    const {
-      borderClasses
-    } = useBorder(props);
-    const {
-      densityClasses
-    } = useDensity(props);
-    const {
-      dimensionStyles
-    } = useDimension(props);
-    const {
-      elevationClasses
-    } = useElevation(props);
-    const {
-      loaderClasses
-    } = useLoader(props);
-    const {
-      locationStyles
-    } = useLocation(props);
-    const {
-      positionClasses
-    } = usePosition(props);
-    const {
-      roundedClasses
-    } = useRounded(props);
-    const {
-      sizeClasses,
-      sizeStyles
-    } = useSize(props);
-    const group = useGroupItem(props, props.symbol, false);
-    const link = useLink(props, attrs);
-    const isActive = computed(() => {
-      if (props.active !== void 0) {
-        return props.active;
-      }
-      if (link.isRouterLink.value) {
-        return link.isActive?.value;
-      }
-      return group?.isSelected.value;
-    });
-    const color = /* @__PURE__ */ toRef(() => isActive.value ? props.activeColor ?? props.color : props.color);
-    const variantProps = computed(() => {
-      const showColor = group?.isSelected.value && (!link.isLink.value || link.isActive?.value) || !group || link.isActive?.value;
-      return {
-        color: showColor ? color.value ?? props.baseColor : props.baseColor,
-        variant: props.variant
-      };
-    });
-    const {
-      colorClasses,
-      colorStyles,
-      variantClasses
-    } = useVariant(variantProps);
-    const isDisabled = computed(() => group?.disabled.value || props.disabled);
-    const isElevated = /* @__PURE__ */ toRef(() => {
-      return props.variant === "elevated" && !(props.disabled || props.flat || props.border);
-    });
-    const valueAttr = computed(() => {
-      if (props.value === void 0 || typeof props.value === "symbol") return void 0;
-      return Object(props.value) === props.value ? JSON.stringify(props.value, null, 0) : props.value;
-    });
-    function onClick(e2) {
-      if (isDisabled.value || link.isLink.value && (e2.metaKey || e2.ctrlKey || e2.shiftKey || e2.button !== 0 || attrs.target === "_blank")) return;
-      if (link.isRouterLink.value) {
-        link.navigate.value?.(e2);
-      } else {
-        group?.toggle();
-      }
-    }
-    useSelectLink(link, group?.select);
-    useRender(() => {
-      const Tag = link.isLink.value ? "a" : props.tag;
-      const hasPrepend = !!(props.prependIcon || slots.prepend);
-      const hasAppend = !!(props.appendIcon || slots.append);
-      const hasIcon = !!(props.icon && props.icon !== true);
-      return withDirectives(createVNode(Tag, mergeProps(link.linkProps, {
-        "type": Tag === "a" ? void 0 : "button",
-        "class": ["v-btn", group?.selectedClass.value, {
-          "v-btn--active": isActive.value,
-          "v-btn--block": props.block,
-          "v-btn--disabled": isDisabled.value,
-          "v-btn--elevated": isElevated.value,
-          "v-btn--flat": props.flat,
-          "v-btn--icon": !!props.icon,
-          "v-btn--loading": props.loading,
-          "v-btn--readonly": props.readonly,
-          "v-btn--slim": props.slim,
-          "v-btn--stacked": props.stacked
-        }, props.spaced ? ["v-btn--spaced", `v-btn--spaced-${props.spaced}`] : [], themeClasses.value, borderClasses.value, colorClasses.value, densityClasses.value, elevationClasses.value, loaderClasses.value, positionClasses.value, roundedClasses.value, sizeClasses.value, variantClasses.value, props.class],
-        "style": [colorStyles.value, dimensionStyles.value, locationStyles.value, sizeStyles.value, props.style],
-        "aria-busy": props.loading ? true : void 0,
-        "disabled": isDisabled.value && Tag !== "a" || void 0,
-        "tabindex": props.loading || props.readonly ? -1 : void 0,
-        "onClick": onClick,
-        "value": valueAttr.value
-      }), {
-        default: () => [genOverlays(true, "v-btn"), !props.icon && hasPrepend && createBaseVNode("span", {
-          "key": "prepend",
-          "class": "v-btn__prepend"
-        }, [!slots.prepend ? createVNode(VIcon, {
-          "key": "prepend-icon",
-          "icon": props.prependIcon
-        }, null) : createVNode(VDefaultsProvider, {
-          "key": "prepend-defaults",
-          "disabled": !props.prependIcon,
-          "defaults": {
-            VIcon: {
-              icon: props.prependIcon
-            }
-          }
-        }, slots.prepend)]), createBaseVNode("span", {
-          "class": "v-btn__content",
-          "data-no-activator": ""
-        }, [!slots.default && hasIcon ? createVNode(VIcon, {
-          "key": "content-icon",
-          "icon": props.icon
-        }, null) : createVNode(VDefaultsProvider, {
-          "key": "content-defaults",
-          "disabled": !hasIcon,
-          "defaults": {
-            VIcon: {
-              icon: props.icon
-            }
-          }
-        }, {
-          default: () => [slots.default?.() ?? toDisplayString(props.text)]
-        })]), !props.icon && hasAppend && createBaseVNode("span", {
-          "key": "append",
-          "class": "v-btn__append"
-        }, [!slots.append ? createVNode(VIcon, {
-          "key": "append-icon",
-          "icon": props.appendIcon
-        }, null) : createVNode(VDefaultsProvider, {
-          "key": "append-defaults",
-          "disabled": !props.appendIcon,
-          "defaults": {
-            VIcon: {
-              icon: props.appendIcon
-            }
-          }
-        }, slots.append)]), !!props.loading && createBaseVNode("span", {
-          "key": "loader",
-          "class": "v-btn__loader"
-        }, [slots.loader?.() ?? createVNode(VProgressCircular, {
-          "color": typeof props.loading === "boolean" ? void 0 : props.loading,
-          "indeterminate": true,
-          "width": "2"
-        }, null)])]
-      }), [[Ripple, !isDisabled.value && props.ripple, "", {
-        center: !!props.icon
-      }]]);
-    });
-    return {
-      group
-    };
-  }
-});
 function elementToViewport(point, offset) {
   return {
     x: point.x + offset.x,
@@ -42305,7 +42344,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent$1({
     };
   }
 });
-const Tree = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-3abaaf7d"]]);
+const Tree = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-ae8d6fd3"]]);
 const _sfc_main$4 = /* @__PURE__ */ defineComponent$1({
   __name: "ContextMenu",
   props: {
@@ -42686,6 +42725,8 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
   setup(__props) {
     const globalStore = useGlobalStore();
     const folderStore = useFolderStore();
+    const { theme } = storeToRefs(globalStore);
+    const toggleTheme = () => globalStore.toggleTheme();
     const {
       tree,
       treeItems,
@@ -42797,7 +42838,13 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
               createTextVNode(" Convert folders ", -1)
             ])]),
             _: 1
-          })) : createCommentVNode("", true)
+          })) : createCommentVNode("", true),
+          createVNode(VBtn, {
+            icon: unref(theme) === "dark" ? "mdi-weather-sunny" : "mdi-weather-night",
+            variant: "text",
+            title: unref(theme) === "dark" ? "Switch to light mode" : "Switch to dark mode",
+            onClick: toggleTheme
+          }, null, 8, ["icon", "title"])
         ]),
         createBaseVNode("div", _hoisted_3$1, [
           createBaseVNode("div", _hoisted_4, [
@@ -42850,9 +42897,12 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
             ])
           ])
         ]),
-        createVNode(VRow, { class: "status-bar" }, {
+        createVNode(VRow, {
+          "no-gutters": "",
+          class: "status-bar"
+        }, {
           default: withCtx(() => [
-            createVNode(VCol, { class: "pb-0 pt-2" }, {
+            createVNode(VCol, { class: "px-2 pb-2 pt-2" }, {
               default: withCtx(() => [
                 createVNode(VCard, {
                   rounded: "0",
@@ -42915,7 +42965,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent$1({
     };
   }
 });
-const Folder = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-60887a75"]]);
+const Folder = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-7150c405"]]);
 const routes = [
   {
     path: "/",
@@ -44134,20 +44184,26 @@ const VMain = genericComponent()({
 const _sfc_main = /* @__PURE__ */ defineComponent$1({
   __name: "App",
   setup(__props) {
+    const { theme } = storeToRefs(useGlobalStore());
     return (_ctx, _cache) => {
       const _component_router_view = resolveComponent("router-view");
-      return openBlock(), createBlock(VApp, { style: { "height": "100%" } }, {
+      return openBlock(), createBlock(VApp, {
+        theme: unref(theme),
+        style: { "height": "100%" }
+      }, {
         default: withCtx(() => [
-          createVNode(VMain, { class: "app" }, {
+          createVNode(VMain, {
+            class: normalizeClass(["app", { "app-dark": unref(theme) === "dark" }])
+          }, {
             default: withCtx(() => [
               createVNode(_component_router_view)
             ]),
             _: 1
-          }),
+          }, 8, ["class"]),
           createVNode(Settings)
         ]),
         _: 1
-      });
+      }, 8, ["theme"]);
     };
   }
 });
@@ -44360,6 +44416,15 @@ function inject(key) {
     return provides[key];
   }
 }
+const prefersDark = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+const storedTheme = (() => {
+  try {
+    return localStorage.getItem("i18n-manager:theme");
+  } catch {
+    return null;
+  }
+})();
+const defaultTheme = storedTheme === "dark" || storedTheme === "light" ? storedTheme : prefersDark ? "dark" : "light";
 const vuetify = createVuetify({
   icons: {
     defaultSet: "mdi",
@@ -44367,7 +44432,7 @@ const vuetify = createVuetify({
     sets: { mdi }
   },
   theme: {
-    defaultTheme: "light",
+    defaultTheme,
     themes: {
       light: {
         dark: false,
@@ -44379,7 +44444,26 @@ const vuetify = createVuetify({
           info: "#2196F3",
           success: "#4CAF50",
           warning: "#FFC107",
-          "warning-darken-1": "#FFA000"
+          "warning-darken-1": "#FFA000",
+          surface: "#FFFFFF",
+          background: "#FAFAFF"
+        }
+      },
+      dark: {
+        dark: true,
+        colors: {
+          primary: "#1976D2",
+          secondary: "#90A4AE",
+          accent: "#82B1FF",
+          error: "#FF5252",
+          info: "#64B5F6",
+          success: "#66BB6A",
+          warning: "#FFA726",
+          "warning-darken-1": "#FB8C00",
+          surface: "#1E1E1E",
+          background: "#121212",
+          "on-surface": "#E0E0E0",
+          "on-background": "#E0E0E0"
         }
       }
     }

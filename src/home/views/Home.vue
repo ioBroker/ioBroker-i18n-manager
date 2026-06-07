@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <v-row style="height: 100%">
-      <v-col cols="7" style="height: 100%">
+    <v-row no-gutters class="home-row">
+      <v-col cols="7" class="home-col pr-2">
         <v-card style="height: 100%">
           <v-card-title>Recent folders</v-card-title>
 
@@ -17,11 +17,19 @@
         </v-card>
       </v-col>
 
-      <v-col>
+      <v-col class="home-col pl-2">
         <v-card class="info-card">
           <v-card-item>
             <template v-slot:prepend>
               <v-icon size="32" color="primary">mdi-translate</v-icon>
+            </template>
+            <template v-slot:append>
+              <v-btn
+                :icon="theme === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+                variant="text"
+                :title="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+                @click="toggleTheme"
+              />
             </template>
             <v-card-title>i18n Manager</v-card-title>
             <v-card-subtitle>ioBroker edition</v-card-subtitle>
@@ -39,12 +47,17 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useHomeStore } from '@/home/store';
+import { useGlobalStore } from '@/store/global';
 import { sendIpc } from '@/ipc';
 import { FormattedFolderPath } from '@common/types';
 import * as ipcMessages from '@common/ipcMessages';
 
 const homeStore = useHomeStore();
 const { recentFolders, currentVersion } = storeToRefs(homeStore);
+
+const globalStore = useGlobalStore();
+const { theme } = storeToRefs(globalStore);
+const toggleTheme = (): void => globalStore.toggleTheme();
 
 function openFolder(folder: FormattedFolderPath): void {
   sendIpc(ipcMessages.open, folder.fullPath);
@@ -55,7 +68,16 @@ sendIpc(ipcMessages.recentFolders);
 
 <style lang="scss">
   .home {
-    padding: 0 8px;
+    padding: 8px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .home-row {
+    height: 100%;
+  }
+
+  .home-col {
     height: 100%;
   }
 </style>

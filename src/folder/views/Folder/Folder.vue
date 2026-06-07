@@ -29,6 +29,12 @@
       >
         Convert folders
       </v-btn>
+      <v-btn
+        :icon="theme === 'dark' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+        variant="text"
+        :title="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        @click="toggleTheme"
+      />
     </div>
     <div class="main">
       <div class="tree-pane">
@@ -76,8 +82,8 @@
         </div>
       </div>
     </div>
-    <v-row class="status-bar">
-      <v-col class="pb-0 pt-2">
+    <v-row no-gutters class="status-bar">
+      <v-col class="px-2 pb-2 pt-2">
         <v-card
           rounded="0"
           class="d-flex align-center"
@@ -149,6 +155,9 @@ import { convert } from '@common/ipcMessages';
 
 const globalStore = useGlobalStore();
 const folderStore = useFolderStore();
+
+const { theme } = storeToRefs(globalStore);
+const toggleTheme = (): void => globalStore.toggleTheme();
 
 const {
   tree,
@@ -291,7 +300,7 @@ const sendModifiedContent = folderStore.sendModifiedContent;
   gap: 8px;
   height: calc(100vh - 64px - 46px - 8px);
   margin-top: 8px;
-  padding-right: 8px;
+  padding: 0 8px;
 }
 
 .tree-pane {
@@ -299,7 +308,6 @@ const sendModifiedContent = folderStore.sendModifiedContent;
   min-width: 0;
   height: 100%;
   padding-bottom: 4px;
-  outline: 3px solid red;
 }
 
 .left-card {
@@ -321,7 +329,6 @@ const sendModifiedContent = folderStore.sendModifiedContent;
   height: 100%;
   display: flex;
   flex-direction: column;
-  outline: 3px solid lime;
 }
 
 .translate-wrap {

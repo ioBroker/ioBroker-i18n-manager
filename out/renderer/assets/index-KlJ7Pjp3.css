@@ -1,4 +1,996 @@
 @layer vuetify-components {
+  .v-btn {
+    align-items: center;
+    border-radius: 4px;
+    display: inline-flex;
+    flex-direction: row;
+    font-weight: 500;
+    justify-content: center;
+    letter-spacing: 0.0071428571em;
+    line-height: normal;
+    max-width: 100%;
+    outline: none;
+    position: relative;
+    text-decoration: none;
+    text-indent: 0.0071428571em;
+    text-transform: none;
+    transition-property: box-shadow, transform, opacity, background;
+    transition-duration: 0.28s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .v-locale--is-rtl .v-btn {
+    text-indent: -0.0071428571em;
+  }
+  .v-btn--size-x-small {
+    --v-btn-size: 0.625rem;
+    --v-btn-height: 20px;
+    font-size: var(--v-btn-size);
+    min-width: 36px;
+    padding: 0 8px;
+  }
+  .v-btn--size-small {
+    --v-btn-size: 0.75rem;
+    --v-btn-height: 28px;
+    font-size: var(--v-btn-size);
+    min-width: 50px;
+    padding: 0 12px;
+  }
+  .v-btn--size-default {
+    --v-btn-size: 0.875rem;
+    --v-btn-height: 36px;
+    font-size: var(--v-btn-size);
+    min-width: 64px;
+    padding: 0 16px;
+  }
+  .v-btn--size-large {
+    --v-btn-size: 1rem;
+    --v-btn-height: 44px;
+    font-size: var(--v-btn-size);
+    min-width: 78px;
+    padding: 0 20px;
+  }
+  .v-btn--size-x-large {
+    --v-btn-size: 1.125rem;
+    --v-btn-height: 52px;
+    font-size: var(--v-btn-size);
+    min-width: 92px;
+    padding: 0 24px;
+  }
+  .v-btn.v-btn--density-default {
+    height: calc(var(--v-btn-height) + 0px);
+  }
+  .v-btn.v-btn--density-comfortable {
+    height: calc(var(--v-btn-height) + -8px);
+  }
+  .v-btn.v-btn--density-compact {
+    height: calc(var(--v-btn-height) + -12px);
+  }
+  .v-btn {
+    border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+    border-style: solid;
+    border-width: 0;
+  }
+  .v-btn--border {
+    border-width: thin;
+    box-shadow: none;
+  }
+  .v-btn--absolute {
+    position: absolute;
+  }
+  .v-btn--fixed {
+    position: fixed;
+  }
+  .v-btn:hover > .v-btn__overlay {
+    opacity: calc(var(--v-hover-opacity) * var(--v-theme-overlay-multiplier));
+  }
+  .v-btn:focus-visible > .v-btn__overlay {
+    opacity: calc(var(--v-focus-opacity) * var(--v-theme-overlay-multiplier));
+  }
+  @supports not selector(:focus-visible) {
+    .v-btn:focus > .v-btn__overlay {
+      opacity: calc(var(--v-focus-opacity) * var(--v-theme-overlay-multiplier));
+    }
+  }
+  .v-btn--active > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true] > .v-btn__overlay {
+    opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
+  }
+  .v-btn--active:hover > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true]:hover > .v-btn__overlay {
+    opacity: calc((var(--v-activated-opacity) + var(--v-hover-opacity)) * var(--v-theme-overlay-multiplier));
+  }
+  .v-btn--active:focus-visible > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true]:focus-visible > .v-btn__overlay {
+    opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
+  }
+  @supports not selector(:focus-visible) {
+    .v-btn--active:focus > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true]:focus > .v-btn__overlay {
+      opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
+    }
+  }
+  .v-btn--variant-plain, .v-btn--variant-outlined, .v-btn--variant-text, .v-btn--variant-tonal {
+    background: transparent;
+    color: inherit;
+  }
+  .v-btn--variant-plain {
+    opacity: 0.62;
+  }
+  .v-btn--variant-plain:focus, .v-btn--variant-plain:hover {
+    opacity: 1;
+  }
+  .v-btn--variant-plain .v-btn__overlay {
+    display: none;
+  }
+  .v-btn--variant-elevated, .v-btn--variant-flat {
+    background: rgb(var(--v-theme-surface));
+    color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) calc(var(--v-high-emphasis-opacity) * 100%), transparent);
+  }
+  .v-btn--variant-elevated {
+    box-shadow: 0px 1px 2px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 1px 3px 1px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
+    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 2%, transparent);
+  }
+  .v-btn--variant-flat {
+    box-shadow: 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
+    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 0%, transparent);
+  }
+  .v-btn--variant-outlined {
+    border: thin solid currentColor;
+  }
+  .v-btn--variant-text .v-btn__overlay {
+    background: currentColor;
+  }
+  .v-btn--variant-tonal .v-btn__underlay {
+    background: currentColor;
+    opacity: var(--v-activated-opacity);
+    border-radius: inherit;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+  }
+  .v-btn .v-btn__underlay {
+    position: absolute;
+  }
+  @supports selector(:focus-visible) {
+    .v-btn::after {
+      pointer-events: none;
+      border: 2px solid currentColor;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    .v-btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .v-btn:focus-visible::after {
+      opacity: calc(0.25 * var(--v-theme-overlay-multiplier));
+    }
+  }
+  .v-btn--icon {
+    border-radius: 50%;
+    min-width: 0;
+    padding: 0;
+  }
+  .v-btn--icon.v-btn--size-default {
+    --v-btn-size: 1rem;
+  }
+  .v-btn--icon.v-btn--density-default {
+    width: calc(var(--v-btn-height) + 12px);
+    height: calc(var(--v-btn-height) + 12px);
+  }
+  .v-btn--icon.v-btn--density-comfortable {
+    width: calc(var(--v-btn-height) + 0px);
+    height: calc(var(--v-btn-height) + 0px);
+  }
+  .v-btn--icon.v-btn--density-compact {
+    width: calc(var(--v-btn-height) + -8px);
+    height: calc(var(--v-btn-height) + -8px);
+  }
+  .v-btn--elevated:hover, .v-btn--elevated:focus {
+    box-shadow: 0px 1px 2px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 2px 6px 2px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
+    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 4%, transparent);
+  }
+  .v-btn--elevated:active {
+    box-shadow: 0px 1px 2px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 1px 3px 1px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
+    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 2%, transparent);
+  }
+  .v-btn--flat {
+    box-shadow: none;
+  }
+  .v-btn--block {
+    display: flex;
+    flex: 1 0 auto;
+    min-width: 100%;
+  }
+  .v-btn--spaced .v-btn__content {
+    flex-grow: 1;
+  }
+  .v-btn--spaced.v-btn--spaced-start > .v-btn__content {
+    justify-content: end;
+  }
+  .v-btn--spaced.v-btn--spaced-end > .v-btn__content {
+    justify-content: start;
+  }
+  .v-btn--disabled {
+    pointer-events: none;
+    opacity: 0.26;
+  }
+  .v-btn--disabled:hover {
+    opacity: 0.26;
+  }
+  .v-btn--disabled.v-btn--variant-elevated, .v-btn--disabled.v-btn--variant-flat {
+    box-shadow: none;
+    opacity: 1;
+    color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) 26%, transparent);
+    background: rgb(var(--v-theme-surface));
+  }
+  .v-btn--disabled.v-btn--variant-elevated .v-btn__overlay, .v-btn--disabled.v-btn--variant-flat .v-btn__overlay {
+    opacity: 0.4615384615;
+  }
+  .v-btn--loading {
+    pointer-events: none;
+  }
+  .v-btn--loading .v-btn__content,
+  .v-btn--loading .v-btn__prepend,
+  .v-btn--loading .v-btn__append {
+    opacity: 0;
+  }
+  .v-btn--stacked {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  .v-btn--stacked .v-btn__content {
+    flex-direction: column;
+    line-height: 1.25;
+  }
+  .v-btn--stacked .v-btn__prepend,
+  .v-btn--stacked .v-btn__append,
+  .v-btn--stacked .v-btn__content > .v-icon--start,
+  .v-btn--stacked .v-btn__content > .v-icon--end {
+    margin-inline: 0;
+  }
+  .v-btn--stacked.v-btn--size-x-small {
+    --v-btn-size: 0.625rem;
+    --v-btn-height: 56px;
+    font-size: var(--v-btn-size);
+    min-width: 56px;
+    padding: 0 12px;
+  }
+  .v-btn--stacked.v-btn--size-small {
+    --v-btn-size: 0.75rem;
+    --v-btn-height: 64px;
+    font-size: var(--v-btn-size);
+    min-width: 64px;
+    padding: 0 14px;
+  }
+  .v-btn--stacked.v-btn--size-default {
+    --v-btn-size: 0.875rem;
+    --v-btn-height: 72px;
+    font-size: var(--v-btn-size);
+    min-width: 72px;
+    padding: 0 16px;
+  }
+  .v-btn--stacked.v-btn--size-large {
+    --v-btn-size: 1rem;
+    --v-btn-height: 80px;
+    font-size: var(--v-btn-size);
+    min-width: 80px;
+    padding: 0 18px;
+  }
+  .v-btn--stacked.v-btn--size-x-large {
+    --v-btn-size: 1.125rem;
+    --v-btn-height: 88px;
+    font-size: var(--v-btn-size);
+    min-width: 88px;
+    padding: 0 20px;
+  }
+  .v-btn--stacked.v-btn--density-default {
+    height: calc(var(--v-btn-height) + 0px);
+  }
+  .v-btn--stacked.v-btn--density-comfortable {
+    height: calc(var(--v-btn-height) + -16px);
+  }
+  .v-btn--stacked.v-btn--density-compact {
+    height: calc(var(--v-btn-height) + -24px);
+  }
+  .v-btn--slim {
+    padding: 0 8px;
+  }
+  .v-btn--readonly {
+    pointer-events: none;
+  }
+  .v-btn--rounded {
+    border-radius: 24px;
+  }
+  .v-btn--rounded.v-btn--icon {
+    border-radius: 4px;
+  }
+  .v-btn .v-icon {
+    --v-icon-size-multiplier: 0.8571428571;
+  }
+  .v-btn--icon .v-icon {
+    --v-icon-size-multiplier: 1;
+  }
+  .v-btn--stacked .v-icon {
+    --v-icon-size-multiplier: 1.1428571429;
+  }
+  .v-btn--stacked.v-btn--block {
+    min-width: 100%;
+  }
+  .v-btn__loader {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  .v-btn__loader > .v-progress-circular {
+    width: 1.5em;
+    height: 1.5em;
+  }
+  .v-btn__content,
+  .v-btn__prepend,
+  .v-btn__append {
+    align-items: center;
+    display: flex;
+    transition: transform, opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .v-btn__prepend {
+    margin-inline: calc(var(--v-btn-height) / -9) calc(var(--v-btn-height) / 4.5);
+  }
+  .v-btn--slim .v-btn__prepend {
+    margin-inline-start: 0;
+  }
+  .v-btn__append {
+    margin-inline: calc(var(--v-btn-height) / 4.5) calc(var(--v-btn-height) / -9);
+  }
+  .v-btn--slim .v-btn__append {
+    margin-inline-end: 0;
+  }
+  .v-btn__content {
+    justify-content: center;
+    white-space: nowrap;
+  }
+  .v-btn__content > .v-icon--start {
+    margin-inline: calc(var(--v-btn-height) / -9) calc(var(--v-btn-height) / 4.5);
+  }
+  .v-btn__content > .v-icon--end {
+    margin-inline: calc(var(--v-btn-height) / 4.5) calc(var(--v-btn-height) / -9);
+  }
+  .v-btn--stacked .v-btn__content {
+    white-space: normal;
+  }
+  .v-btn__overlay {
+    background-color: currentColor;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .v-btn__overlay,
+  .v-btn__underlay {
+    pointer-events: none;
+  }
+  .v-btn__overlay,
+  .v-btn__underlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .v-pagination .v-btn {
+    width: auto;
+    padding-inline: 5px;
+  }
+  .v-pagination .v-btn.v-btn--density-default {
+    min-width: calc(var(--v-btn-height) + 12px);
+  }
+  .v-pagination .v-btn.v-btn--density-comfortable {
+    min-width: calc(var(--v-btn-height) + 0px);
+  }
+  .v-pagination .v-btn.v-btn--density-compact {
+    min-width: calc(var(--v-btn-height) + -8px);
+  }
+  .v-pagination .v-btn {
+    border-radius: 4px;
+  }
+  .v-pagination .v-btn--rounded {
+    border-radius: 50%;
+  }
+  .v-pagination .v-btn__overlay {
+    transition: none;
+  }
+  .v-pagination__prev .v-btn, .v-pagination__next .v-btn {
+    padding-inline: 0;
+  }
+  .v-pagination__prev .v-btn.v-btn--density-default, .v-pagination__next .v-btn.v-btn--density-default {
+    width: calc(var(--v-btn-height) + 12px);
+  }
+  .v-pagination__prev .v-btn.v-btn--density-comfortable, .v-pagination__next .v-btn.v-btn--density-comfortable {
+    width: calc(var(--v-btn-height) + 0px);
+  }
+  .v-pagination__prev .v-btn.v-btn--density-compact, .v-pagination__next .v-btn.v-btn--density-compact {
+    width: calc(var(--v-btn-height) + -8px);
+  }
+  .v-pagination .v-pagination__item--is-active .v-btn__overlay {
+    opacity: var(--v-border-opacity);
+  }
+  @media (forced-colors: active) {
+    .v-btn:not(.v-btn--variant-text, .v-btn--variant-plain) {
+      border: thin solid;
+    }
+    .v-btn:focus-visible {
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+  }
+}@layer vuetify-components {
+  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled) > .v-btn__overlay {
+    opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
+  }
+  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled):hover > .v-btn__overlay {
+    opacity: calc((var(--v-activated-opacity) + var(--v-hover-opacity)) * var(--v-theme-overlay-multiplier));
+  }
+  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled):focus-visible > .v-btn__overlay {
+    opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
+  }
+  @supports not selector(:focus-visible) {
+    .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled):focus > .v-btn__overlay {
+      opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
+    }
+  }
+  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled).v-btn--variant-plain {
+    opacity: 1;
+  }
+  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled).v-btn--variant-elevated > .v-btn__overlay, .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled).v-btn--variant-flat > .v-btn__overlay {
+    opacity: 0;
+  }
+}
+@layer vuetify-final.trumps {
+  @media (forced-colors: active) {
+    .v-btn-toggle > .v-btn:not(.v-btn--disabled) {
+      border-color: buttontext;
+    }
+    .v-btn-toggle > .v-btn:not(.v-btn--disabled):focus-visible {
+      outline: 0;
+    }
+    .v-btn-toggle > .v-btn:not(.v-btn--disabled):not(.v-btn--active):hover, .v-btn-toggle > .v-btn:not(.v-btn--disabled):not(.v-btn--active):focus-visible {
+      color: highlight;
+      border-color: currentColor;
+    }
+    .v-btn-toggle > .v-btn--active {
+      color: highlight;
+      forced-color-adjust: preserve-parent-color;
+    }
+    .v-btn-toggle > .v-btn--active:not(.v-btn--variant-text, .v-btn--variant-plain) {
+      background-color: highlight;
+      color: highlighttext;
+      border-color: highlight;
+    }
+  }
+}@layer vuetify-components {
+  .v-btn-group {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    min-width: 0;
+    overflow-y: hidden;
+    overflow-x: auto;
+    vertical-align: middle;
+  }
+  .v-btn-group {
+    border-color: rgba(var(--v-border-color), var(--v-border-opacity));
+    border-style: solid;
+    border-width: 0;
+  }
+  .v-btn-group--border {
+    border-width: thin;
+    box-shadow: none;
+  }
+  .v-btn-group {
+    box-shadow: 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
+    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 0%, transparent);
+  }
+  .v-btn-group {
+    border-radius: 4px;
+  }
+  .v-btn-group {
+    background: transparent;
+    color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) calc(var(--v-high-emphasis-opacity) * 100%), transparent);
+  }
+  .v-btn-group .v-btn {
+    border-radius: 0;
+    border-color: inherit;
+  }
+  .v-btn-group--tile {
+    border-radius: 0;
+  }
+  .v-btn-group--density-default.v-btn-group--horizontal {
+    height: 48px;
+  }
+  .v-btn-group--density-comfortable.v-btn-group--horizontal {
+    height: 40px;
+  }
+  .v-btn-group--density-compact.v-btn-group--horizontal {
+    height: 36px;
+  }
+  .v-btn-group--horizontal .v-btn:not(:last-child) {
+    border-inline-end: none;
+  }
+  .v-btn-group--horizontal .v-btn:not(:first-child) {
+    border-inline-start: none;
+  }
+  .v-btn-group--horizontal .v-btn:first-child {
+    border-start-start-radius: inherit;
+    border-end-start-radius: inherit;
+  }
+  .v-btn-group--horizontal .v-btn:last-child {
+    border-start-end-radius: inherit;
+    border-end-end-radius: inherit;
+  }
+  .v-btn-group--horizontal.v-btn-group--divided .v-btn:not(:last-child) {
+    border-inline-end-width: thin;
+    border-inline-end-style: solid;
+    border-inline-end-color: rgba(var(--v-border-color), var(--v-border-opacity));
+  }
+  .v-btn-group--vertical {
+    flex-direction: column;
+  }
+  .v-btn-group--vertical .v-btn:not(:last-child) {
+    border-block-end: none;
+  }
+  .v-btn-group--vertical .v-btn:not(:first-child) {
+    border-block-start: none;
+  }
+  .v-btn-group--vertical .v-btn:first-child {
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+  }
+  .v-btn-group--vertical .v-btn:last-child {
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
+  }
+  .v-btn-group--vertical.v-btn-group--divided .v-btn:not(:last-child) {
+    border-block-end-width: thin;
+    border-block-end-style: solid;
+    border-block-end-color: rgba(var(--v-border-color), var(--v-border-opacity));
+  }
+}@layer vuetify-components {
+  .v-icon {
+    --v-icon-size-multiplier: 1;
+    align-items: center;
+    display: inline-flex;
+    font-feature-settings: "liga";
+    height: 1em;
+    justify-content: center;
+    letter-spacing: normal;
+    line-height: 1;
+    position: relative;
+    opacity: var(--v-icon-opacity, 1);
+    text-indent: 0;
+    text-align: center;
+    user-select: none;
+    vertical-align: middle;
+    width: 1em;
+    min-width: 1em;
+  }
+  .v-icon--clickable {
+    cursor: pointer;
+  }
+  .v-icon--disabled {
+    pointer-events: none;
+    opacity: 0.38;
+  }
+  .v-icon--size-x-small {
+    font-size: calc(var(--v-icon-size-multiplier) * 1em);
+  }
+  .v-icon--size-small {
+    font-size: calc(var(--v-icon-size-multiplier) * 1.25em);
+  }
+  .v-icon--size-default {
+    font-size: calc(var(--v-icon-size-multiplier) * 1.5em);
+  }
+  .v-icon--size-large {
+    font-size: calc(var(--v-icon-size-multiplier) * 1.75em);
+  }
+  .v-icon--size-x-large {
+    font-size: calc(var(--v-icon-size-multiplier) * 2em);
+  }
+  .v-icon__svg {
+    fill: currentColor;
+    width: 100%;
+    height: 100%;
+  }
+  .v-icon--start {
+    margin-inline-end: 8px;
+  }
+  .v-icon--end {
+    margin-inline-start: 8px;
+  }
+}@layer vuetify-components {
+  .v-progress-circular {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+  }
+  .v-progress-circular > svg {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 0;
+  }
+  .v-progress-circular__content {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+  .v-progress-circular__underlay {
+    color: rgba(var(--v-border-color), var(--v-border-opacity));
+    stroke: currentColor;
+    z-index: 1;
+  }
+  .v-progress-circular__overlay {
+    stroke: currentColor;
+    transition: all 0.2s ease-in-out, stroke-width 0s;
+    z-index: 2;
+  }
+  .v-progress-circular--revealing {
+    --progress-reveal-duration: $progress-circular-reveal-duration;
+  }
+  .v-progress-circular--revealing .v-progress-circular__overlay {
+    transition-duration: var(--progress-reveal-duration), 0s;
+  }
+  .v-progress-circular--size-x-small {
+    height: 16px;
+    width: 16px;
+  }
+  .v-progress-circular--size-small {
+    height: 24px;
+    width: 24px;
+  }
+  .v-progress-circular--size-default {
+    height: 32px;
+    width: 32px;
+  }
+  .v-progress-circular--size-large {
+    height: 48px;
+    width: 48px;
+  }
+  .v-progress-circular--size-x-large {
+    height: 64px;
+    width: 64px;
+  }
+  .v-progress-circular--indeterminate > svg {
+    animation: progress-circular-rotate 1.4s linear infinite;
+    transform-origin: center center;
+    transition: all 0.2s ease-in-out;
+  }
+  .v-progress-circular--indeterminate .v-progress-circular__overlay {
+    animation: progress-circular-dash 1.4s ease-in-out infinite, progress-circular-rotate 1.4s linear infinite;
+    stroke-dasharray: 25, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    transform-origin: center center;
+    transform: rotate(-90deg);
+  }
+  .v-progress-circular--disable-shrink > svg {
+    animation-duration: 0.7s;
+  }
+  .v-progress-circular--disable-shrink .v-progress-circular__overlay {
+    animation: none;
+  }
+  .v-progress-circular--indeterminate:not(.v-progress-circular--visible) > svg,
+  .v-progress-circular--indeterminate:not(.v-progress-circular--visible) .v-progress-circular__overlay {
+    animation-play-state: paused;
+  }
+  @keyframes progress-circular-dash {
+    0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0px;
+    }
+    50% {
+      stroke-dasharray: 100, 200;
+      stroke-dashoffset: -15px;
+    }
+    100% {
+      stroke-dasharray: 100, 200;
+      stroke-dashoffset: -124px;
+    }
+  }
+  @keyframes progress-circular-rotate {
+    100% {
+      transform: rotate(270deg);
+    }
+  }
+}@layer vuetify-components {
+  .v-progress-linear {
+    background: transparent;
+    overflow: hidden;
+    position: relative;
+    transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1), mask-size 0s;
+    width: 100%;
+  }
+  .v-progress-linear--rounded {
+    border-radius: 9999px;
+  }
+  @media (forced-colors: active) {
+    .v-progress-linear {
+      border: thin solid buttontext;
+    }
+  }
+  .v-progress-linear__background,
+  .v-progress-linear__buffer {
+    background: currentColor;
+    bottom: 0;
+    left: 0;
+    opacity: var(--v-border-opacity);
+    position: absolute;
+    top: 0;
+    width: 100%;
+    transition-property: width, left, right;
+    transition: inherit;
+  }
+}
+@layer vuetify-final.trumps {
+  @media (forced-colors: active) {
+    .v-progress-linear__buffer {
+      background-color: highlight;
+      opacity: 0.5;
+    }
+  }
+}
+@layer vuetify-components {
+  .v-progress-linear__content {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  .v-progress-linear--clickable .v-progress-linear__content {
+    pointer-events: none;
+  }
+  .v-progress-linear__determinate,
+  .v-progress-linear__indeterminate {
+    background: currentColor;
+  }
+}
+@layer vuetify-final.trumps {
+  @media (forced-colors: active) {
+    .v-progress-linear__determinate,
+    .v-progress-linear__indeterminate {
+      background-color: highlight;
+    }
+  }
+}
+@layer vuetify-components {
+  .v-progress-linear__determinate {
+    height: inherit;
+    left: 0;
+    position: absolute;
+    transition: inherit;
+    transition-property: width, left, right;
+  }
+  .v-progress-linear__indeterminate .long, .v-progress-linear__indeterminate .short {
+    animation-play-state: paused;
+    animation-duration: 2.2s;
+    animation-iteration-count: infinite;
+    bottom: 0;
+    height: inherit;
+    left: 0;
+    position: absolute;
+    right: auto;
+    top: 0;
+    width: auto;
+  }
+  .v-progress-linear__indeterminate .long {
+    animation-name: indeterminate-ltr;
+  }
+  .v-progress-linear__indeterminate .short {
+    animation-name: indeterminate-short-ltr;
+  }
+  .v-progress-linear__stream {
+    animation: stream 0.25s infinite linear;
+    animation-play-state: paused;
+    bottom: 0;
+    left: auto;
+    opacity: 0.3;
+    pointer-events: none;
+    position: absolute;
+    transition: inherit;
+    transition-property: width, left, right;
+  }
+  .v-progress-linear--reverse .v-progress-linear__background,
+  .v-progress-linear--reverse .v-progress-linear__determinate,
+  .v-progress-linear--reverse .v-progress-linear__content {
+    left: auto;
+    right: 0;
+  }
+  .v-progress-linear--reverse .v-progress-linear__indeterminate .long, .v-progress-linear--reverse .v-progress-linear__indeterminate .short {
+    left: auto;
+    right: 0;
+  }
+  .v-progress-linear--reverse .v-progress-linear__indeterminate .long {
+    animation-name: indeterminate-rtl;
+  }
+  .v-progress-linear--reverse .v-progress-linear__indeterminate .short {
+    animation-name: indeterminate-short-rtl;
+  }
+  .v-progress-linear--reverse .v-progress-linear__stream {
+    right: auto;
+  }
+  .v-progress-linear--absolute,
+  .v-progress-linear--fixed {
+    left: 0;
+    z-index: 1;
+  }
+  .v-progress-linear--absolute {
+    position: absolute;
+  }
+  .v-progress-linear--fixed {
+    position: fixed;
+  }
+  .v-progress-linear--rounded {
+    border-radius: 9999px;
+  }
+  .v-progress-linear--rounded.v-progress-linear--rounded-bar .v-progress-linear__determinate,
+  .v-progress-linear--rounded.v-progress-linear--rounded-bar .v-progress-linear__indeterminate {
+    border-radius: inherit;
+  }
+  .v-progress-linear--striped .v-progress-linear__determinate {
+    animation: progress-linear-stripes 1s infinite linear;
+    background-image: linear-gradient(135deg, hsla(0, 0%, 100%, 0.25) 25%, transparent 0, transparent 50%, hsla(0, 0%, 100%, 0.25) 0, hsla(0, 0%, 100%, 0.25) 75%, transparent 0, transparent);
+    background-repeat: repeat;
+    background-size: var(--v-progress-linear-height);
+  }
+  .v-progress-linear--active .v-progress-linear__indeterminate .long, .v-progress-linear--active .v-progress-linear__indeterminate .short {
+    animation-play-state: running;
+  }
+  .v-progress-linear--active .v-progress-linear__stream {
+    animation-play-state: running;
+  }
+  .v-progress-linear--rounded-bar .v-progress-linear__determinate,
+  .v-progress-linear--rounded-bar .v-progress-linear__indeterminate,
+  .v-progress-linear--rounded-bar .v-progress-linear__stream + .v-progress-linear__background {
+    border-radius: 9999px;
+  }
+  .v-progress-linear--rounded-bar .v-progress-linear__determinate {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+  @keyframes indeterminate-ltr {
+    0% {
+      left: -90%;
+      right: 100%;
+    }
+    60% {
+      left: -90%;
+      right: 100%;
+    }
+    100% {
+      left: 100%;
+      right: -35%;
+    }
+  }
+  @keyframes indeterminate-rtl {
+    0% {
+      left: 100%;
+      right: -90%;
+    }
+    60% {
+      left: 100%;
+      right: -90%;
+    }
+    100% {
+      left: -35%;
+      right: 100%;
+    }
+  }
+  @keyframes indeterminate-short-ltr {
+    0% {
+      left: -200%;
+      right: 100%;
+    }
+    60% {
+      left: 107%;
+      right: -8%;
+    }
+    100% {
+      left: 107%;
+      right: -8%;
+    }
+  }
+  @keyframes indeterminate-short-rtl {
+    0% {
+      left: 100%;
+      right: -200%;
+    }
+    60% {
+      left: -8%;
+      right: 107%;
+    }
+    100% {
+      left: -8%;
+      right: 107%;
+    }
+  }
+  @keyframes stream {
+    to {
+      transform: translateX(var(--v-progress-linear-stream-to));
+    }
+  }
+  @keyframes progress-linear-stripes {
+    0% {
+      background-position-x: var(--v-progress-linear-height);
+    }
+  }
+}@layer vuetify-components {
+  .v-ripple__container {
+    color: inherit;
+    border-radius: inherit;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+    contain: strict;
+  }
+  .v-ripple__animation {
+    color: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    will-change: transform, opacity;
+  }
+  .v-ripple__animation--enter {
+    transition: none;
+    opacity: 0;
+  }
+  .v-ripple__animation--in {
+    transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1), opacity 0.1s cubic-bezier(0, 0, 0.2, 1);
+    opacity: calc(0.25 * var(--v-theme-overlay-multiplier));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .v-ripple__animation--in {
+      transition-property: opacity;
+      transition-duration: 0.1s;
+    }
+  }
+  .v-ripple__animation--out {
+    transition: opacity 0.3s cubic-bezier(0, 0, 0.2, 1);
+    opacity: 0;
+  }
+}@layer vuetify-components {
   .v-card {
     display: block;
     overflow: hidden;
@@ -504,58 +1496,6 @@
     }
   }
 }@layer vuetify-components {
-  .v-icon {
-    --v-icon-size-multiplier: 1;
-    align-items: center;
-    display: inline-flex;
-    font-feature-settings: "liga";
-    height: 1em;
-    justify-content: center;
-    letter-spacing: normal;
-    line-height: 1;
-    position: relative;
-    opacity: var(--v-icon-opacity, 1);
-    text-indent: 0;
-    text-align: center;
-    user-select: none;
-    vertical-align: middle;
-    width: 1em;
-    min-width: 1em;
-  }
-  .v-icon--clickable {
-    cursor: pointer;
-  }
-  .v-icon--disabled {
-    pointer-events: none;
-    opacity: 0.38;
-  }
-  .v-icon--size-x-small {
-    font-size: calc(var(--v-icon-size-multiplier) * 1em);
-  }
-  .v-icon--size-small {
-    font-size: calc(var(--v-icon-size-multiplier) * 1.25em);
-  }
-  .v-icon--size-default {
-    font-size: calc(var(--v-icon-size-multiplier) * 1.5em);
-  }
-  .v-icon--size-large {
-    font-size: calc(var(--v-icon-size-multiplier) * 1.75em);
-  }
-  .v-icon--size-x-large {
-    font-size: calc(var(--v-icon-size-multiplier) * 2em);
-  }
-  .v-icon__svg {
-    fill: currentColor;
-    width: 100%;
-    height: 100%;
-  }
-  .v-icon--start {
-    margin-inline-end: 8px;
-  }
-  .v-icon--end {
-    margin-inline-start: 8px;
-  }
-}@layer vuetify-components {
   .v-img {
     --v-theme-overlay-multiplier: 3;
     z-index: 0;
@@ -638,275 +1578,6 @@
     flex: 1 0 0px;
     transition: padding-bottom 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
-  }
-}@layer vuetify-components {
-  .v-progress-linear {
-    background: transparent;
-    overflow: hidden;
-    position: relative;
-    transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1), mask-size 0s;
-    width: 100%;
-  }
-  .v-progress-linear--rounded {
-    border-radius: 9999px;
-  }
-  @media (forced-colors: active) {
-    .v-progress-linear {
-      border: thin solid buttontext;
-    }
-  }
-  .v-progress-linear__background,
-  .v-progress-linear__buffer {
-    background: currentColor;
-    bottom: 0;
-    left: 0;
-    opacity: var(--v-border-opacity);
-    position: absolute;
-    top: 0;
-    width: 100%;
-    transition-property: width, left, right;
-    transition: inherit;
-  }
-}
-@layer vuetify-final.trumps {
-  @media (forced-colors: active) {
-    .v-progress-linear__buffer {
-      background-color: highlight;
-      opacity: 0.5;
-    }
-  }
-}
-@layer vuetify-components {
-  .v-progress-linear__content {
-    align-items: center;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-  .v-progress-linear--clickable .v-progress-linear__content {
-    pointer-events: none;
-  }
-  .v-progress-linear__determinate,
-  .v-progress-linear__indeterminate {
-    background: currentColor;
-  }
-}
-@layer vuetify-final.trumps {
-  @media (forced-colors: active) {
-    .v-progress-linear__determinate,
-    .v-progress-linear__indeterminate {
-      background-color: highlight;
-    }
-  }
-}
-@layer vuetify-components {
-  .v-progress-linear__determinate {
-    height: inherit;
-    left: 0;
-    position: absolute;
-    transition: inherit;
-    transition-property: width, left, right;
-  }
-  .v-progress-linear__indeterminate .long, .v-progress-linear__indeterminate .short {
-    animation-play-state: paused;
-    animation-duration: 2.2s;
-    animation-iteration-count: infinite;
-    bottom: 0;
-    height: inherit;
-    left: 0;
-    position: absolute;
-    right: auto;
-    top: 0;
-    width: auto;
-  }
-  .v-progress-linear__indeterminate .long {
-    animation-name: indeterminate-ltr;
-  }
-  .v-progress-linear__indeterminate .short {
-    animation-name: indeterminate-short-ltr;
-  }
-  .v-progress-linear__stream {
-    animation: stream 0.25s infinite linear;
-    animation-play-state: paused;
-    bottom: 0;
-    left: auto;
-    opacity: 0.3;
-    pointer-events: none;
-    position: absolute;
-    transition: inherit;
-    transition-property: width, left, right;
-  }
-  .v-progress-linear--reverse .v-progress-linear__background,
-  .v-progress-linear--reverse .v-progress-linear__determinate,
-  .v-progress-linear--reverse .v-progress-linear__content {
-    left: auto;
-    right: 0;
-  }
-  .v-progress-linear--reverse .v-progress-linear__indeterminate .long, .v-progress-linear--reverse .v-progress-linear__indeterminate .short {
-    left: auto;
-    right: 0;
-  }
-  .v-progress-linear--reverse .v-progress-linear__indeterminate .long {
-    animation-name: indeterminate-rtl;
-  }
-  .v-progress-linear--reverse .v-progress-linear__indeterminate .short {
-    animation-name: indeterminate-short-rtl;
-  }
-  .v-progress-linear--reverse .v-progress-linear__stream {
-    right: auto;
-  }
-  .v-progress-linear--absolute,
-  .v-progress-linear--fixed {
-    left: 0;
-    z-index: 1;
-  }
-  .v-progress-linear--absolute {
-    position: absolute;
-  }
-  .v-progress-linear--fixed {
-    position: fixed;
-  }
-  .v-progress-linear--rounded {
-    border-radius: 9999px;
-  }
-  .v-progress-linear--rounded.v-progress-linear--rounded-bar .v-progress-linear__determinate,
-  .v-progress-linear--rounded.v-progress-linear--rounded-bar .v-progress-linear__indeterminate {
-    border-radius: inherit;
-  }
-  .v-progress-linear--striped .v-progress-linear__determinate {
-    animation: progress-linear-stripes 1s infinite linear;
-    background-image: linear-gradient(135deg, hsla(0, 0%, 100%, 0.25) 25%, transparent 0, transparent 50%, hsla(0, 0%, 100%, 0.25) 0, hsla(0, 0%, 100%, 0.25) 75%, transparent 0, transparent);
-    background-repeat: repeat;
-    background-size: var(--v-progress-linear-height);
-  }
-  .v-progress-linear--active .v-progress-linear__indeterminate .long, .v-progress-linear--active .v-progress-linear__indeterminate .short {
-    animation-play-state: running;
-  }
-  .v-progress-linear--active .v-progress-linear__stream {
-    animation-play-state: running;
-  }
-  .v-progress-linear--rounded-bar .v-progress-linear__determinate,
-  .v-progress-linear--rounded-bar .v-progress-linear__indeterminate,
-  .v-progress-linear--rounded-bar .v-progress-linear__stream + .v-progress-linear__background {
-    border-radius: 9999px;
-  }
-  .v-progress-linear--rounded-bar .v-progress-linear__determinate {
-    border-start-start-radius: 0;
-    border-end-start-radius: 0;
-  }
-  @keyframes indeterminate-ltr {
-    0% {
-      left: -90%;
-      right: 100%;
-    }
-    60% {
-      left: -90%;
-      right: 100%;
-    }
-    100% {
-      left: 100%;
-      right: -35%;
-    }
-  }
-  @keyframes indeterminate-rtl {
-    0% {
-      left: 100%;
-      right: -90%;
-    }
-    60% {
-      left: 100%;
-      right: -90%;
-    }
-    100% {
-      left: -35%;
-      right: 100%;
-    }
-  }
-  @keyframes indeterminate-short-ltr {
-    0% {
-      left: -200%;
-      right: 100%;
-    }
-    60% {
-      left: 107%;
-      right: -8%;
-    }
-    100% {
-      left: 107%;
-      right: -8%;
-    }
-  }
-  @keyframes indeterminate-short-rtl {
-    0% {
-      left: 100%;
-      right: -200%;
-    }
-    60% {
-      left: -8%;
-      right: 107%;
-    }
-    100% {
-      left: -8%;
-      right: 107%;
-    }
-  }
-  @keyframes stream {
-    to {
-      transform: translateX(var(--v-progress-linear-stream-to));
-    }
-  }
-  @keyframes progress-linear-stripes {
-    0% {
-      background-position-x: var(--v-progress-linear-height);
-    }
-  }
-}@layer vuetify-components {
-  .v-ripple__container {
-    color: inherit;
-    border-radius: inherit;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    overflow: hidden;
-    z-index: 0;
-    pointer-events: none;
-    contain: strict;
-  }
-  .v-ripple__animation {
-    color: inherit;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0;
-    pointer-events: none;
-    overflow: hidden;
-    will-change: transform, opacity;
-  }
-  .v-ripple__animation--enter {
-    transition: none;
-    opacity: 0;
-  }
-  .v-ripple__animation--in {
-    transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1), opacity 0.1s cubic-bezier(0, 0, 0.2, 1);
-    opacity: calc(0.25 * var(--v-theme-overlay-multiplier));
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .v-ripple__animation--in {
-      transition-property: opacity;
-      transition-duration: 0.1s;
-    }
-  }
-  .v-ripple__animation--out {
-    transition: opacity 0.3s cubic-bezier(0, 0, 0.2, 1);
-    opacity: 0;
   }
 }@layer vuetify-components {
   .v-chip {
@@ -3003,679 +3674,15 @@
     mask-image: linear-gradient(0deg, transparent, #000, transparent);
   }
 }.home {
-  padding: 0 8px;
+  padding: 8px;
   height: 100%;
-}@layer vuetify-components {
-  .v-btn {
-    align-items: center;
-    border-radius: 4px;
-    display: inline-flex;
-    flex-direction: row;
-    font-weight: 500;
-    justify-content: center;
-    letter-spacing: 0.0071428571em;
-    line-height: normal;
-    max-width: 100%;
-    outline: none;
-    position: relative;
-    text-decoration: none;
-    text-indent: 0.0071428571em;
-    text-transform: none;
-    transition-property: box-shadow, transform, opacity, background;
-    transition-duration: 0.28s;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    user-select: none;
-    vertical-align: middle;
-    flex-shrink: 0;
-  }
-  .v-locale--is-rtl .v-btn {
-    text-indent: -0.0071428571em;
-  }
-  .v-btn--size-x-small {
-    --v-btn-size: 0.625rem;
-    --v-btn-height: 20px;
-    font-size: var(--v-btn-size);
-    min-width: 36px;
-    padding: 0 8px;
-  }
-  .v-btn--size-small {
-    --v-btn-size: 0.75rem;
-    --v-btn-height: 28px;
-    font-size: var(--v-btn-size);
-    min-width: 50px;
-    padding: 0 12px;
-  }
-  .v-btn--size-default {
-    --v-btn-size: 0.875rem;
-    --v-btn-height: 36px;
-    font-size: var(--v-btn-size);
-    min-width: 64px;
-    padding: 0 16px;
-  }
-  .v-btn--size-large {
-    --v-btn-size: 1rem;
-    --v-btn-height: 44px;
-    font-size: var(--v-btn-size);
-    min-width: 78px;
-    padding: 0 20px;
-  }
-  .v-btn--size-x-large {
-    --v-btn-size: 1.125rem;
-    --v-btn-height: 52px;
-    font-size: var(--v-btn-size);
-    min-width: 92px;
-    padding: 0 24px;
-  }
-  .v-btn.v-btn--density-default {
-    height: calc(var(--v-btn-height) + 0px);
-  }
-  .v-btn.v-btn--density-comfortable {
-    height: calc(var(--v-btn-height) + -8px);
-  }
-  .v-btn.v-btn--density-compact {
-    height: calc(var(--v-btn-height) + -12px);
-  }
-  .v-btn {
-    border-color: rgba(var(--v-border-color), var(--v-border-opacity));
-    border-style: solid;
-    border-width: 0;
-  }
-  .v-btn--border {
-    border-width: thin;
-    box-shadow: none;
-  }
-  .v-btn--absolute {
-    position: absolute;
-  }
-  .v-btn--fixed {
-    position: fixed;
-  }
-  .v-btn:hover > .v-btn__overlay {
-    opacity: calc(var(--v-hover-opacity) * var(--v-theme-overlay-multiplier));
-  }
-  .v-btn:focus-visible > .v-btn__overlay {
-    opacity: calc(var(--v-focus-opacity) * var(--v-theme-overlay-multiplier));
-  }
-  @supports not selector(:focus-visible) {
-    .v-btn:focus > .v-btn__overlay {
-      opacity: calc(var(--v-focus-opacity) * var(--v-theme-overlay-multiplier));
-    }
-  }
-  .v-btn--active > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true] > .v-btn__overlay {
-    opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
-  }
-  .v-btn--active:hover > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true]:hover > .v-btn__overlay {
-    opacity: calc((var(--v-activated-opacity) + var(--v-hover-opacity)) * var(--v-theme-overlay-multiplier));
-  }
-  .v-btn--active:focus-visible > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true]:focus-visible > .v-btn__overlay {
-    opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
-  }
-  @supports not selector(:focus-visible) {
-    .v-btn--active:focus > .v-btn__overlay, .v-btn[aria-haspopup=menu][aria-expanded=true]:focus > .v-btn__overlay {
-      opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
-    }
-  }
-  .v-btn--variant-plain, .v-btn--variant-outlined, .v-btn--variant-text, .v-btn--variant-tonal {
-    background: transparent;
-    color: inherit;
-  }
-  .v-btn--variant-plain {
-    opacity: 0.62;
-  }
-  .v-btn--variant-plain:focus, .v-btn--variant-plain:hover {
-    opacity: 1;
-  }
-  .v-btn--variant-plain .v-btn__overlay {
-    display: none;
-  }
-  .v-btn--variant-elevated, .v-btn--variant-flat {
-    background: rgb(var(--v-theme-surface));
-    color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) calc(var(--v-high-emphasis-opacity) * 100%), transparent);
-  }
-  .v-btn--variant-elevated {
-    box-shadow: 0px 1px 2px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 1px 3px 1px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
-    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 2%, transparent);
-  }
-  .v-btn--variant-flat {
-    box-shadow: 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
-    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 0%, transparent);
-  }
-  .v-btn--variant-outlined {
-    border: thin solid currentColor;
-  }
-  .v-btn--variant-text .v-btn__overlay {
-    background: currentColor;
-  }
-  .v-btn--variant-tonal .v-btn__underlay {
-    background: currentColor;
-    opacity: var(--v-activated-opacity);
-    border-radius: inherit;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    pointer-events: none;
-  }
-  .v-btn .v-btn__underlay {
-    position: absolute;
-  }
-  @supports selector(:focus-visible) {
-    .v-btn::after {
-      pointer-events: none;
-      border: 2px solid currentColor;
-      border-radius: inherit;
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out;
-    }
-    .v-btn::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .v-btn:focus-visible::after {
-      opacity: calc(0.25 * var(--v-theme-overlay-multiplier));
-    }
-  }
-  .v-btn--icon {
-    border-radius: 50%;
-    min-width: 0;
-    padding: 0;
-  }
-  .v-btn--icon.v-btn--size-default {
-    --v-btn-size: 1rem;
-  }
-  .v-btn--icon.v-btn--density-default {
-    width: calc(var(--v-btn-height) + 12px);
-    height: calc(var(--v-btn-height) + 12px);
-  }
-  .v-btn--icon.v-btn--density-comfortable {
-    width: calc(var(--v-btn-height) + 0px);
-    height: calc(var(--v-btn-height) + 0px);
-  }
-  .v-btn--icon.v-btn--density-compact {
-    width: calc(var(--v-btn-height) + -8px);
-    height: calc(var(--v-btn-height) + -8px);
-  }
-  .v-btn--elevated:hover, .v-btn--elevated:focus {
-    box-shadow: 0px 1px 2px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 2px 6px 2px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
-    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 4%, transparent);
-  }
-  .v-btn--elevated:active {
-    box-shadow: 0px 1px 2px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 1px 3px 1px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
-    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 2%, transparent);
-  }
-  .v-btn--flat {
-    box-shadow: none;
-  }
-  .v-btn--block {
-    display: flex;
-    flex: 1 0 auto;
-    min-width: 100%;
-  }
-  .v-btn--spaced .v-btn__content {
-    flex-grow: 1;
-  }
-  .v-btn--spaced.v-btn--spaced-start > .v-btn__content {
-    justify-content: end;
-  }
-  .v-btn--spaced.v-btn--spaced-end > .v-btn__content {
-    justify-content: start;
-  }
-  .v-btn--disabled {
-    pointer-events: none;
-    opacity: 0.26;
-  }
-  .v-btn--disabled:hover {
-    opacity: 0.26;
-  }
-  .v-btn--disabled.v-btn--variant-elevated, .v-btn--disabled.v-btn--variant-flat {
-    box-shadow: none;
-    opacity: 1;
-    color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) 26%, transparent);
-    background: rgb(var(--v-theme-surface));
-  }
-  .v-btn--disabled.v-btn--variant-elevated .v-btn__overlay, .v-btn--disabled.v-btn--variant-flat .v-btn__overlay {
-    opacity: 0.4615384615;
-  }
-  .v-btn--loading {
-    pointer-events: none;
-  }
-  .v-btn--loading .v-btn__content,
-  .v-btn--loading .v-btn__prepend,
-  .v-btn--loading .v-btn__append {
-    opacity: 0;
-  }
-  .v-btn--stacked {
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-  }
-  .v-btn--stacked .v-btn__content {
-    flex-direction: column;
-    line-height: 1.25;
-  }
-  .v-btn--stacked .v-btn__prepend,
-  .v-btn--stacked .v-btn__append,
-  .v-btn--stacked .v-btn__content > .v-icon--start,
-  .v-btn--stacked .v-btn__content > .v-icon--end {
-    margin-inline: 0;
-  }
-  .v-btn--stacked.v-btn--size-x-small {
-    --v-btn-size: 0.625rem;
-    --v-btn-height: 56px;
-    font-size: var(--v-btn-size);
-    min-width: 56px;
-    padding: 0 12px;
-  }
-  .v-btn--stacked.v-btn--size-small {
-    --v-btn-size: 0.75rem;
-    --v-btn-height: 64px;
-    font-size: var(--v-btn-size);
-    min-width: 64px;
-    padding: 0 14px;
-  }
-  .v-btn--stacked.v-btn--size-default {
-    --v-btn-size: 0.875rem;
-    --v-btn-height: 72px;
-    font-size: var(--v-btn-size);
-    min-width: 72px;
-    padding: 0 16px;
-  }
-  .v-btn--stacked.v-btn--size-large {
-    --v-btn-size: 1rem;
-    --v-btn-height: 80px;
-    font-size: var(--v-btn-size);
-    min-width: 80px;
-    padding: 0 18px;
-  }
-  .v-btn--stacked.v-btn--size-x-large {
-    --v-btn-size: 1.125rem;
-    --v-btn-height: 88px;
-    font-size: var(--v-btn-size);
-    min-width: 88px;
-    padding: 0 20px;
-  }
-  .v-btn--stacked.v-btn--density-default {
-    height: calc(var(--v-btn-height) + 0px);
-  }
-  .v-btn--stacked.v-btn--density-comfortable {
-    height: calc(var(--v-btn-height) + -16px);
-  }
-  .v-btn--stacked.v-btn--density-compact {
-    height: calc(var(--v-btn-height) + -24px);
-  }
-  .v-btn--slim {
-    padding: 0 8px;
-  }
-  .v-btn--readonly {
-    pointer-events: none;
-  }
-  .v-btn--rounded {
-    border-radius: 24px;
-  }
-  .v-btn--rounded.v-btn--icon {
-    border-radius: 4px;
-  }
-  .v-btn .v-icon {
-    --v-icon-size-multiplier: 0.8571428571;
-  }
-  .v-btn--icon .v-icon {
-    --v-icon-size-multiplier: 1;
-  }
-  .v-btn--stacked .v-icon {
-    --v-icon-size-multiplier: 1.1428571429;
-  }
-  .v-btn--stacked.v-btn--block {
-    min-width: 100%;
-  }
-  .v-btn__loader {
-    align-items: center;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-  .v-btn__loader > .v-progress-circular {
-    width: 1.5em;
-    height: 1.5em;
-  }
-  .v-btn__content,
-  .v-btn__prepend,
-  .v-btn__append {
-    align-items: center;
-    display: flex;
-    transition: transform, opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .v-btn__prepend {
-    margin-inline: calc(var(--v-btn-height) / -9) calc(var(--v-btn-height) / 4.5);
-  }
-  .v-btn--slim .v-btn__prepend {
-    margin-inline-start: 0;
-  }
-  .v-btn__append {
-    margin-inline: calc(var(--v-btn-height) / 4.5) calc(var(--v-btn-height) / -9);
-  }
-  .v-btn--slim .v-btn__append {
-    margin-inline-end: 0;
-  }
-  .v-btn__content {
-    justify-content: center;
-    white-space: nowrap;
-  }
-  .v-btn__content > .v-icon--start {
-    margin-inline: calc(var(--v-btn-height) / -9) calc(var(--v-btn-height) / 4.5);
-  }
-  .v-btn__content > .v-icon--end {
-    margin-inline: calc(var(--v-btn-height) / 4.5) calc(var(--v-btn-height) / -9);
-  }
-  .v-btn--stacked .v-btn__content {
-    white-space: normal;
-  }
-  .v-btn__overlay {
-    background-color: currentColor;
-    border-radius: inherit;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-  .v-btn__overlay,
-  .v-btn__underlay {
-    pointer-events: none;
-  }
-  .v-btn__overlay,
-  .v-btn__underlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .v-pagination .v-btn {
-    width: auto;
-    padding-inline: 5px;
-  }
-  .v-pagination .v-btn.v-btn--density-default {
-    min-width: calc(var(--v-btn-height) + 12px);
-  }
-  .v-pagination .v-btn.v-btn--density-comfortable {
-    min-width: calc(var(--v-btn-height) + 0px);
-  }
-  .v-pagination .v-btn.v-btn--density-compact {
-    min-width: calc(var(--v-btn-height) + -8px);
-  }
-  .v-pagination .v-btn {
-    border-radius: 4px;
-  }
-  .v-pagination .v-btn--rounded {
-    border-radius: 50%;
-  }
-  .v-pagination .v-btn__overlay {
-    transition: none;
-  }
-  .v-pagination__prev .v-btn, .v-pagination__next .v-btn {
-    padding-inline: 0;
-  }
-  .v-pagination__prev .v-btn.v-btn--density-default, .v-pagination__next .v-btn.v-btn--density-default {
-    width: calc(var(--v-btn-height) + 12px);
-  }
-  .v-pagination__prev .v-btn.v-btn--density-comfortable, .v-pagination__next .v-btn.v-btn--density-comfortable {
-    width: calc(var(--v-btn-height) + 0px);
-  }
-  .v-pagination__prev .v-btn.v-btn--density-compact, .v-pagination__next .v-btn.v-btn--density-compact {
-    width: calc(var(--v-btn-height) + -8px);
-  }
-  .v-pagination .v-pagination__item--is-active .v-btn__overlay {
-    opacity: var(--v-border-opacity);
-  }
-  @media (forced-colors: active) {
-    .v-btn:not(.v-btn--variant-text, .v-btn--variant-plain) {
-      border: thin solid;
-    }
-    .v-btn:focus-visible {
-      outline: 2px solid;
-      outline-offset: 2px;
-    }
-  }
-}@layer vuetify-components {
-  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled) > .v-btn__overlay {
-    opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
-  }
-  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled):hover > .v-btn__overlay {
-    opacity: calc((var(--v-activated-opacity) + var(--v-hover-opacity)) * var(--v-theme-overlay-multiplier));
-  }
-  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled):focus-visible > .v-btn__overlay {
-    opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
-  }
-  @supports not selector(:focus-visible) {
-    .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled):focus > .v-btn__overlay {
-      opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
-    }
-  }
-  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled).v-btn--variant-plain {
-    opacity: 1;
-  }
-  .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled).v-btn--variant-elevated > .v-btn__overlay, .v-btn-toggle > .v-btn.v-btn--active:not(.v-btn--disabled).v-btn--variant-flat > .v-btn__overlay {
-    opacity: 0;
-  }
+  box-sizing: border-box;
 }
-@layer vuetify-final.trumps {
-  @media (forced-colors: active) {
-    .v-btn-toggle > .v-btn:not(.v-btn--disabled) {
-      border-color: buttontext;
-    }
-    .v-btn-toggle > .v-btn:not(.v-btn--disabled):focus-visible {
-      outline: 0;
-    }
-    .v-btn-toggle > .v-btn:not(.v-btn--disabled):not(.v-btn--active):hover, .v-btn-toggle > .v-btn:not(.v-btn--disabled):not(.v-btn--active):focus-visible {
-      color: highlight;
-      border-color: currentColor;
-    }
-    .v-btn-toggle > .v-btn--active {
-      color: highlight;
-      forced-color-adjust: preserve-parent-color;
-    }
-    .v-btn-toggle > .v-btn--active:not(.v-btn--variant-text, .v-btn--variant-plain) {
-      background-color: highlight;
-      color: highlighttext;
-      border-color: highlight;
-    }
-  }
-}@layer vuetify-components {
-  .v-btn-group {
-    display: inline-flex;
-    flex-wrap: nowrap;
-    max-width: 100%;
-    min-width: 0;
-    overflow-y: hidden;
-    overflow-x: auto;
-    vertical-align: middle;
-  }
-  .v-btn-group {
-    border-color: rgba(var(--v-border-color), var(--v-border-opacity));
-    border-style: solid;
-    border-width: 0;
-  }
-  .v-btn-group--border {
-    border-width: thin;
-    box-shadow: none;
-  }
-  .v-btn-group {
-    box-shadow: 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 0px 0px 0px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
-    --v-elevation-overlay: color-mix(in srgb, var(--v-elevation-overlay-color) 0%, transparent);
-  }
-  .v-btn-group {
-    border-radius: 4px;
-  }
-  .v-btn-group {
-    background: transparent;
-    color: color-mix(in srgb, rgb(var(--v-theme-on-surface)) calc(var(--v-high-emphasis-opacity) * 100%), transparent);
-  }
-  .v-btn-group .v-btn {
-    border-radius: 0;
-    border-color: inherit;
-  }
-  .v-btn-group--tile {
-    border-radius: 0;
-  }
-  .v-btn-group--density-default.v-btn-group--horizontal {
-    height: 48px;
-  }
-  .v-btn-group--density-comfortable.v-btn-group--horizontal {
-    height: 40px;
-  }
-  .v-btn-group--density-compact.v-btn-group--horizontal {
-    height: 36px;
-  }
-  .v-btn-group--horizontal .v-btn:not(:last-child) {
-    border-inline-end: none;
-  }
-  .v-btn-group--horizontal .v-btn:not(:first-child) {
-    border-inline-start: none;
-  }
-  .v-btn-group--horizontal .v-btn:first-child {
-    border-start-start-radius: inherit;
-    border-end-start-radius: inherit;
-  }
-  .v-btn-group--horizontal .v-btn:last-child {
-    border-start-end-radius: inherit;
-    border-end-end-radius: inherit;
-  }
-  .v-btn-group--horizontal.v-btn-group--divided .v-btn:not(:last-child) {
-    border-inline-end-width: thin;
-    border-inline-end-style: solid;
-    border-inline-end-color: rgba(var(--v-border-color), var(--v-border-opacity));
-  }
-  .v-btn-group--vertical {
-    flex-direction: column;
-  }
-  .v-btn-group--vertical .v-btn:not(:last-child) {
-    border-block-end: none;
-  }
-  .v-btn-group--vertical .v-btn:not(:first-child) {
-    border-block-start: none;
-  }
-  .v-btn-group--vertical .v-btn:first-child {
-    border-start-start-radius: inherit;
-    border-start-end-radius: inherit;
-  }
-  .v-btn-group--vertical .v-btn:last-child {
-    border-end-start-radius: inherit;
-    border-end-end-radius: inherit;
-  }
-  .v-btn-group--vertical.v-btn-group--divided .v-btn:not(:last-child) {
-    border-block-end-width: thin;
-    border-block-end-style: solid;
-    border-block-end-color: rgba(var(--v-border-color), var(--v-border-opacity));
-  }
-}@layer vuetify-components {
-  .v-progress-circular {
-    align-items: center;
-    display: inline-flex;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-    vertical-align: middle;
-  }
-  .v-progress-circular > svg {
-    width: 100%;
-    height: 100%;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 0;
-  }
-  .v-progress-circular__content {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
-  .v-progress-circular__underlay {
-    color: rgba(var(--v-border-color), var(--v-border-opacity));
-    stroke: currentColor;
-    z-index: 1;
-  }
-  .v-progress-circular__overlay {
-    stroke: currentColor;
-    transition: all 0.2s ease-in-out, stroke-width 0s;
-    z-index: 2;
-  }
-  .v-progress-circular--revealing {
-    --progress-reveal-duration: $progress-circular-reveal-duration;
-  }
-  .v-progress-circular--revealing .v-progress-circular__overlay {
-    transition-duration: var(--progress-reveal-duration), 0s;
-  }
-  .v-progress-circular--size-x-small {
-    height: 16px;
-    width: 16px;
-  }
-  .v-progress-circular--size-small {
-    height: 24px;
-    width: 24px;
-  }
-  .v-progress-circular--size-default {
-    height: 32px;
-    width: 32px;
-  }
-  .v-progress-circular--size-large {
-    height: 48px;
-    width: 48px;
-  }
-  .v-progress-circular--size-x-large {
-    height: 64px;
-    width: 64px;
-  }
-  .v-progress-circular--indeterminate > svg {
-    animation: progress-circular-rotate 1.4s linear infinite;
-    transform-origin: center center;
-    transition: all 0.2s ease-in-out;
-  }
-  .v-progress-circular--indeterminate .v-progress-circular__overlay {
-    animation: progress-circular-dash 1.4s ease-in-out infinite, progress-circular-rotate 1.4s linear infinite;
-    stroke-dasharray: 25, 200;
-    stroke-dashoffset: 0;
-    stroke-linecap: round;
-    transform-origin: center center;
-    transform: rotate(-90deg);
-  }
-  .v-progress-circular--disable-shrink > svg {
-    animation-duration: 0.7s;
-  }
-  .v-progress-circular--disable-shrink .v-progress-circular__overlay {
-    animation: none;
-  }
-  .v-progress-circular--indeterminate:not(.v-progress-circular--visible) > svg,
-  .v-progress-circular--indeterminate:not(.v-progress-circular--visible) .v-progress-circular__overlay {
-    animation-play-state: paused;
-  }
-  @keyframes progress-circular-dash {
-    0% {
-      stroke-dasharray: 1, 200;
-      stroke-dashoffset: 0px;
-    }
-    50% {
-      stroke-dasharray: 100, 200;
-      stroke-dashoffset: -15px;
-    }
-    100% {
-      stroke-dasharray: 100, 200;
-      stroke-dashoffset: -124px;
-    }
-  }
-  @keyframes progress-circular-rotate {
-    100% {
-      transform: rotate(270deg);
-    }
-  }
+.home-row {
+  height: 100%;
+}
+.home-col {
+  height: 100%;
 }@layer vuetify-components {
   .v-menu > .v-overlay__content {
     display: flex;
@@ -5652,51 +5659,51 @@
     transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
     transition-duration: 75ms;
   }
-}.tree-item[data-v-3abaaf7d] {
-  --selected-background-color: #f0f2f5;
+}.tree-item[data-v-ae8d6fd3] {
+  --selected-background-color: rgba(var(--v-theme-on-surface), 0.08);
   min-width: 100%;
   border: 2px solid transparent;
 }
-.tree-item.selected .label[data-v-3abaaf7d] {
+.tree-item.selected .label[data-v-ae8d6fd3] {
   background-color: var(--selected-background-color);
 }
-.tree-item.expanded .folder-arrow[data-v-3abaaf7d] {
+.tree-item.expanded .folder-arrow[data-v-ae8d6fd3] {
   transform: rotate(45deg);
 }
-.tree-item.copy[data-v-3abaaf7d] {
+.tree-item.copy[data-v-ae8d6fd3] {
   border: 2px solid rgb(var(--v-theme-primary));
 }
-.tree-item.cut[data-v-3abaaf7d] {
+.tree-item.cut[data-v-ae8d6fd3] {
   border: 2px dashed rgb(var(--v-theme-primary));
 }
-.tree-item .label[data-v-3abaaf7d] {
+.tree-item .label[data-v-ae8d6fd3] {
   display: flex;
   flex-direction: row;
   padding: 8px;
   cursor: pointer;
 }
-.tree-item .label > .v-icon[data-v-3abaaf7d] {
+.tree-item .label > .v-icon[data-v-ae8d6fd3] {
   margin-right: 8px;
 }
-.tree-item .label[data-v-3abaaf7d]:hover {
+.tree-item .label[data-v-ae8d6fd3]:hover {
   background-color: var(--selected-background-color);
 }
-.tree-item .label.item .folder-arrow[data-v-3abaaf7d] {
+.tree-item .label.item .folder-arrow[data-v-ae8d6fd3] {
   opacity: 0;
 }
-.tree-item .label.missing[data-v-3abaaf7d] {
+.tree-item .label.missing[data-v-ae8d6fd3] {
   color: rgb(var(--v-theme-error));
 }
-.tree-item .label.changed[data-v-3abaaf7d] {
+.tree-item .label.changed[data-v-ae8d6fd3] {
   color: rgb(var(--v-theme-warning-darken-1));
 }
-.tree-item .label.new[data-v-3abaaf7d] {
+.tree-item .label.new[data-v-ae8d6fd3] {
   color: rgb(var(--v-theme-success));
 }
-.tree-item .folder-arrow[data-v-3abaaf7d] {
+.tree-item .folder-arrow[data-v-ae8d6fd3] {
   transform: rotate(0);
 }
-.tree-item .badge[data-v-3abaaf7d] {
+.tree-item .badge[data-v-ae8d6fd3] {
   width: auto;
   height: 24px;
   min-width: 24px;
@@ -5707,22 +5714,22 @@
   font-size: 14px;
   margin-left: 8px;
 }
-.tree-item .missing-count[data-v-3abaaf7d] {
+.tree-item .missing-count[data-v-ae8d6fd3] {
   background-color: rgb(var(--v-theme-error));
   color: #ffffff;
 }
-.tree-item .duplicated-count[data-v-3abaaf7d] {
+.tree-item .duplicated-count[data-v-ae8d6fd3] {
   background-color: rgb(var(--v-theme-warning));
   color: #ffffff;
 }
-.tree-item .item-name[data-v-3abaaf7d] {
+.tree-item .item-name[data-v-ae8d6fd3] {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}.folder[data-v-60887a75] {
+}.folder[data-v-7150c405] {
   height: 100vh;
 }
-.folder-toolbar[data-v-60887a75] {
+.folder-toolbar[data-v-7150c405] {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -5730,84 +5737,82 @@
   padding: 0 16px;
   background-color: rgb(var(--v-theme-primary));
 }
-.folder-toolbar[data-v-60887a75] .v-field__input,
-.folder-toolbar[data-v-60887a75] .v-field__input input,
-.folder-toolbar[data-v-60887a75] input,
-.folder-toolbar[data-v-60887a75] .v-label,
-.folder-toolbar[data-v-60887a75] .v-field-label,
-.folder-toolbar[data-v-60887a75] .v-select__selection-text,
-.folder-toolbar[data-v-60887a75] .v-icon {
+.folder-toolbar[data-v-7150c405] .v-field__input,
+.folder-toolbar[data-v-7150c405] .v-field__input input,
+.folder-toolbar[data-v-7150c405] input,
+.folder-toolbar[data-v-7150c405] .v-label,
+.folder-toolbar[data-v-7150c405] .v-field-label,
+.folder-toolbar[data-v-7150c405] .v-select__selection-text,
+.folder-toolbar[data-v-7150c405] .v-icon {
   color: #ffffff !important;
   opacity: 1;
 }
-.folder-toolbar[data-v-60887a75] input::placeholder {
+.folder-toolbar[data-v-7150c405] input::placeholder {
   color: #ffffff;
   opacity: 0.85;
 }
-.folder-toolbar[data-v-60887a75] .v-field__outline::before {
+.folder-toolbar[data-v-7150c405] .v-field__outline::before {
   border-color: rgba(255, 255, 255, 0.7);
 }
-.folder-toolbar[data-v-60887a75] .v-field__outline::after {
+.folder-toolbar[data-v-7150c405] .v-field__outline::after {
   border-color: #ffffff;
 }
-.show-select[data-v-60887a75] {
+.show-select[data-v-7150c405] {
   flex: 0 0 220px;
   max-width: 220px;
 }
-.search-field[data-v-60887a75] {
+.search-field[data-v-7150c405] {
   flex: 1 1 auto;
 }
-.main[data-v-60887a75] {
+.main[data-v-7150c405] {
   display: flex;
   gap: 8px;
   height: calc(100vh - 64px - 46px - 8px);
   margin-top: 8px;
-  padding-right: 8px;
+  padding: 0 8px;
 }
-.tree-pane[data-v-60887a75] {
+.tree-pane[data-v-7150c405] {
   flex: 0 0 33%;
   min-width: 0;
   height: 100%;
   padding-bottom: 4px;
-  outline: 3px solid red;
 }
-.left-card[data-v-60887a75] {
+.left-card[data-v-7150c405] {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-.tree-scroller[data-v-60887a75] {
+.tree-scroller[data-v-7150c405] {
   height: 100%;
 }
-.content-pane[data-v-60887a75] {
+.content-pane[data-v-7150c405] {
   flex: 1 1 auto;
   min-width: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
-  outline: 3px solid lime;
 }
-.translate-wrap[data-v-60887a75] {
+.translate-wrap[data-v-7150c405] {
   margin-bottom: 16px;
 }
-.content-wrap[data-v-60887a75] {
+.content-wrap[data-v-7150c405] {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
-.status-bar .v-card[data-v-60887a75] {
+.status-bar .v-card[data-v-7150c405] {
   height: 30px;
 }
-.status-bar .status-item[data-v-60887a75] {
+.status-bar .status-item[data-v-7150c405] {
   padding: 0 8px;
 }
-.status-bar .status-item.animate[data-v-60887a75] {
-  animation: status-animation-60887a75 2s infinite;
+.status-bar .status-item.animate[data-v-7150c405] {
+  animation: status-animation-7150c405 2s infinite;
 }
-@keyframes status-animation-60887a75 {
+@keyframes status-animation-7150c405 {
 0% {
     opacity: 0;
 }
@@ -5905,6 +5910,10 @@ body::-webkit-scrollbar,
   background-size: 500px 125px;
   background-blend-mode: lighten;
   background-color: rgba(250, 250, 255, 0.7019607843);
+}
+.app.app-dark {
+  background-blend-mode: multiply;
+  background-color: #121212;
 }
 *::-webkit-scrollbar {
   width: 6px;

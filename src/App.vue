@@ -1,6 +1,6 @@
 <template>
-  <v-app style="height: 100%">
-    <v-main class="app">
+  <v-app :theme="theme" style="height: 100%">
+    <v-main class="app" :class="{ 'app-dark': theme === 'dark' }">
       <router-view />
     </v-main>
 
@@ -9,7 +9,11 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useGlobalStore } from '@/store/global';
 import Settings from '@/settings/views/Settings.vue';
+
+const { theme } = storeToRefs(useGlobalStore());
 </script>
 
 <style lang="scss">
@@ -34,6 +38,11 @@ import Settings from '@/settings/views/Settings.vue';
     background-size: 500px 125px;
     background-blend-mode: lighten;
     background-color: #fafaffb3;
+  }
+
+  .app.app-dark {
+    background-blend-mode: multiply;
+    background-color: #121212;
   }
 
   *::-webkit-scrollbar {

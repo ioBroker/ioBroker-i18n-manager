@@ -99,7 +99,7 @@ function getIcon(item: TreeItem): string {
 
 <style scoped lang="scss">
   .tree-item {
-    --selected-background-color: #f0f2f5;
+    --selected-background-color: rgba(var(--v-theme-on-surface), 0.08);
     min-width: 100%;
 
     border: 2px solid transparent;
