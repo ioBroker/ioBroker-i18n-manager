@@ -1189,7 +1189,9 @@ const onOpen = (e, data) => {
 };
 const onConvert = (e, files) => {
   if (!Array.isArray(files) || files.length === 0) return;
-  sendClose(e.sender);
+  const window = electron.BrowserWindow.fromWebContents(e.sender);
+  if (!window) return;
+  sendClose(window);
   const failures = [];
   let parentDir;
   for (const file of files) {

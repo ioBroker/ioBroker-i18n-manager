@@ -54,7 +54,10 @@ const onConvert = (e: any, files: {
 }[]) => {
   if (!Array.isArray(files) || files.length === 0) return;
 
-  windowManager.sendClose(e.sender);
+  const window = BrowserWindow.fromWebContents(e.sender);
+  if (!window) return;
+
+  windowManager.sendClose(window);
 
   const failures: string[] = [];
   let parentDir: string | undefined;
